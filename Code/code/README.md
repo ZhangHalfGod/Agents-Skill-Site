@@ -25,6 +25,14 @@ npm run build
 
 `prebuild` 会先跑 `sync`。产物：`docs/.vitepress/dist/`
 
+服务器只 clone 本仓、无 standards 树时：
+
+```bash
+SKIP_SYNC=1 npm run build
+```
+
+生产发布步骤见 [`../doc/07-deploy.md`](../doc/07-deploy.md)（git pull + 服务器编译）。
+
 ## 本地预览（模拟生产端口）
 
 ```bash

@@ -689,9 +689,27 @@ function writeManifest({
 
 function main() {
   const standardsRoot = resolveStandardsRoot()
+  const skipSync =
+    process.env.SKIP_SYNC === '1' ||
+    process.env.SKIP_SYNC === 'true'
+
   if (!fs.existsSync(standardsRoot)) {
+    // 生产机常只 clone 本仓；docs 已入库时可跳过 sync 直接 build
+    if (skipSync || fs.existsSync(path.join(DOCS_ROOT, 'agents', 'standard', 'Architect', 'index.md'))) {
+      console.warn(
+        `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；跳过 sync，使用仓库内已有 docs（设 SKIP_SYNC=1 可显式跳过）`
+      )
+      return
+    }
     console.error(`[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}`)
+    console.error(
+      '[sync-standards] 请设置 STANDARDS_ROOT，或 clone standards 后重试；仅构建已入库 docs 时：SKIP_SYNC=1 npm run build'
+    )
     process.exit(1)
+  }
+  if (skipSync) {
+    console.warn('[sync-standards] SKIP_SYNC=1，跳过同步')
+    return
   }
   console.log(`[sync-standards] standards = ${standardsRoot}`)
 

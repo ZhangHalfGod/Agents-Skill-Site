@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-10 — v0.9
+
+- **阶段 1.5**：部署笔记落地（形态 α：Nginx 静态 `/agents-skill/`）
+- 文件：`Code/doc/07-deploy.md`、`Code/code/deploy/nginx-agents-skill.snippet.conf`
+- 下一步：本人在 ECS 执行上线；或阶段 4 validate 门禁
+
 ## 2026-07-10 — v0.8
 
 - **阶段 3**：Skills 1～11 正文 + Rules L0/L1/L2（10 条）只读挂载

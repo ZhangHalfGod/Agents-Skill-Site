@@ -12,7 +12,7 @@
 | 1.2 | 在 `Code/code/` 创建可 `dev` 的 VitePress 工程 | **完成**（build 通过） |
 | 1.3 | 外层导航：agents / skills / rules 空页 | **完成** |
 | 1.4 | content 挂载方式（读 `standards/`） | **完成**（Architect + sync 脚本） |
-| 1.5 | PM2 + Nginx（α alias 或 β serve:3010） | 参数已锁；待部署 |
+| 1.5 | PM2 + Nginx（α alias 或 β serve:3010） | **笔记完成**（见 `07-deploy.md`；待你在 ECS 执行） |
 
 ## 2. 技术栈（已锁定，勿再选）
 
@@ -50,4 +50,4 @@
 - [x] 空页 agents/skills/rules  
 - [x] 扫描接入 standards（1.4：Architect 样例）  
 - [x] 阶段 2：八角色全量同步  
-- [ ] 生产形态选 α 或 β 并写部署笔记  
+- [x] 生产形态选 **α** 并写部署笔记（`07-deploy.md`）；ECS 上线由本人执行 

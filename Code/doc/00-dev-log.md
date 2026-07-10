@@ -2,6 +2,19 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-10（续 9）— 部署主路径改为「服务器 git pull + 编译」
+
+- 主流程：本机 push → ECS `git pull` → `SKIP_SYNC=1 npm run build` → `dist` 软链 → Nginx alias。
+- `sync-standards.mjs`：无 STANDARDS_ROOT 且 docs 已入库时可跳过 sync，便于服务器只 clone 本仓。
+- 根目录增加 `deploy.sh`；`07-deploy.md` 已改写。
+
+## 2026-07-10（续 8）— 阶段 1.5 部署笔记（形态 α）
+
+- 选定生产形态 **α**：Nginx `alias` → `/var/www/agents-skill-site/dist/`，无 PM2、不占 3010。
+- 新增：`Code/doc/07-deploy.md`、`Code/code/deploy/nginx-agents-skill.snippet.conf`、β 备选 `ecosystem.config.cjs`。
+- （已废止为默认）本机 rsync dist；现以服务器 git 编译为主。
+- ECS 实操由本人执行；验收 URL：`http://8.163.18.183/agents-skill/`。
+
 ## 2026-07-10（续 7）— 阶段 3：Skills + Rules 正文打通
 
 - Skills 1～11：同步 `SKILL.md` 正文 + 矩阵反向角色列表；相对 `./reference/*.md` 改为源路径提示（避免死链/非法 HTML）。

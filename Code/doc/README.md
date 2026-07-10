@@ -27,6 +27,7 @@
 | **[ADR-001-architecture-and-stack.md](ADR-001-architecture-and-stack.md)** | **架构与技术栈冻结** |
 | [05-local-dev-notes.md](05-local-dev-notes.md) | 本地 dev/build 与 Nginx 草案 |
 | [06-content-mount.md](06-content-mount.md) | standards → docs 同步约定（1.4） |
+| [07-deploy.md](07-deploy.md) | **阶段 1.5 生产部署（形态 α）** |
 
 ## 与 PM2 现有进程共存原则
 

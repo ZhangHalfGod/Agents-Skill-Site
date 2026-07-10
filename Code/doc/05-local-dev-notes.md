@@ -24,15 +24,6 @@ npm run preview  # http://127.0.0.1:3010/agents-skill/
 
 已验证挂载页：`/agents-skill/agents/standard/Architect/`（见 `06-content-mount.md`）。
 
-## 生产部署（待执行）
+## 生产部署
 
-见 ADR-001 §5。建议形态 α：将 `dist` 同步到服务器，Nginx：
-
-```nginx
-location /agents-skill/ {
-    alias /var/www/agents-skill-site/dist/;
-    try_files $uri $uri/ /agents-skill/index.html;
-}
-```
-
-（上线前在 ECS 上 `nginx -t` 再 reload；不新开安全组端口。）
+完整步骤见 [`07-deploy.md`](07-deploy.md)（形态 α）。摘要：本机构建 → rsync `dist/` → 现网 Nginx 追加 `location /agents-skill/` → `nginx -t` + reload。
