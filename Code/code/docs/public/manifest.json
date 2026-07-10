@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T09:22:41.697Z",
-  "standardsRoot": "C:/Users/Administrator/Desktop/100G_gateway/Agents_Skill/standards",
-  "note": "agents + skills 1～11 + rules L0/L1/L2；阶段 4 加 validate 门禁",
+  "generatedAt": "2026-07-10T14:26:09.892Z",
+  "standardsRoot": "(repo-docs)",
+  "note": "agents + skills 1～11 + rules；阶段 4 validate 门禁",
   "agents": [
     {
       "index": 1,
@@ -363,5 +363,8 @@
       "source": "standards/common/rules/L2/ptp-nmos-minimum-ops.mdc",
       "alwaysApply": true
     }
-  ]
+  ],
+  "contentHash": "11551bc5b589d320",
+  "validatedAt": "2026-07-10T14:26:10.001Z",
+  "validateOk": true
 }

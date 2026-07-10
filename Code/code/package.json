@@ -9,9 +9,10 @@
   },
   "scripts": {
     "sync": "node scripts/sync-standards.mjs",
-    "predev": "npm run sync",
+    "validate": "node scripts/validate-manifest.mjs",
+    "predev": "npm run sync && npm run validate",
     "dev": "vitepress dev docs",
-    "prebuild": "npm run sync",
+    "prebuild": "npm run sync && npm run validate",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --port 3010 --host 127.0.0.1"
   },

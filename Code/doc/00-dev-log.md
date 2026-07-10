@@ -2,6 +2,12 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-10（续 12）— 阶段 1.5 完成；阶段 4 门禁落地
+
+- 1.5：公网 `http://8.163.18.183/agents-skill/` 已验收；进度/CHANGELOG 标完成。
+- 4.1～4.4：`sync` repo scan 刷新 manifest；`validate-manifest.mjs` 失败阻断 build；`/health/` + health.json；`08-release-checklist.md`。
+- `prebuild` = sync && validate；本地 validate OK（8+11+10）。
+
 ## 2026-07-10（续 11）— 服务器 `npm run build` 无需 SKIP_SYNC
 
 - 无 `STANDARDS_ROOT` 时 sync 自动跳过并警告，不再 exit 1。

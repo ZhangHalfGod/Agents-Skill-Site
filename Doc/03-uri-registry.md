@@ -99,7 +99,7 @@
 | GET | `/api/catalog` | 返回 manifest 全量索引 |
 | GET | `/api/agents/:id` | 单角色元数据 + skill_tags |
 | GET | `/api/skills/:id` | 单技能元数据 + bound_agents |
-| GET | `/api/health` | 扫描时间、standards 哈希、校验状态 |
+| GET | `/api/health`（二期）或站点 `/health/` | 扫描时间、contentHash、校验状态（一期静态页） |
 
 对齐控制面经验：`/health` 可观测；构建期生成即可，运行时不必强依赖。
 

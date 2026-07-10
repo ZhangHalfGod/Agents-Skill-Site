@@ -23,15 +23,20 @@ npm run dev
 npm run build
 ```
 
-`prebuild` 会先跑 `sync`。若找不到 `STANDARDS_ROOT`，**自动跳过 sync**（用仓库内已有 docs），因此服务器上直接：
+`prebuild` = `sync` + `validate`。无 `STANDARDS_ROOT` 时 sync 自动 repo scan 刷新 manifest，再用 validate 门禁。
+
+单独跑：
 
 ```bash
-npm run build
+npm run sync
+npm run validate
 ```
 
-本机要从 standards 更新内容时：设好 `STANDARDS_ROOT` 后 `npm run sync`（或直接 `npm run build`，有 standards 就会同步）。
+产物：`docs/.vitepress/dist/`；健康摘要：`/health/`、`public/health.json`。
 
-生产发布步骤见 [`../doc/07-deploy.md`](../doc/07-deploy.md)（git pull + 服务器编译）。
+本机要从 standards 更新正文：设好 `STANDARDS_ROOT` 后 `npm run sync`。
+
+生产发布见 [`../doc/07-deploy.md`](../doc/07-deploy.md)；放行勾选 [`../doc/08-release-checklist.md`](../doc/08-release-checklist.md)。
 
 ## 本地预览（模拟生产端口）
 

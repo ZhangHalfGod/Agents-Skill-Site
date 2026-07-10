@@ -1,6 +1,6 @@
 # All_URI — Agents / Skills / Rules 运行站工程文档入口
 
-> **状态**：**阶段 0 完成**；**阶段 1 进行中**（ADR-001 已锁 VitePress；`Code/code/` 待初始化）  
+> **状态**：**阶段 0～3 完成**；**阶段 1.5 已上线**；**阶段 4 门禁完成**  
 > **目标**：自建网站，用于浏览、检索、运行（按说明书触发）自有 `agents` / `skills` / `rules` 资产  
 > **内容源**：`Agents_Skill/standards/`（以 `common/` 为基线，`domains/` 为增强）
 

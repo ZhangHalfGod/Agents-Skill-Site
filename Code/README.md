@@ -34,6 +34,7 @@ All_URI/
 
 ## 当前状态
 
-- **阶段 2/3 基本完成**：Agents ↔ Skills ↔ Rules 可浏览，build 通过。  
-- 本地：`cd Code/code && npm run dev` → `http://localhost:5173/agents-skill/`  
-- 下一步：阶段 4 validate 门禁，或 1.5 ECS 部署。
+- **阶段 1～4 完成**（含 ECS 上线与 validate 门禁）。  
+- 生产：`http://8.163.18.183/agents-skill/`（形态 α）。  
+- 本地：`cd Code/code && npm run build`（prebuild = sync + validate）。  
+- 下一步：阶段 5 domains，或阶段 6 运行指引。

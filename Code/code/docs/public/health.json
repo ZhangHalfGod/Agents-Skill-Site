@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "validatedAt": "2026-07-10T14:26:10.001Z",
+  "contentHash": "11551bc5b589d320",
+  "generatedAt": "2026-07-10T14:26:09.892Z",
+  "standardsRoot": "(repo-docs)",
+  "counts": {
+    "agents": 8,
+    "skills": 11,
+    "rules": 10,
+    "relatedDocs": 6
+  },
+  "errorCount": 0,
+  "warningCount": 0,
+  "errors": [],
+  "warnings": []
+}

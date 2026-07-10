@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-10 — v1.0
+
+- **阶段 1.5 完成**：ECS 形态 α 上线，`http://8.163.18.183/agents-skill/` 可浏览
+- **阶段 4 启动并落地**：`npm run validate` 门禁（失败阻断 build）；`/health/` 摘要；`08-release-checklist.md`
+- sync：无 STANDARDS_ROOT 时仍 repo scan 刷新 manifest；服务器直接 `npm run build`
+- 下一步：阶段 5 domains 灰度，或阶段 6 运行指引
+
 ## 2026-07-10 — v0.9
 
 - **阶段 1.5**：部署笔记落地（形态 α：Nginx 静态 `/agents-skill/`）

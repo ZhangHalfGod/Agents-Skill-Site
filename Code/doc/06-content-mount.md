@@ -36,8 +36,9 @@ npm run build
 
 ## 4. 下一步
 
-- 阶段 4：`scan` → `validate`（URI/矩阵对账，失败阻断 build）
-- 1.5：ECS Nginx/PM2 部署笔记
+- 阶段 5：domains 灰度（建议先 ptp-nmos）
+- 阶段 6：运行指引（复制 Cursor 触发句等）
+- 发布放行：见 `Code/doc/08-release-checklist.md`
 
 ## 5. 验收
 

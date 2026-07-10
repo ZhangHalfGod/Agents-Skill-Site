@@ -38,7 +38,8 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: 'Agents', link: '/agents/' },
       { text: 'Skills', link: '/skills/' },
-      { text: 'Rules', link: '/rules/' }
+      { text: 'Rules', link: '/rules/' },
+      { text: 'Health', link: '/health/' }
     ],
     sidebar: {
       ...agentsSidebar,

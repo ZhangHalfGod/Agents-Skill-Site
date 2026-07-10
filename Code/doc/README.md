@@ -28,6 +28,7 @@
 | [05-local-dev-notes.md](05-local-dev-notes.md) | 本地 dev/build 与 Nginx 草案 |
 | [06-content-mount.md](06-content-mount.md) | standards → docs 同步约定（1.4） |
 | [07-deploy.md](07-deploy.md) | **阶段 1.5 生产部署**（含现网 Nginx `mechassist` 插入点） |
+| [08-release-checklist.md](08-release-checklist.md) | **阶段 4.4 发布检查清单** |
 
 ## 与 PM2 现有进程共存原则
 

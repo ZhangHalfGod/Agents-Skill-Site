@@ -646,6 +646,62 @@ function discoverRules(standardsRoot) {
   )
 }
 
+function discoverRulesFromDocs() {
+  const rules = []
+  for (const level of ['L0', 'L1', 'L2']) {
+    const dir = path.join(DOCS_ROOT, 'rules', level)
+    if (!fs.existsSync(dir)) continue
+    for (const name of fs.readdirSync(dir)) {
+      const indexMd = path.join(dir, name, 'index.md')
+      if (!fs.existsSync(indexMd)) continue
+      const raw = fs.readFileSync(indexMd, 'utf8')
+      const titleMatch = raw.match(/^title:\s*["']?(.+?)["']?\s*$/m)
+      const title = titleMatch
+        ? titleMatch[1].replace(/^L[012]\s*·\s*/, '')
+        : name
+      rules.push({
+        level,
+        name,
+        title,
+        siteUri: `/rules/${level}/${name}`,
+        sourceRel: `common/rules/${level}/${name}.mdc`,
+        sitePath: `rules/${level}/${name}/index.md`,
+        alwaysApply: /alwaysApply：`true`/.test(raw)
+      })
+    }
+  }
+  return rules.sort((a, b) =>
+    a.level === b.level
+      ? a.name.localeCompare(b.name)
+      : a.level.localeCompare(b.level)
+  )
+}
+
+/** 无 standards 时仍刷新 manifest（阶段 4.1 scan），供 validate / health 使用 */
+function scanRepoOnly(reason) {
+  console.warn(`[sync-standards] ${reason}；执行 repo scan 刷新 manifest`)
+  const relatedDocs = []
+  for (const agent of STANDARD_AGENTS) {
+    for (const doc of agent.relatedDocs || []) {
+      relatedDocs.push({
+        siteUri: `/agents/standard/${agent.id}/docs/${doc.slug}`,
+        source: `standards/common/agents/standard/${agent.id}/${doc.sourceFile}`
+      })
+    }
+  }
+  const rules = discoverRulesFromDocs()
+  writeManifest({
+    standardsRoot: '(repo-docs)',
+    agents: STANDARD_AGENTS,
+    relatedDocs,
+    skills: STANDARD_SKILLS,
+    rules
+  })
+  console.log(
+    `[sync-standards] scan 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules`
+  )
+}
+
 function writeManifest({
   standardsRoot,
   agents,
@@ -655,8 +711,8 @@ function writeManifest({
 }) {
   const manifest = {
     generatedAt: new Date().toISOString(),
-    standardsRoot: standardsRoot.replace(/\\/g, '/'),
-    note: 'agents + skills 1～11 + rules L0/L1/L2；阶段 4 加 validate 门禁',
+    standardsRoot: String(standardsRoot).replace(/\\/g, '/'),
+    note: 'agents + skills 1～11 + rules；阶段 4 validate 门禁',
     agents: agents.map((a) => ({
       index: a.index,
       id: a.id,
@@ -696,18 +752,19 @@ function main() {
     process.env.SKIP_SYNC === 'true'
 
   if (forceSkip) {
-    console.warn('[sync-standards] SKIP_SYNC=1，跳过同步（使用仓库内已有 docs）')
+    scanRepoOnly('SKIP_SYNC=1')
     return
   }
 
   if (!fs.existsSync(standardsRoot)) {
-    // 服务器通常只 clone 本仓：无 standards 时自动跳过，直接 npm run build 即可
+    // 服务器通常只 clone 本仓：无 standards 时自动跳过内容同步，仍刷新 manifest
     console.warn(
-      `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；已自动跳过 sync，使用仓库内 docs`
+      `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；跳过内容同步，使用仓库内 docs`
     )
     console.warn(
-      '[sync-standards] 本机若需同步：设置 STANDARDS_ROOT 后执行 npm run sync'
+      '[sync-standards] 本机若需同步正文：设置 STANDARDS_ROOT 后执行 npm run sync'
     )
+    scanRepoOnly('无 STANDARDS_ROOT')
     return
   }
 
