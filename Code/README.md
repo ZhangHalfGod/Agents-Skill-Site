@@ -2,7 +2,8 @@
 
 > 对齐 S0：[`../Doc/SYSTEM-DIRECTION.md`](../Doc/SYSTEM-DIRECTION.md)  
 > 阶段：**1 立项与脚手架（进行中）**  
-> 部署目标：阿里云 Ubuntu 22.04 + PM2 + Node（待核对版本）
+> 部署目标：阿里云 Ubuntu 22.04 + PM2 + Node **v22.2.1**  
+> **技术栈冻结**：[`doc/ADR-001-architecture-and-stack.md`](doc/ADR-001-architecture-and-stack.md)
 
 ## 目录约定
 
@@ -29,8 +30,10 @@ All_URI/
 | [02-phase1-scaffold.md](doc/02-phase1-scaffold.md) | 阶段 1 脚手架技术细节与待决项 |
 | [03-commands-to-run.md](doc/03-commands-to-run.md) | 精简复核命令（补 mcp 端口等） |
 | [04-security-alignment.md](doc/04-security-alignment.md) | 与现网 ECS 安全清单对齐的本站门禁 |
+| **[ADR-001-architecture-and-stack.md](doc/ADR-001-architecture-and-stack.md)** | **系统架构 + 技术栈冻结（后续开发必遵）** |
 
-## 当前阻塞
+## 当前状态
 
-**服务器端口与 IP 已齐。** 仅差口头确认：技术栈（推荐 **选 A VitePress**）+ 是否采用 `http://8.163.18.183/agents-skill/` → `127.0.0.1:3010`。  
-确认后立即在 `code/` 初始化脚手架（URL 只写 Code/doc，不写 standards 角色 md）。
+- **阶段 2/3 基本完成**：Agents ↔ Skills ↔ Rules 可浏览，build 通过。  
+- 本地：`cd Code/code && npm run dev` → `http://localhost:5173/agents-skill/`  
+- 下一步：阶段 4 validate 门禁，或 1.5 ECS 部署。

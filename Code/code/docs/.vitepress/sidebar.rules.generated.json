@@ -1,0 +1,68 @@
+{
+  "/rules/": [
+    {
+      "text": "Rules",
+      "items": [
+        {
+          "text": "规则目录",
+          "link": "/rules/"
+        },
+        {
+          "text": "L0",
+          "items": [
+            {
+              "text": "01-language-and-safety",
+              "link": "/rules/L0/01-language-and-safety/"
+            },
+            {
+              "text": "02-core-boundary",
+              "link": "/rules/L0/02-core-boundary/"
+            },
+            {
+              "text": "03-traceability",
+              "link": "/rules/L0/03-traceability/"
+            }
+          ]
+        },
+        {
+          "text": "L1",
+          "items": [
+            {
+              "text": "01-stage-gate",
+              "link": "/rules/L1/01-stage-gate/"
+            },
+            {
+              "text": "02-prompt-review",
+              "link": "/rules/L1/02-prompt-review/"
+            },
+            {
+              "text": "03-batch-and-cr",
+              "link": "/rules/L1/03-batch-and-cr/"
+            }
+          ]
+        },
+        {
+          "text": "L2",
+          "items": [
+            {
+              "text": "concurrency-minimum-capacity",
+              "link": "/rules/L2/concurrency-minimum-capacity/"
+            },
+            {
+              "text": "dialog-minimum-safety",
+              "link": "/rules/L2/dialog-minimum-safety/"
+            },
+            {
+              "text": "mcp-minimum-contract",
+              "link": "/rules/L2/mcp-minimum-contract/"
+            },
+            {
+              "text": "ptp-nmos-minimum-ops",
+              "link": "/rules/L2/ptp-nmos-minimum-ops/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

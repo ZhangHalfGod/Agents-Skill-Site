@@ -1,10 +1,49 @@
-# agents-skill-site（源码目录）
+# agents-skill-site
 
-阶段 1 脚手架将在此初始化。
+VitePress 治理发现站源码。约束见 [`../doc/ADR-001-architecture-and-stack.md`](../doc/ADR-001-architecture-and-stack.md)。
 
-当前状态：空目录占位；等待：
+## 本地开发
 
-1. 服务器清单补全（`../doc/01-server-inventory.md`）  
-2. 技术栈确认（默认推荐 VitePress）  
+```bash
+cd Code/code
+npm install
+npm run sync   # 从 Agents_Skill/standards 同步（可设 STANDARDS_ROOT）
+npm run dev
+```
 
-确认后执行：`npm create` / 脚手架生成，并用 PM2 名 `agents-skill-site` 与现有 `mechassist-api` / `mcp-*` 隔离。
+开发服务器默认打开后，因 `base: '/agents-skill/'`，请访问：
+
+`http://localhost:5173/agents-skill/`
+
+已挂载样例：`http://localhost:5173/agents-skill/agents/standard/Architect/`
+
+## 构建
+
+```bash
+npm run build
+```
+
+`prebuild` 会先跑 `sync`。产物：`docs/.vitepress/dist/`
+
+## 本地预览（模拟生产端口）
+
+```bash
+npm run preview
+```
+
+访问：`http://127.0.0.1:3010/agents-skill/`
+
+## 目录
+
+```text
+scripts/
+  sync-standards.mjs      # standards → docs 只读同步
+docs/
+  .vitepress/config.mts   # base=/agents-skill/
+  index.md                # 首页
+  agents/index.md
+  agents/standard/Architect/index.md   # sync 生成
+  skills/index.md
+  rules/index.md
+  public/manifest.json    # sync 生成（最小索引）
+```

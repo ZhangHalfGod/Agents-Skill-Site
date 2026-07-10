@@ -1,0 +1,57 @@
+{
+  "/skills/": [
+    {
+      "text": "Skills",
+      "items": [
+        {
+          "text": "技能目录",
+          "link": "/skills/"
+        },
+        {
+          "text": "1. ai-code-boundary",
+          "link": "/skills/custom/common/ai-code-boundary/"
+        },
+        {
+          "text": "2. traceability-compliance",
+          "link": "/skills/custom/common/traceability-compliance/"
+        },
+        {
+          "text": "3. prompt-versioning",
+          "link": "/skills/custom/common/prompt-versioning/"
+        },
+        {
+          "text": "4. stage-gate-flow",
+          "link": "/skills/custom/common/stage-gate-flow/"
+        },
+        {
+          "text": "5. doc-coauthoring",
+          "link": "/skills/external/doc-coauthoring/"
+        },
+        {
+          "text": "6. mcp-builder",
+          "link": "/skills/external/mcp-builder/"
+        },
+        {
+          "text": "7. frontend-design",
+          "link": "/skills/external/frontend-design/"
+        },
+        {
+          "text": "8. webapp-testing",
+          "link": "/skills/external/webapp-testing/"
+        },
+        {
+          "text": "9. web-artifacts-builder",
+          "link": "/skills/external/web-artifacts-builder/"
+        },
+        {
+          "text": "10. skill-creator",
+          "link": "/skills/external/skill-creator/"
+        },
+        {
+          "text": "11. Human",
+          "link": "/skills/external/Human/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "/agents/": [
+    {
+      "text": "Agents",
+      "items": [
+        {
+          "text": "角色目录",
+          "link": "/agents/"
+        },
+        {
+          "text": "1. ProductManager",
+          "link": "/agents/standard/ProductManager/"
+        },
+        {
+          "text": "2. Architect",
+          "link": "/agents/standard/Architect/"
+        },
+        {
+          "text": "3. DevLead",
+          "link": "/agents/standard/DevLead/"
+        },
+        {
+          "text": "4. TestEngineer",
+          "link": "/agents/standard/TestEngineer/"
+        },
+        {
+          "text": "5. SecurityEngineer",
+          "link": "/agents/standard/SecurityEngineer/"
+        },
+        {
+          "text": "6. OpsEngineer",
+          "link": "/agents/standard/OpsEngineer/"
+        },
+        {
+          "text": "7. UIDesigner",
+          "link": "/agents/standard/UIDesigner/"
+        },
+        {
+          "text": "8. NmosEngineer",
+          "link": "/agents/standard/NmosEngineer/"
+        }
+      ]
+    }
+  ]
+}

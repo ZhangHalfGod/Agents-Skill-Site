@@ -1,0 +1,14 @@
+node_modules/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+dist/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# sync 生成物：本地/CI 由 npm run sync 产出；入库以便无 standards 树时仍可预览样例
+# 若只想本地生成，可取消下一行注释并删除已跟踪的同步页
+# docs/agents/standard/
+# docs/public/manifest.json

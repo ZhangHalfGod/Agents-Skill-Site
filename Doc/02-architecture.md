@@ -1,5 +1,7 @@
 # 02 — 架构设计
 
+> **技术栈与部署冻结**：以实现层 [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md) 为准（VitePress 已锁定）。本文保留内容模型与总体架构叙述。
+
 ## 1. 总体架构
 
 ```text
@@ -9,10 +11,10 @@
 └───────────────────────────┬─────────────────────────────┘
                             │ HTTP（只读为主）
 ┌───────────────────────────▼─────────────────────────────┐
-│  Agents-Skill 运行站（未来工程，本阶段不创建）              │
+│  Agents-Skill 运行站（Code/code · VitePress）             │
 │  ┌─────────────┐  ┌──────────────┐  ┌────────────────┐  │
-│  │ 静态页面/SSR │  │ 索引 API     │  │ 同步校验门禁    │  │
-│  │ Markdown渲染 │  │ /api/catalog │  │ scan→validate  │  │
+│  │ 静态页面/SSG │  │ 索引/manifest│  │ 同步校验门禁    │  │
+│  │ Markdown渲染 │  │ （阶段 4）   │  │ scan→validate  │  │
 │  └──────┬───────┘  └──────┬───────┘  └────────┬───────┘  │
 │         │                 │                    │          │
 │         └────────────┬────┴────────────────────┘          │
@@ -99,23 +101,21 @@ site/
 
 URI 细节见 [03-uri-registry.md](03-uri-registry.md)。
 
-## 4. 技术选型建议（待立项时确认）
+## 4. 技术选型（已冻结，见 ADR-001）
 
-> 本阶段不定死栈，给出推荐与备选，立项时二选一。
+> **已锁定：VitePress。** 细节与换栈规则见 [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md)。下表仅保留历史备选说明。
 
-| 方案 | 优点 | 风险 | 建议 |
-|------|------|------|------|
-| **A. 静态站点生成（SSG）** VitePress / Astro + MD | 简单、离线友好、与 Markdown 天然契合 | 动态检索弱 | **一期首选** |
-| **B. Next.js / Nuxt 半静态** | API + 检索好扩展 | 复杂度高 | 二期若要强检索再上 |
-| **C. 纯静态 HTML 手写** | 零依赖 | 维护成本高 | 不推荐 |
+| 方案 | 状态 | 说明 |
+|------|:----:|------|
+| **A. VitePress** | **已采纳** | 一期唯一 SSG |
+| B. Astro / Next / Nuxt | 未采用 | 换栈须新 ADR |
+| C. 纯手写 HTML | 未采用 | — |
 
-**一期推荐路径**：
+**一期路径**：
 
-1. 用脚本扫描 `standards/` → 生成 `manifest.json` + 侧栏数据  
-2. SSG 渲染 Markdown / `.mdc`  
-3. 本地 `npm run dev` 预览；可选 Nginx 静态托管  
-
-对齐 LUT/控制面经验：**轮询/构建时扫描即可，不必上 WebSocket**；HTTP 只做目录与文档 RPC。
+1. 扫描 `standards/` → 侧栏 / manifest  
+2. VitePress 渲染 Markdown / `.mdc`  
+3. `base: '/agents-skill/'`；Nginx 反代或 alias；可选 PM2 `serve` @ `127.0.0.1:3010`
 
 ## 5. 同步与门禁状态机
 

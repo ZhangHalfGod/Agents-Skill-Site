@@ -26,25 +26,26 @@
 | 安全组（文档） | 公网宜仅 80/443；Node 端口不对公网 | [x] | 安全清单 |
 | 部署根惯例 | `/var/www/...` | [x] | 部署文档 |
 
-## 2. 仍待确认（不阻塞端口锁定，阻塞脚手架选型）
+## 2. 部署与选型（已按 ADR-001 锁定）
 
-| 项 | 状态 | 说明 |
-|----|------|------|
-| `mcp-faq` / `mcp-gaode` 各自对应 3001 还是 3003 | 可选复核 | `pm2 jlist` 看 PORT/cwd 即可 |
-| 技术栈 | **待决** | 推荐 VitePress（A） |
-| Nginx 子路径方案 | **待决** | 建议 `/agents-skill/` → `127.0.0.1:3010` |
-| 部署绝对路径 | 建议 `/var/www/agents-skill-site` | 需你点头 |
-| 代码上线方式 | 默认 git pull | 可改 rsync |
+| 项 | 冻结值 |
+|----|--------|
+| 技术栈 | **VitePress**（见 ADR-001） |
+| 本站 URL | `http://8.163.18.183/agents-skill/` |
+| 本机端口 | `3010`（形态 β；形态 α 可无常驻 Node） |
+| 部署目录 | `/var/www/agents-skill-site` |
+| PM2 名 | `agents-skill-site` |
+| mcp 名↔3001/3003 | 可选复核 |
 
-### 快速确认区（回复即可）
+### 快速确认区（历史；已由 ADR-001 采纳）
 
-| 项 | 建议默认 | 你的确认 |
-|----|----------|----------|
-| 技术栈 | A VitePress | |
-| 本站 URL | `http://8.163.18.183/agents-skill/` | |
-| 本机端口 | `3010`（ss 显示 3001–3003 已占，3010 空闲） | |
-| 部署目录 | `/var/www/agents-skill-site` | |
-| 上线方式 | git pull | |
+| 项 | 值 |
+|----|-----|
+| 技术栈 | A VitePress ✅ |
+| 本站 URL | `http://8.163.18.183/agents-skill/` ✅ |
+| 本机端口 | 3010 ✅ |
+| 部署目录 | `/var/www/agents-skill-site` ✅ |
+| 上线方式 | git pull（默认） |
 
 ## 3. 命令输出摘要（已登记）
 
@@ -90,15 +91,15 @@ for a in json.load(sys.stdin):
 - 无域名阶段用 HTTP；有敏感操作时优先经 Tailscale 或后续上 HTTPS。  
 - 保持 3001–3003、3010 均不对公网直连。
 
-## 6. 本站部署建议（已可执行草案）
+## 6. 本站部署参数（ADR-001 已锁定）
 
-| 项 | 建议值 | 状态 |
-|----|--------|:----:|
-| 代码目录 | `/var/www/agents-skill-site` | 待确认 |
-| PM2 名 | `agents-skill-site` | 待确认 |
-| 本机端口 | **`3010`** | **建议锁定**（避开 3001–3003） |
-| 对外 URL | `http://8.163.18.183/agents-skill/` | 待确认 |
-| Nginx | `location /agents-skill/` → `http://127.0.0.1:3010/` | 待确认 |
-| 构建/发布 | `npm ci && npm run build` + `pm2 restart` + `nginx reload` | 待确认 |
+| 项 | 值 | 状态 |
+|----|-----|:----:|
+| 代码目录 | `/var/www/agents-skill-site` | 已锁 |
+| PM2 名 | `agents-skill-site` | 已锁 |
+| 本机端口 | `3010`（形态 β） | 已锁 |
+| 对外 URL | `http://8.163.18.183/agents-skill/` | 已锁 |
+| Nginx | `location /agents-skill/` | 已锁 |
+| 技术栈 | VitePress | 已锁 |
 
-**请回复**：是否确认「选 A（VitePress）+ `/agents-skill/` + 3010」？确认后即在 `Code/code/` 初始化工程。
+详见 [`ADR-001-architecture-and-stack.md`](ADR-001-architecture-and-stack.md)。下一步：初始化 `Code/code/`。

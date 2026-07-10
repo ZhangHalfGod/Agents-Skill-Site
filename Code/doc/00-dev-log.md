@@ -2,6 +2,44 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-10（续 7）— 阶段 3：Skills + Rules 正文打通
+
+- Skills 1～11：同步 `SKILL.md` 正文 + 矩阵反向角色列表；相对 `./reference/*.md` 改为源路径提示（避免死链/非法 HTML）。
+- Rules：扫描同步 L0×3 + L1×3 + L2×4（共 10 条 `.mdc` → 站点 md）。
+- 侧栏：`sidebar.skills.generated.json` / `sidebar.rules.generated.json`。
+- `npm run build` **通过**。阶段 3.1～3.5 基本完成；下一步：阶段 4 scan/validate 门禁，或 1.5 部署。
+
+## 2026-07-10（续 6）— 阶段 2：八角色 MVP 挂载
+
+- `sync-standards.mjs` 扩展：标准 8 角色主文档 + 6 附属 docs + 矩阵技能标签 + Cursor 运行指引。
+- 技能标签跳转：为引用到的 7 个技能生成占位页（阶段 3 再同步 SKILL.md 正文）。
+- 侧栏由 `sidebar.agents.generated.json` 生成；`agents/index` 编号墙已通。
+- `npm run build` **通过**（技能链接需尾斜杠 `/`）。
+- 阶段 2.1～2.5 基本完成；下一步：阶段 3 Skills/Rules 正文，或 1.5 部署笔记。
+
+## 2026-07-10（续 5）— 阶段 1.4 content 挂载打通
+
+- 新增 `Code/code/scripts/sync-standards.mjs`：从 `Agents_Skill/standards` 只读同步到 VitePress docs。
+- 首个挂载页：`/agents/standard/Architect` ← `Architect.md`；产出 `docs/public/manifest.json`。
+- `package.json`：`npm run sync`；`predev` / `prebuild` 自动同步。
+- `npm run build` **通过**；约定见 `Code/doc/06-content-mount.md`。
+- 阶段 1.4 完成；下一步：1.5 部署笔记，或阶段 2 补齐其余 7 角色。
+
+## 2026-07-10（续 4）— VitePress 脚手架初始化
+
+- 在 `Code/code/` 创建 VitePress 工程：`package.json`、`docs/.vitepress/config.mts`（`base: /agents-skill/`）。
+- 页面：首页 + `/agents/` `/skills/` `/rules/` 占位。
+- `npm install` + `npm run build` **通过**（vitepress 1.6.4）。
+- 本地：`npm run dev` → `http://localhost:5173/agents-skill/`；`npm run preview` → `127.0.0.1:3010/agents-skill/`。
+- 阶段 1.2 / 1.3 完成；下一步：部署笔记（1.5）或阶段 2 接入 Architect 等角色正文。
+
+## 2026-07-10（续 3）— ADR-001 冻结架构与技术栈
+
+- 新增 `Code/doc/ADR-001-architecture-and-stack.md`：锁定 VitePress、治理站分层、部署参数。
+- GitHub：`ZhangHalfGod/Agents-Skill-Site` 已存在；S0 决策 04 已记。
+- 阶段 1.1 完成；**下一步**：在 `Code/code/` 初始化 VitePress（`base: /agents-skill/`）。
+- 换栈须新 ADR，禁止静默更换。
+
 ## 2026-07-10（续 2）— 实机 IP / Node / 端口确认
 
 - 公网 IP：`8.163.18.183`；**暂无域名**。

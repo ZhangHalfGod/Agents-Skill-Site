@@ -3,7 +3,7 @@
 > **文档级别**：系统级（S0），高于 `00`～`05` 工程文档。  
 > **效力**：本文件与下级文档冲突时，**以本文件为准**；下级文档应随后修订对齐。  
 > **性质**：活文档（Living Doc）——每次重大决策、范围膨胀冲动、技术选型争议时必须回读并更新「决策日志」。  
-> **当前版本**：v0.2｜**最近更新**：2026-07-10
+> **当前版本**：v0.3｜**最近更新**：2026-07-10
 
 ---
 
@@ -110,8 +110,8 @@
 |:------:|------|:----:|
 | P0 | All_URI 文档完备 + 方向约束（本文件） | **完成** |
 | P0 | 阶段 0 评审通过 | **完成**（2026-07-10 确认启动阶段 1） |
-| P1 | 网站脚手架 + Agents 八角色 + 标签跳转 | **进行中**（脚手架目录已建，待服务器信息） |
-| P1 | Skills 1～11 + Rules L0/L1/L2 打通、零死链 | 未开始 |
+| P1 | 网站脚手架 + Agents 八角色 + 标签跳转 | **基本完成**（技能正文阶段 3） |
+| P1 | Skills 1～11 + Rules L0/L1/L2 打通、零死链 | **基本完成** |
 | P2 | scan → validate → manifest 门禁 | 未开始 |
 | P2 | 「运行指引」（复制 Cursor 触发句） | 未开始 |
 | P3 | Domains 灰度（建议先 ptp-nmos） | 未开始 |
@@ -128,12 +128,13 @@
 |------|------|------------|
 | [00-context.md](00-context.md) | 背景与目标叙述 | 服从本文件硬约束 |
 | [01-requirements.md](01-requirements.md) | 需求与验收 | 新增需求不得违反 §3 |
-| [02-architecture.md](02-architecture.md) | 架构与选型 | 选型争议以 §2/§3 裁决 |
+| [02-architecture.md](02-architecture.md) | 架构叙述（早期） | 服从本文件；**技术栈以 ADR-001 为准** |
 | [03-uri-registry.md](03-uri-registry.md) | URI 注册 | 本文件强制「先注册后实现」 |
 | [04-progress-plan.md](04-progress-plan.md) | 进度与里程碑 | 节奏可调；方向不可违背本文件 |
 | [05-agent-skill-matrix.md](05-agent-skill-matrix.md) | 角色-技能权威映射 | 绑定关系的治理真源之一 |
+| [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md) | **技术栈与部署冻结** | 实现层宪法；换栈须新 ADR + §8 |
 
-**冲突裁决顺序**：`SYSTEM-DIRECTION` → L0 rules → 本目录 `01/02/03/05` → `04` 进度弹性调整。
+**冲突裁决顺序**：`SYSTEM-DIRECTION` → **ADR-001** → L0 rules → 本目录 `01/02/03/05` → `04` 进度弹性调整。
 
 ---
 
@@ -189,6 +190,14 @@
 - **结论**：阶段 0 出门；阶段 1 开始。网站工程目录定为 `All_URI/Code/code/`，开发跟踪在 `All_URI/Code/doc/`（废止早期「`Agents_Skill/site/`」占位表述）。  
 - **约束**：部署 URL/端口只进 `Code/doc`，不写 `standards` 角色 md；新站 PM2 进程与现有应用隔离。  
 - **影响**：`Doc/CHANGELOG` v0.3；`04-progress-plan` 阶段状态更新；待服务器清单补全后再锁端口与初始化脚手架。
+
+### 2026-07-10-04｜冻结技术栈与部署架构（ADR-001）；GitHub 仓已建
+
+- **背景**：仓库 `ZhangHalfGod/Agents-Skill-Site` 已 push；需明确「系统架构 + 技术栈」以约束后续开发；此前仅有推荐未锁定。  
+- **选项**：A VitePress / B Astro / C Express 静态。  
+- **结论**：**锁定 A. VitePress**；部署锁定 `base=/agents-skill/`、`127.0.0.1:3010`（若用 serve）、公网 `http://8.163.18.183/agents-skill/`、目录 `/var/www/agents-skill-site`、PM2 名 `agents-skill-site`。  
+- **约束落地**：新增 `Code/doc/ADR-001-architecture-and-stack.md`；后续换栈须新 ADR + 本日志。  
+- **影响**：阶段 1.1 完成；可开始 `Code/code/` 脚手架初始化。
 
 ---
 

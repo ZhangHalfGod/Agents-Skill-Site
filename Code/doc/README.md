@@ -24,6 +24,9 @@
 | [02-phase1-scaffold.md](02-phase1-scaffold.md) | 阶段 1 技术细节 |
 | [03-commands-to-run.md](03-commands-to-run.md) | 精简复核命令 |
 | [04-security-alignment.md](04-security-alignment.md) | 现网安全策略对齐 |
+| **[ADR-001-architecture-and-stack.md](ADR-001-architecture-and-stack.md)** | **架构与技术栈冻结** |
+| [05-local-dev-notes.md](05-local-dev-notes.md) | 本地 dev/build 与 Nginx 草案 |
+| [06-content-mount.md](06-content-mount.md) | standards → docs 同步约定（1.4） |
 
 ## 与 PM2 现有进程共存原则
 

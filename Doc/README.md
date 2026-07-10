@@ -1,6 +1,6 @@
 # All_URI — Agents / Skills / Rules 运行站工程文档入口
 
-> **状态**：**阶段 0 完成**；**阶段 1 进行中**（实现目录 `../Code/`）  
+> **状态**：**阶段 0 完成**；**阶段 1 进行中**（ADR-001 已锁 VitePress；`Code/code/` 待初始化）  
 > **目标**：自建网站，用于浏览、检索、运行（按说明书触发）自有 `agents` / `skills` / `rules` 资产  
 > **内容源**：`Agents_Skill/standards/`（以 `common/` 为基线，`domains/` 为增强）
 
@@ -8,7 +8,8 @@
 
 | 级别 | 文件 | 用途 |
 |:----:|------|------|
-| **S0** | **[SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md)** | **行进方向活文档**：北极星、硬约束、反模式、优先级、决策日志；与下级冲突时以它为准 |
+| **S0** | **[SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md)** | **行进方向活文档** |
+| **ADR** | **[../Code/doc/ADR-001-architecture-and-stack.md](../Code/doc/ADR-001-architecture-and-stack.md)** | **架构 + 技术栈冻结（实现必遵）** |
 
 开工前勾选：`SYSTEM-DIRECTION.md` §9。重大改向只追加其 §8，禁止静默漂移。
 
@@ -69,3 +70,4 @@ Agents_Skill/
 | 2026-07-10 | v0.1 | 初稿：工程文档 + 进度计划 + URI 注册表 |
 | 2026-07-10 | v0.2 | 新增 S0 `SYSTEM-DIRECTION.md` 系统级行进方向约束（活文档） |
 | 2026-07-10 | v0.3 | 阶段 0 完成；阶段 1 启动；创建 `Code/doc` + `Code/code` |
+| 2026-07-10 | v0.4 | ADR-001 冻结 VitePress 架构与技术栈 |
