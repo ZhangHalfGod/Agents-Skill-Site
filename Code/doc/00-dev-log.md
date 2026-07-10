@@ -2,10 +2,22 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-10（续 11）— 服务器 `npm run build` 无需 SKIP_SYNC
+
+- 无 `STANDARDS_ROOT` 时 sync 自动跳过并警告，不再 exit 1。
+- `deploy.sh` / `07-deploy.md` 改为直接 `npm run build`。
+
+## 2026-07-10（续 10）— 登记现网 Nginx 修改点
+
+- 实体文件：`/etc/nginx/sites-available/mechassist`（`sites-enabled` 软链已启用）。
+- 同 server：`root`→MechAssist dist；`/`、`/api/voice/`、`/api`、`/auth` 不动。
+- 本站：在 `/auth` 后、`# Gaode Project` 前新增 `location /agents-skill/`。
+- 已写入 `07-deploy.md` §5、`deploy/nginx-agents-skill.snippet.conf`、`01-server-inventory.md`。
+
 ## 2026-07-10（续 9）— 部署主路径改为「服务器 git pull + 编译」
 
-- 主流程：本机 push → ECS `git pull` → `SKIP_SYNC=1 npm run build` → `dist` 软链 → Nginx alias。
-- `sync-standards.mjs`：无 STANDARDS_ROOT 且 docs 已入库时可跳过 sync，便于服务器只 clone 本仓。
+- 主流程：本机 push → ECS `git pull` → `npm run build`（无 standards 自动跳过 sync）→ `dist` 软链 → Nginx alias。
+- `sync-standards.mjs`：无 STANDARDS_ROOT 时自动跳过，服务器无需 `SKIP_SYNC=1`。
 - 根目录增加 `deploy.sh`；`07-deploy.md` 已改写。
 
 ## 2026-07-10（续 8）— 阶段 1.5 部署笔记（形态 α）

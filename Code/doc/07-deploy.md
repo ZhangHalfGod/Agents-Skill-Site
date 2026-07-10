@@ -49,8 +49,8 @@ cd agents-skill-site/Code/code
 node -v
 npm ci
 
-# 本仓通常已含 sync 后的 docs；无 standards 树时跳过 sync：
-SKIP_SYNC=1 npm run build
+# 本仓通常已含 sync 后的 docs；无 standards 树时 sync 会自动跳过：
+npm run build
 
 # 稳定路径给 Nginx（每次发布可重跑）
 ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
@@ -77,8 +77,7 @@ git pull origin main
 
 cd Code/code
 npm ci                    # lock 有变时再跑；无变可省略
-SKIP_SYNC=1 npm run build
-# 若已配 STANDARDS_ROOT，可改为：npm run build
+npm run build             # 无 STANDARDS_ROOT 时自动跳过 sync
 
 ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
         /var/www/agents-skill-site/dist
@@ -95,16 +94,66 @@ cd /var/www/agents-skill-site
 git pull origin main
 cd Code/code
 npm ci
-SKIP_SYNC=1 npm run build
+npm run build
 ln -sfn "$(pwd)/docs/.vitepress/dist" /var/www/agents-skill-site/dist
 echo "OK → http://8.163.18.183/agents-skill/"
 ```
+## 5. Nginx 现网实况与修改位置（2026-07-10 登记）
 
-## 5. Nginx（只加 location）
+### 5.1 文件位置
 
-在现网 `listen 80` 的 **同一个** `server { }` 内追加（勿新建抢 80 的 server）：
+| 项 | 路径 |
+|----|------|
+| 实体配置（**编辑这个**） | `/etc/nginx/sites-available/mechassist` |
+| 启用软链 | `/etc/nginx/sites-enabled/mechassist` → 上述文件 |
+| 同目录另有 | `default`（也已启用；**本站不改 default**） |
+| 仓库片段备忘 | `Code/code/deploy/nginx-agents-skill.snippet.conf` |
+
+```bash
+ls -la /etc/nginx/sites-enabled/
+# mechassist -> /etc/nginx/sites-available/mechassist
+# default    -> /etc/nginx/sites-available/default
+
+nano /etc/nginx/sites-available/mechassist
+```
+
+### 5.2 现网 `mechassist` 结构摘要（改前）
+
+同一 `server` 块（`listen 80`）大致为：
+
+| 指令 / location | 作用 | 本站是否改动 |
+|-----------------|------|:------------:|
+| `listen 80` | HTTP | 否 |
+| `server_name 8.163.18.183` | 公网 IP | 否 |
+| `root /var/www/MechAssist-Fusion/extern-api/dist` | MechAssist 前端 | 否 |
+| `location /` | SPA `try_files` → MechAssist | 否 |
+| `location /api/voice/` | 反代 `127.0.0.1:3002`（长超时） | 否 |
+| `location /api` | 反代 `127.0.0.1:3002` | 否 |
+| `location /auth` | 反代 `127.0.0.1:3002/api/auth` | 否 |
+| `# Gaode Project` 及后续 | 高德相关（若有） | 否 |
+| **`location /agents-skill/`** | **本站静态 alias** | **新增** |
+
+共存示意：
+
+```text
+http://8.163.18.183:80  （sites-available/mechassist）
+  ├─ /                 → MechAssist-Fusion/extern-api/dist
+  ├─ /api/voice/       → 127.0.0.1:3002
+  ├─ /api              → 127.0.0.1:3002
+  ├─ /auth             → 127.0.0.1:3002/api/auth
+  └─ /agents-skill/    → /var/www/agents-skill-site/dist/   ← 新增
+```
+
+### 5.3 插入位置（推荐）
+
+在 **`location /auth { ... }` 整块结束之后**、**`# Gaode Project` 注释之前**插入（与 MechAssist / 高德块分开，便于回滚）。
+
+也可插在 `location /` 之后；前缀匹配下 `/agents-skill/` 不会被 `/` 抢走。**不要**新建第二个 `listen 80` 的 `server`。
+
+插入内容：
 
 ```nginx
+    # --- agents-skill-site（形态 α；勿改 3001–3003）---
     location /agents-skill/ {
         alias /var/www/agents-skill-site/dist/;
         index index.html;
@@ -112,12 +161,27 @@ echo "OK → http://8.163.18.183/agents-skill/"
     }
 ```
 
-片段文件：`Code/code/deploy/nginx-agents-skill.snippet.conf`
+注意：`alias` 路径末尾的 `/` 必须保留，与 `location /agents-skill/` 配对。
+
+### 5.4 改完校验
+
+本机 **没有** `nginx.service`（`systemctl reload nginx` 会报 Unit not found）。进程在跑时用：
 
 ```bash
-sudo nginx -t && sudo systemctl reload nginx
+nginx -t
+nginx -s reload
+# 或：service nginx reload
 ```
 
+不要用：`systemctl reload nginx`。
+
+```bash
+curl -I http://127.0.0.1/agents-skill/
+# 期望 200（或带尾斜杠的跳转）；不应是 MechAssist 首页
+ls -la /var/www/agents-skill-site/dist/index.html   # 构建产物须存在
+```
+
+回滚本站：删掉上述 `location /agents-skill/` 块 → `nginx -t` → `nginx -s reload`；MechAssist 其它 location 保持不动。
 ## 6. 验证
 
 ```bash
@@ -135,7 +199,7 @@ ss -lntp | egrep '3001|3002|3003|3010|80'
 cd /var/www/agents-skill-site
 git log --oneline -5
 git checkout <上一好用的 commit>
-cd Code/code && SKIP_SYNC=1 npm run build
+cd Code/code && npm run build
 ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
         /var/www/agents-skill-site/dist
 ```

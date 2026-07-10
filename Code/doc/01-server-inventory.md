@@ -14,7 +14,8 @@
 | 主机名（截图） | `iZ7xva3ki6uz7x412fcdqpZ` 一类 | [x] | 终端提示符 |
 | 进程管理 | PM2（fork）+ `pm2-logrotate` | [x] | 截图 |
 | Node 精确版本 | **`v22.2.1`**（更正此前笔误 22.22.1） | [x] | `node -v` 截图 |
-| Web 反向代理 | **Nginx** 监听 `0.0.0.0:80` / `[::]:80` | [x] | `ss -lntp` |
+| Nginx 站点配置 | **`/etc/nginx/sites-available/mechassist`**（enabled 软链） | [x] | 2026-07-10 实机 |
+| 本站 Nginx location | **`location /agents-skill/`** 插入于 `/auth` 后、Gaode 注释前 | [x] | 见 `07-deploy.md` §5 |
 | 对外入口 | `http://8.163.18.183/`（80） | [x] | IP + Nginx |
 | HTTPS / 443 | 暂无域名，Let's Encrypt 后置 | [x] | 无域名 |
 | 已有 PM2 应用 | `mechassist-api`, `mcp-faq`, `mcp-gaode` | [x] | 早前 PM2 截图 |
@@ -99,7 +100,7 @@ for a in json.load(sys.stdin):
 | PM2 名 | `agents-skill-site` | 已锁 |
 | 本机端口 | `3010`（形态 β） | 已锁 |
 | 对外 URL | `http://8.163.18.183/agents-skill/` | 已锁 |
-| Nginx | `location /agents-skill/` | 已锁 |
+| Nginx | `location /agents-skill/` 写入 **`sites-available/mechassist`** | 已锁；插入点见 `07-deploy.md` §5 |
 | 技术栈 | VitePress | 已锁 |
 
 详见 [`ADR-001-architecture-and-stack.md`](ADR-001-architecture-and-stack.md)。下一步：初始化 `Code/code/`。

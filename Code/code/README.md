@@ -23,13 +23,13 @@ npm run dev
 npm run build
 ```
 
-`prebuild` 会先跑 `sync`。产物：`docs/.vitepress/dist/`
-
-服务器只 clone 本仓、无 standards 树时：
+`prebuild` 会先跑 `sync`。若找不到 `STANDARDS_ROOT`，**自动跳过 sync**（用仓库内已有 docs），因此服务器上直接：
 
 ```bash
-SKIP_SYNC=1 npm run build
+npm run build
 ```
+
+本机要从 standards 更新内容时：设好 `STANDARDS_ROOT` 后 `npm run sync`（或直接 `npm run build`，有 standards 就会同步）。
 
 生产发布步骤见 [`../doc/07-deploy.md`](../doc/07-deploy.md)（git pull + 服务器编译）。
 

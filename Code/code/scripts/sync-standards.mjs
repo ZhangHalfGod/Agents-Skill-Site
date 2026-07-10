@@ -3,6 +3,8 @@
  * SoT：Agents_Skill/standards；禁止回写。
  *
  * STANDARDS_ROOT：可选。默认 ../../../standards（相对 Code/code）。
+ * 若不存在：自动跳过（便于服务器只 clone 本仓后直接 npm run build）。
+ * SKIP_SYNC=1：即使有 STANDARDS_ROOT 也强制跳过。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -689,28 +691,26 @@ function writeManifest({
 
 function main() {
   const standardsRoot = resolveStandardsRoot()
-  const skipSync =
+  const forceSkip =
     process.env.SKIP_SYNC === '1' ||
     process.env.SKIP_SYNC === 'true'
 
-  if (!fs.existsSync(standardsRoot)) {
-    // 生产机常只 clone 本仓；docs 已入库时可跳过 sync 直接 build
-    if (skipSync || fs.existsSync(path.join(DOCS_ROOT, 'agents', 'standard', 'Architect', 'index.md'))) {
-      console.warn(
-        `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；跳过 sync，使用仓库内已有 docs（设 SKIP_SYNC=1 可显式跳过）`
-      )
-      return
-    }
-    console.error(`[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}`)
-    console.error(
-      '[sync-standards] 请设置 STANDARDS_ROOT，或 clone standards 后重试；仅构建已入库 docs 时：SKIP_SYNC=1 npm run build'
-    )
-    process.exit(1)
-  }
-  if (skipSync) {
-    console.warn('[sync-standards] SKIP_SYNC=1，跳过同步')
+  if (forceSkip) {
+    console.warn('[sync-standards] SKIP_SYNC=1，跳过同步（使用仓库内已有 docs）')
     return
   }
+
+  if (!fs.existsSync(standardsRoot)) {
+    // 服务器通常只 clone 本仓：无 standards 时自动跳过，直接 npm run build 即可
+    console.warn(
+      `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；已自动跳过 sync，使用仓库内 docs`
+    )
+    console.warn(
+      '[sync-standards] 本机若需同步：设置 STANDARDS_ROOT 后执行 npm run sync'
+    )
+    return
+  }
+
   console.log(`[sync-standards] standards = ${standardsRoot}`)
 
   const relatedDocs = []

@@ -11,7 +11,7 @@ git pull origin main
 
 cd "$CODE"
 npm ci
-SKIP_SYNC=1 npm run build
+npm run build
 
 ln -sfn "$CODE/docs/.vitepress/dist" "$ROOT/dist"
 echo "OK → http://8.163.18.183/agents-skill/"
