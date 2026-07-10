@@ -313,9 +313,6 @@ UI agents 拿到图片后，必须补齐“可工程化”的沉淀：
 
 ## 在 Cursor 中运行本角色
 
-1. `@` 引用：`standards/common/agents/standard/UIDesigner/UIDesigner.md`
-2. （可选）再 `@` 绑定技能的 `SKILL.md`，或说「使用技能 <序号>」并 `@` skills README
-3. 粘贴角色文档中的「一句话激活」（若有）
-4. 按角色工作流程产出；涉及核心模块时遵守 L0 红色记录
+<RunGuide role-id="UIDesigner" role-path="standards/common/agents/standard/UIDesigner/UIDesigner.md" :skills='[{"id":"frontend-design","label":"前端设计","uri":"/skills/external/frontend-design"},{"id":"doc-coauthoring","label":"文档协作","uri":"/skills/external/doc-coauthoring"},{"id":"ai-code-boundary","label":"AI 生成代码边界","uri":"/skills/custom/common/ai-code-boundary"}]' />
 
 本站只提供说明书与索引，**不执行模型推理**。

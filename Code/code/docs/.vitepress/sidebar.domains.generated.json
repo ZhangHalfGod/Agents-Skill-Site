@@ -1,0 +1,33 @@
+{
+  "/domains/": [
+    {
+      "text": "Domains",
+      "items": [
+        {
+          "text": "领域目录",
+          "link": "/domains/"
+        },
+        {
+          "text": "PTP / NMOS",
+          "link": "/domains/ptp-nmos/"
+        },
+        {
+          "text": "Agent · ClockOpsEngineer",
+          "link": "/domains/ptp-nmos/agents/ClockOpsEngineer/"
+        },
+        {
+          "text": "Agent · NmosEngineer",
+          "link": "/domains/ptp-nmos/agents/NmosEngineer/"
+        },
+        {
+          "text": "Agent · PtpInteropTestEngineer",
+          "link": "/domains/ptp-nmos/agents/PtpInteropTestEngineer/"
+        },
+        {
+          "text": "Agent · RealtimePtpEngineer",
+          "link": "/domains/ptp-nmos/agents/RealtimePtpEngineer/"
+        }
+      ]
+    }
+  ]
+}

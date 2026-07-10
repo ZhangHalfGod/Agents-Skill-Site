@@ -10,8 +10,6 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 # 参考笔记
 
 本文件汇总标准包设计时参考的公开资料，作为模板结构依据，不替代项目内规范。
-具体项目的联调策略、CR 检查点、风险点与回滚方案请写入：
-`standards/operations/requests/<year>/<REQ-ID>/03-devlead-notes.md`
 
 ## MCP 工具契约
 - MCP Tools 规范（tools/list、tools/call、input schema）

@@ -9,12 +9,9 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 
 # 架构约束与接口数据模型
 
-> 本文件仅保留通用模板。具体项目/需求的架构约束与接口实例请写入 `standards/operations/requests/<year>/<REQ-ID>/02-architecture.md`。
-
 ## 模块信息
 - 模块名：
 - 版本：
-- 影响面：
 
 ## 架构约束
 - 分层约束：
@@ -31,10 +28,4 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 - 实体：
 - 字段：
 - 校验规则：
-
-## NFR 映射（建议补充）
-- 稳定性：
-- 可观测性：
-- 兼容性：
-- 性能：
 

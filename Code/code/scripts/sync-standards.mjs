@@ -17,7 +17,13 @@ const MANIFEST_OUT = path.join(DOCS_ROOT, 'public', 'manifest.json')
 const SIDEBAR_AGENTS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.agents.generated.json')
 const SIDEBAR_SKILLS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.skills.generated.json')
 const SIDEBAR_RULES = path.join(DOCS_ROOT, '.vitepress', 'sidebar.rules.generated.json')
+const SIDEBAR_DOMAINS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.domains.generated.json')
+const SITE_CONFIG = path.join(CODE_ROOT, 'site.config.json')
 const DEFAULT_STANDARDS = path.resolve(CODE_ROOT, '../../../standards')
+const ALT_STANDARDS = path.resolve(
+  CODE_ROOT,
+  '../../../agents-skill-standards/standards'
+)
 
 /** @type {Record<string, { label: string, uri: string }>} */
 const SKILL_META = {
@@ -315,7 +321,27 @@ const RULE_TITLES = {
 function resolveStandardsRoot() {
   const fromEnv = process.env.STANDARDS_ROOT
   if (fromEnv) return path.resolve(fromEnv)
+  if (fs.existsSync(DEFAULT_STANDARDS)) return DEFAULT_STANDARDS
+  if (fs.existsSync(ALT_STANDARDS)) return ALT_STANDARDS
   return DEFAULT_STANDARDS
+}
+
+function loadSiteConfig() {
+  try {
+    return JSON.parse(fs.readFileSync(SITE_CONFIG, 'utf8'))
+  } catch {
+    return { domains: { enabled: false, active: [], catalog: [] } }
+  }
+}
+
+function domainsEnabled() {
+  if (process.env.ENABLE_DOMAINS === '0' || process.env.ENABLE_DOMAINS === 'false') {
+    return false
+  }
+  if (process.env.ENABLE_DOMAINS === '1' || process.env.ENABLE_DOMAINS === 'true') {
+    return true
+  }
+  return Boolean(loadSiteConfig().domains?.enabled)
 }
 
 function ensureDir(filePath) {
@@ -389,7 +415,10 @@ function syncMarkdown({
   rewriteRelativeRefs = false
 }) {
   const src = path.join(standardsRoot, sourceRel)
-  if (!fs.existsSync(src)) throw new Error(`源文件不存在: ${src}`)
+  if (!fs.existsSync(src)) {
+    console.warn(`[sync-standards] 跳过缺失源: ${src}`)
+    return { meta: {}, skipped: true }
+  }
   const raw = fs.readFileSync(src, 'utf8')
   const parsed = bodyWithoutLeadingH1(raw)
   let body = parsed.body
@@ -453,13 +482,21 @@ function buildAgentExtras(agent) {
     }
     parts.push('')
   }
+
+  const ordered = [...(agent.skills || []), ...(agent.skillsRecommended || [])]
+  const skillProps = ordered.map((id) => {
+    const meta = SKILL_META[id]
+    return {
+      id,
+      label: meta?.label || id,
+      uri: meta?.uri || `/skills/${id}`
+    }
+  })
+  const rolePath = `standards/common/agents/standard/${agent.id}/${agent.id}.md`
   parts.push(
     '## 在 Cursor 中运行本角色',
     '',
-    `1. \`@\` 引用：\`standards/common/agents/standard/${agent.id}/${agent.id}.md\``,
-    '2. （可选）再 `@` 绑定技能的 `SKILL.md`，或说「使用技能 <序号>」并 `@` skills README',
-    '3. 粘贴角色文档中的「一句话激活」（若有）',
-    '4. 按角色工作流程产出；涉及核心模块时遵守 L0 红色记录',
+    `<RunGuide role-id="${agent.id}" role-path="${rolePath}" :skills='${JSON.stringify(skillProps)}' />`,
     '',
     '本站只提供说明书与索引，**不执行模型推理**。',
     ''
@@ -513,6 +550,8 @@ function writeAgentsIndex(agents) {
 ${rows}
 
 在 Cursor 中运行：\`@standards/common/agents/standard/<Role>/<Role>.md\`。
+
+<QuickJump />
 `
   fs.writeFileSync(path.join(DOCS_ROOT, 'agents', 'index.md'), md, 'utf8')
 }
@@ -565,7 +604,7 @@ ${section('L0', '硬约束')}
 ${section('L1', '流程与协作')}
 ${section('L2', '场景最低限度')}
 
-领域规则（\`domains/\`）二期灰度。在 Cursor 中可 \`@\` 对应 \`.mdc\`。
+领域规则见 [Domains](/domains/)（可由 \`site.config.json\` / \`ENABLE_DOMAINS\` 开关）。在 Cursor 中可 \`@\` 对应 \`.mdc\`。
 `
   fs.writeFileSync(path.join(DOCS_ROOT, 'rules', 'index.md'), md, 'utf8')
 }
@@ -677,6 +716,222 @@ function discoverRulesFromDocs() {
   )
 }
 
+function patchAgentRunGuides() {
+  for (const agent of STANDARD_AGENTS) {
+    const out = path.join(DOCS_ROOT, 'agents', 'standard', agent.id, 'index.md')
+    if (!fs.existsSync(out)) continue
+    let raw = fs.readFileSync(out, 'utf8')
+    const marker = '## 技能标签（矩阵）'
+    const idx = raw.indexOf(marker)
+    if (idx === -1) {
+      raw = raw.trimEnd() + '\n\n' + buildAgentExtras(agent)
+    } else {
+      raw = raw.slice(0, idx) + buildAgentExtras(agent)
+    }
+    fs.writeFileSync(out, raw, 'utf8')
+  }
+}
+
+function writeDomainsPages(domainManifest) {
+  const cfg = loadSiteConfig()
+  const catalog = cfg.domains?.catalog || []
+  const enabled = domainsEnabled()
+  const active = new Set(cfg.domains?.active || [])
+
+  fs.mkdirSync(path.join(DOCS_ROOT, 'domains'), { recursive: true })
+
+  const rows = catalog
+    .map((d) => {
+      const isActive = enabled && active.has(d.id)
+      const link = isActive ? `[${d.title}](/domains/${d.id}/)` : d.title
+      const status = !enabled ? '总开关关闭' : isActive ? '**灰度中**' : '占位'
+      return `| \`${d.id}\` | ${link} | ${d.summary} | ${status} |`
+    })
+    .join('\n')
+
+  const md = `---
+title: "Domains"
+description: 领域增强灰度入口
+---
+
+# Domains
+
+领域增强目录（对齐 \`standards/domains/\`）。**common 浏览不依赖本区**；关闭开关后本站其余分区仍可用。
+
+| 领域 ID | 名称 | 说明 | 状态 |
+|---------|------|------|:----:|
+${rows}
+
+### 开关
+
+- 配置：\`Code/code/site.config.json\` → \`domains.enabled\` / \`domains.active\`
+- 环境变量：\`ENABLE_DOMAINS=0\` 可强制关闭（优先于配置）
+
+当前：\`${enabled ? 'enabled' : 'disabled'}\`；灰度：\`${[...active].join(', ') || '（无）'}\`
+`
+  fs.writeFileSync(path.join(DOCS_ROOT, 'domains', 'index.md'), md, 'utf8')
+
+  const sidebarItems = [{ text: '领域目录', link: '/domains/' }]
+  if (enabled) {
+    for (const d of catalog) {
+      if (!active.has(d.id)) {
+        const stub = path.join(DOCS_ROOT, 'domains', d.id, 'index.md')
+        ensureDir(stub)
+        fs.writeFileSync(
+          stub,
+          `---\ntitle: "${d.title}"\n---\n\n# ${d.title}\n\n占位：尚未灰度。源目录 \`standards/domains/${d.id}/\`。\n`,
+          'utf8'
+        )
+        continue
+      }
+      sidebarItems.push({ text: d.title, link: withSlash(`/domains/${d.id}`) })
+      const dm = domainManifest?.[d.id]
+      if (dm) {
+        for (const a of dm.agents || []) {
+          sidebarItems.push({
+            text: `Agent · ${a.id}`,
+            link: withSlash(a.siteUri)
+          })
+        }
+      }
+    }
+  }
+
+  writeJson(SIDEBAR_DOMAINS, {
+    '/domains/': [{ text: 'Domains', items: sidebarItems }]
+  })
+}
+
+function syncDomainPtpNmos(standardsRoot) {
+  const domainId = 'ptp-nmos'
+  const base = path.join(standardsRoot, 'domains', domainId)
+  if (!fs.existsSync(base)) {
+    console.warn(`[sync-standards] 领域源不存在: ${base}`)
+    return null
+  }
+
+  const agentsDir = path.join(base, 'agents')
+  const skillsDir = path.join(base, 'skills')
+  const rulesDir = path.join(base, 'rules')
+  const agents = []
+  const skills = []
+  const rules = []
+
+  if (fs.existsSync(agentsDir)) {
+    for (const file of fs.readdirSync(agentsDir).filter((f) => f.endsWith('.md'))) {
+      const id = file.replace(/\.md$/, '')
+      const sourceRel = `domains/${domainId}/agents/${file}`
+      syncMarkdown({
+        standardsRoot,
+        sourceRel,
+        sitePath: `domains/${domainId}/agents/${id}/index.md`,
+        title: id,
+        extras: [
+          '## 在 Cursor 中运行',
+          '',
+          `\`@standards/${sourceRel}\``,
+          '',
+          `<RunGuide role-id="${id}" role-path="standards/${sourceRel}" :skills='[]' />`,
+          ''
+        ].join('\n')
+      })
+      agents.push({
+        id,
+        siteUri: `/domains/${domainId}/agents/${id}`,
+        source: `standards/${sourceRel}`
+      })
+      console.log(`[sync-standards] OK domain agent ${domainId}/${id}`)
+    }
+  }
+
+  if (fs.existsSync(skillsDir)) {
+    for (const name of fs.readdirSync(skillsDir)) {
+      const skillMd = path.join(skillsDir, name, 'SKILL.md')
+      if (!fs.existsSync(skillMd)) continue
+      const sourceRel = `domains/${domainId}/skills/${name}/SKILL.md`
+      syncMarkdown({
+        standardsRoot,
+        sourceRel,
+        sitePath: `domains/${domainId}/skills/${name}/index.md`,
+        title: name,
+        rewriteRelativeRefs: true
+      })
+      skills.push({
+        id: name,
+        siteUri: `/domains/${domainId}/skills/${name}`,
+        source: `standards/${sourceRel}`
+      })
+      console.log(`[sync-standards] OK domain skill ${domainId}/${name}`)
+    }
+  }
+
+  if (fs.existsSync(rulesDir)) {
+    for (const file of fs.readdirSync(rulesDir).filter((f) => f.endsWith('.mdc'))) {
+      const name = file.replace(/\.mdc$/, '')
+      const sourceRel = `domains/${domainId}/rules/${file}`
+      syncMarkdown({
+        standardsRoot,
+        sourceRel,
+        sitePath: `domains/${domainId}/rules/${name}/index.md`,
+        title: `${domainId} · ${name}`,
+        notice: `同步自领域规则 \`.mdc\`：\`standards/${sourceRel}\`。`
+      })
+      rules.push({
+        id: name,
+        siteUri: `/domains/${domainId}/rules/${name}`,
+        source: `standards/${sourceRel}`
+      })
+      console.log(`[sync-standards] OK domain rule ${domainId}/${name}`)
+    }
+  }
+
+  const hub = `---
+title: "PTP / NMOS"
+description: 领域灰度：ptp-nmos
+---
+
+# PTP / NMOS
+
+灰度领域（\`standards/domains/ptp-nmos/\`）。关闭 \`domains.enabled\` 或从 \`active\` 移除后，不影响 common。
+
+## Agents
+
+${agents.map((a) => `- [${a.id}](${withSlash(a.siteUri)})`).join('\n') || '_无_'}
+
+## Skills
+
+${skills.map((s) => `- [${s.id}](${withSlash(s.siteUri)})`).join('\n') || '_无_'}
+
+## Rules
+
+${rules.map((r) => `- [${r.id}](${withSlash(r.siteUri)})`).join('\n') || '_无_'}
+`
+  const hubPath = path.join(DOCS_ROOT, 'domains', domainId, 'index.md')
+  ensureDir(hubPath)
+  fs.writeFileSync(hubPath, hub, 'utf8')
+  return { agents, skills, rules }
+}
+
+function syncDomains(standardsRoot) {
+  const out = {}
+  if (!domainsEnabled()) {
+    writeDomainsPages(null)
+    console.warn('[sync-standards] domains 总开关关闭；仅写目录占位')
+    return out
+  }
+  const active = loadSiteConfig().domains?.active || []
+  if (active.includes('ptp-nmos') && standardsRoot && fs.existsSync(standardsRoot)) {
+    const m = syncDomainPtpNmos(standardsRoot)
+    if (m) out['ptp-nmos'] = m
+  } else if (active.includes('ptp-nmos')) {
+    console.warn(
+      '[sync-standards] ptp-nmos 灰度开启但无 STANDARDS_ROOT；保留仓库内 domains 页'
+    )
+  }
+  writeDomainsPages(out)
+  return out
+}
+
 /** 无 standards 时仍刷新 manifest（阶段 4.1 scan），供 validate / health 使用 */
 function scanRepoOnly(reason) {
   console.warn(`[sync-standards] ${reason}；执行 repo scan 刷新 manifest`)
@@ -690,13 +945,20 @@ function scanRepoOnly(reason) {
     }
   }
   const rules = discoverRulesFromDocs()
+  const domains = syncDomains(null)
   writeManifest({
     standardsRoot: '(repo-docs)',
     agents: STANDARD_AGENTS,
     relatedDocs,
     skills: STANDARD_SKILLS,
-    rules
+    rules,
+    domains
   })
+  writeSidebars(STANDARD_AGENTS, STANDARD_SKILLS, rules)
+  writeAgentsIndex(STANDARD_AGENTS)
+  writeSkillsIndex(STANDARD_SKILLS)
+  writeRulesIndex(rules)
+  patchAgentRunGuides()
   console.log(
     `[sync-standards] scan 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules`
   )
@@ -707,12 +969,15 @@ function writeManifest({
   agents,
   relatedDocs,
   skills,
-  rules
+  rules,
+  domains = {}
 }) {
   const manifest = {
     generatedAt: new Date().toISOString(),
     standardsRoot: String(standardsRoot).replace(/\\/g, '/'),
-    note: 'agents + skills 1～11 + rules；阶段 4 validate 门禁',
+    note: 'agents + skills 1～11 + rules；domains 灰度；阶段 4 validate',
+    domainsEnabled: domainsEnabled(),
+    domainsActive: loadSiteConfig().domains?.active || [],
     agents: agents.map((a) => ({
       index: a.index,
       id: a.id,
@@ -740,7 +1005,8 @@ function writeManifest({
       siteUri: `/rules/${r.level}/${r.name}`,
       source: `standards/${r.sourceRel}`,
       alwaysApply: r.alwaysApply || false
-    }))
+    })),
+    domains
   }
   writeJson(MANIFEST_OUT, manifest)
 }
@@ -794,6 +1060,7 @@ function main() {
       console.log(`[sync-standards] OK   doc ${doc.slug}`)
     }
   }
+  patchAgentRunGuides()
   writeAgentsIndex(STANDARD_AGENTS)
 
   for (const skill of STANDARD_SKILLS) {
@@ -854,17 +1121,19 @@ function main() {
   }
   writeRulesIndex(rules)
 
+  const domains = syncDomains(standardsRoot)
   writeSidebars(STANDARD_AGENTS, STANDARD_SKILLS, rules)
   writeManifest({
     standardsRoot,
     agents: STANDARD_AGENTS,
     relatedDocs,
     skills: STANDARD_SKILLS,
-    rules
+    rules,
+    domains
   })
 
   console.log(
-    `[sync-standards] 完成：${STANDARD_AGENTS.length} 角色 + ${relatedDocs.length} 附属 + ${STANDARD_SKILLS.length} 技能 + ${rules.length} 规则`
+    `[sync-standards] 完成：${STANDARD_AGENTS.length} 角色 + ${relatedDocs.length} 附属 + ${STANDARD_SKILLS.length} 技能 + ${rules.length} 规则 + domains=${Object.keys(domains).join(',') || 'none'}`
   )
 }
 

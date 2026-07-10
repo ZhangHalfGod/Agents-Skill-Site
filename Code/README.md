@@ -34,7 +34,9 @@ All_URI/
 
 ## 当前状态
 
-- **阶段 1～4 完成**（含 ECS 上线与 validate 门禁）。  
-- 生产：`http://8.163.18.183/agents-skill/`（形态 α）。  
-- 本地：`cd Code/code && npm run build`（prebuild = sync + validate）。  
-- 下一步：阶段 5 domains，或阶段 6 运行指引。
+## 当前状态
+
+- **阶段 1～6 完成**；**1.5 / 4 已验收**。  
+- 生产：`http://8.163.18.183/agents-skill/`（含 `/domains/`、`/health/`、运行指引）。  
+- 关 Domains：`ENABLE_DOMAINS=0 npm run build` 或改 `site.config.json`。  
+- 下一步：阶段 7 联调复盘。

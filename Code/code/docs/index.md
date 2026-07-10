@@ -17,9 +17,11 @@ hero:
       link: /rules/
 features:
   - title: Agents
-    details: 标准八角色正文、技能标签与附属文档
+    details: 标准八角色正文、技能标签、运行指引与编号跳转
   - title: Skills
     details: 编号 1～11 的 SKILL.md 正文与反向角色关联
-  - title: Rules
-    details: L0 / L1 / L2 规则只读浏览（.mdc 同步）
+  - title: Rules / Domains
+    details: L0/L1/L2 规则；Domains 可灰度开关（默认 ptp-nmos）
 ---
+
+<QuickJump />

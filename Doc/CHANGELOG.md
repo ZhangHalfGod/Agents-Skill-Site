@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-10 — v1.1
+
+- **验收**：阶段 1.5（ECS 上线）与阶段 4（validate/health）正式验收通过
+- **阶段 5**：Domains 四领域目录 + `ptp-nmos` 灰度；`site.config.json` / `ENABLE_DOMAINS` 可关域
+- **阶段 6**：角色页 `RunGuide`（复制触发句 / 技能顺序 / 导出 md）+ 首页/Agents `QuickJump` 编号跳转
+- 下一步：阶段 7 联调复盘，或继续 domains 扩域
+
 ## 2026-07-10 — v1.0
 
 - **阶段 1.5 完成**：ECS 形态 α 上线，`http://8.163.18.183/agents-skill/` 可浏览

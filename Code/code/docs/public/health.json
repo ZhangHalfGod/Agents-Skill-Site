@@ -1,9 +1,9 @@
 {
   "ok": true,
-  "validatedAt": "2026-07-10T14:26:10.001Z",
+  "validatedAt": "2026-07-10T15:09:51.190Z",
   "contentHash": "11551bc5b589d320",
-  "generatedAt": "2026-07-10T14:26:09.892Z",
-  "standardsRoot": "(repo-docs)",
+  "generatedAt": "2026-07-10T15:09:51.075Z",
+  "standardsRoot": "/Users/zhanghalfgod/Public/Work/agents-skill-standards/standards",
   "counts": {
     "agents": 8,
     "skills": 11,

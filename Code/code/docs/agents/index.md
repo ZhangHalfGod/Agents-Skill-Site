@@ -14,3 +14,5 @@
 | 8 | [NmosEngineer](/agents/standard/NmosEngineer/) | NMOS IS-04/IS-05 校验、Registry 注入验证、证据固化 | **已同步** |
 
 在 Cursor 中运行：`@standards/common/agents/standard/<Role>/<Role>.md`。
+
+<QuickJump />

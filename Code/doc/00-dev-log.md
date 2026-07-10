@@ -2,6 +2,12 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-10（续 13）— 1.5/4 验收；阶段 5+6 完成
+
+- 验收：公网站点 + `/health/` OK → 1.5 与 4 正式通过。
+- 阶段 5：`/domains` 四领域；`ptp-nmos` agents/skills/rules 灰度；`ENABLE_DOMAINS=0` / `site.config.json` 可关。
+- 阶段 6：`RunGuide`（复制/顺序/导出）+ `QuickJump`（使用角色/技能 N）；`npm run build` 通过。
+
 ## 2026-07-10（续 12）— 阶段 1.5 完成；阶段 4 门禁落地
 
 - 1.5：公网 `http://8.163.18.183/agents-skill/` 已验收；进度/CHANGELOG 标完成。

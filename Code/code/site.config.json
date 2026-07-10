@@ -1,0 +1,28 @@
+{
+  "domains": {
+    "enabled": true,
+    "active": ["ptp-nmos"],
+    "catalog": [
+      {
+        "id": "mcp",
+        "title": "MCP",
+        "summary": "工具契约、服务实现与 capabilities / tools.call 一致性"
+      },
+      {
+        "id": "ai-dialog",
+        "title": "AI Dialog",
+        "summary": "意图路由、上下文编排、对话安全与兜底"
+      },
+      {
+        "id": "ptp-nmos",
+        "title": "PTP / NMOS",
+        "summary": "广播级 PTP、NMOS IS-04/05 与 AES67/ST 2110 联调门禁"
+      },
+      {
+        "id": "high-concurrency",
+        "title": "High Concurrency",
+        "summary": "容量、弹性、限流熔断与可观测性"
+      }
+    ]
+  }
+}

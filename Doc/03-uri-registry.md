@@ -11,7 +11,7 @@
 | `/agents` | Agents 目录 | `standards/common/agents/README.md` | P0 | ready* |
 | `/skills` | Skills 目录 | `standards/common/skills/README.md` | P0 | ready* |
 | `/rules` | Rules 目录 | `standards/common/rules/README.md` | P0 | ready* |
-| `/domains` | 领域增强 | `standards/domains/README.md` | P2 | ready* |
+| `/domains` | 领域增强 | `standards/domains/README.md` | P2 | **已挂载**（灰度） |
 | `/operations` | 需求归档 | `standards/operations/README.md` | P2 | ready* |
 
 \* 源文件 ready，站点页 planned。

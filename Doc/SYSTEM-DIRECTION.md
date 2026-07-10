@@ -112,9 +112,9 @@
 | P0 | 阶段 0 评审通过 | **完成**（2026-07-10 确认启动阶段 1） |
 | P1 | 网站脚手架 + Agents 八角色 + 标签跳转 | **基本完成**（技能正文阶段 3） |
 | P1 | Skills 1～11 + Rules L0/L1/L2 打通、零死链 | **基本完成** |
-| P2 | scan → validate → manifest 门禁 | **完成**（2026-07-10） |
-| P2 | 「运行指引」（复制 Cursor 触发句） | 未开始 |
-| P3 | Domains 灰度（建议先 ptp-nmos） | 未开始 |
+| P2 | scan → validate → manifest 门禁 | **完成（已验收）** |
+| P2 | 「运行指引」（复制 Cursor 触发句） | **完成** |
+| P3 | Domains 灰度（建议先 ptp-nmos） | **完成**（ptp-nmos） |
 | P3 | 可选：MCP 暴露同一 manifest（list/get/validate） | 未开始 |
 | 明确不做 | 网站内模型推理、多租户账号、替代 Cursor | 永久非目标* |
 
@@ -198,6 +198,12 @@
 - **结论**：**锁定 A. VitePress**；部署锁定 `base=/agents-skill/`、`127.0.0.1:3010`（若用 serve）、公网 `http://8.163.18.183/agents-skill/`、目录 `/var/www/agents-skill-site`、PM2 名 `agents-skill-site`。  
 - **约束落地**：新增 `Code/doc/ADR-001-architecture-and-stack.md`；后续换栈须新 ADR + 本日志。  
 - **影响**：阶段 1.1 完成；可开始 `Code/code/` 脚手架初始化。
+
+### 2026-07-10-06｜1.5/4 验收通过；阶段 5+6 落地
+
+- **背景**：公网 Health OK；需 Domains 灰度与运行指引。  
+- **结论**：正式验收 1.5 与 4；落地 `/domains`（ptp-nmos 灰度 + 开关）与 `RunGuide`/`QuickJump`。  
+- **影响**：CHANGELOG v1.1；`site.config.json`；阶段 7 待联调复盘。
 
 ### 2026-07-10-05｜阶段 1.5 上线完成；阶段 4 门禁落地
 

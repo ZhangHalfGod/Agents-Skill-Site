@@ -163,9 +163,6 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 
 ## 在 Cursor 中运行本角色
 
-1. `@` 引用：`standards/common/agents/standard/NmosEngineer/NmosEngineer.md`
-2. （可选）再 `@` 绑定技能的 `SKILL.md`，或说「使用技能 <序号>」并 `@` skills README
-3. 粘贴角色文档中的「一句话激活」（若有）
-4. 按角色工作流程产出；涉及核心模块时遵守 L0 红色记录
+<RunGuide role-id="NmosEngineer" role-path="standards/common/agents/standard/NmosEngineer/NmosEngineer.md" :skills='[{"id":"stage-gate-flow","label":"瀑布/敏捷阶段门禁","uri":"/skills/custom/common/stage-gate-flow"},{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/skills/custom/common/traceability-compliance"}]' />
 
 本站只提供说明书与索引，**不执行模型推理**。
