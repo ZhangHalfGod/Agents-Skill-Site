@@ -71,7 +71,7 @@ curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1/agents-skill/
 ss -lntp | egrep '3921|3001|3002|3003|80'
 ```
 
-Cursor：复制 [`../cursor-mcp.url.production.json.example`](../cursor-mcp.url.production.json.example)，填入真实 Token。
+Cursor：完整步骤见 [`../CURSOR-SETUP.md`](../CURSOR-SETUP.md)；JSON 样例见 [`../cursor-mcp.url.production.json.example`](../cursor-mcp.url.production.json.example)。
 
 本机冒烟（经公网，需 Token）：
 

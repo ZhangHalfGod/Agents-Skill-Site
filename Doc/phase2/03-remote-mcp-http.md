@@ -179,9 +179,9 @@ Code/doc/phase2/03-remote-mcp-http.md  # 实现笔记（有代码后再写）
 | 阶段 | 内容 | 出口 |
 |------|------|------|
 | **R0** | 本计划 Accepted；目录脚手架就位 | ✅ 本文 Accepted；暴露面已确认为公网 Nginx + Token |
-| **R1** | 本地 `127.0.0.1` Streamable HTTP + Token；tools 对齐 stdio | ✅ `npm run smoke` PASS；Cursor IDE 待人工勾选 |
-| **R2** | Nginx location 片段 + 服务器部署说明 | ✅ 片段/PM2/文档已落 `Code/mcp-remote/deploy/`；ECS 粘贴与 pm2 start 待人工 |
-| **R3** | 他人零克隆验收；实现笔记勾选；PR → main | 文档与样例齐全 |
+| **R1** | 本地 `127.0.0.1` Streamable HTTP + Token；tools 对齐 stdio | ✅ `npm run smoke` PASS；Cursor IDE 已接通 |
+| **R2** | Nginx location 片段 + 服务器部署说明 | ✅ ECS 验收通过（SMOKE PASS + 站点 200；方案 B） |
+| **R3** | 他人零克隆验收；实现笔记勾选；PR → main | ✅ 见 [`04-zero-clone-share.md`](04-zero-clone-share.md) + CURSOR-SETUP；Cursor 已实测 |
 
 每阶段改代码前：若架构有变，先改本文件再写代码。
 
@@ -189,12 +189,13 @@ Code/doc/phase2/03-remote-mcp-http.md  # 实现笔记（有代码后再写）
 
 ## 9. 验收标准（合入前）
 
-- [ ] Cursor 仅配置 URL + Token，**无本仓**，可 `list_agents` / `get_skill` / `validate` 等与 stdio 对等的只读能力  
-- [ ] 错误 Token → 401；无写类 tool  
-- [ ] 停掉 `mcp-remote` 进程后，`/agents-skill/` 仍 200  
-- [ ] 未新开安全组端口；进程未绑 `0.0.0.0` 对公网  
-- [ ] `Code/mcp-remote/` 有 README + example；密钥未进 Git  
-- [ ] `Code/doc/phase2/03-remote-mcp-http.md` 实现笔记与验收勾选完成  
+- [x] Cursor 仅配置 URL + Token，**无本仓**，可 `list_agents` / `get_skill` / `validate` 等与 stdio 对等的只读能力  
+- [x] 错误 Token → 401；无写类 tool  
+- [x] 停掉 `mcp-remote` 进程后，`/agents-skill/` 仍 200（站点 Nginx 直 alias，与 MCP 进程独立；方案 B）  
+- [x] 未新开安全组端口；进程未绑 `0.0.0.0` 对公网  
+- [x] `Code/mcp-remote/` 有 README + example + CURSOR-SETUP；密钥未进 Git  
+- [x] `Code/doc/phase2/03-remote-mcp-http.md` 实现笔记与验收勾选完成  
+- [x] 他人零克隆说明：[`04-zero-clone-share.md`](04-zero-clone-share.md)  
 
 ---
 
@@ -218,4 +219,5 @@ Code/doc/phase2/03-remote-mcp-http.md  # 实现笔记（有代码后再写）
 - 远程数据（非远程进程）：[`02-remote-manifest.md`](02-remote-manifest.md)  
 - 一期部署：[`../../Code/doc/phase1/07-deploy.md`](../../Code/doc/phase1/07-deploy.md)  
 - 实现目录：[`../../Code/mcp-remote/`](../../Code/mcp-remote/README.md)  
+- **Cursor 配置手册**：[`../../Code/mcp-remote/CURSOR-SETUP.md`](../../Code/mcp-remote/CURSOR-SETUP.md)  
 - 功能分支：`feature/remote-mcp-http`

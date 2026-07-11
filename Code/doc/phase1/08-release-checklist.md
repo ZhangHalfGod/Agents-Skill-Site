@@ -16,8 +16,8 @@
 - [ ] 变更已 `git push` 到 `main`（或约定发布分支）
 - [ ] ECS：`cd /var/www/agents-skill-site && git pull`
 - [ ] ECS：`cd Code/code && npm ci && npm run build`
-- [ ] `ln -sfn …/docs/.vitepress/dist /var/www/agents-skill-site/dist`（若未自动）
-- [ ] 可选备份：`cp -a dist dist.bak.$(date +%Y%m%d%H%M)`
+- [ ] 确认 `Code/code/docs/.vitepress/dist/index.html` 存在（方案 B：无软链）
+- [ ] Nginx `location /agents-skill/` 的 `alias` 指向上述 `.vitepress/dist/`（若尚未改过则改一次并 reload）
 
 ## C. Nginx / 安全
 
@@ -28,7 +28,7 @@
 
 ## D. 验收
 
-- [ ] `curl -I http://127.0.0.1/agents-skill/` → 200
+- [ ] `curl -I -H 'Host: 8.163.18.183' http://127.0.0.1/agents-skill/` → 200（或直接 curl 公网 IP）
 - [ ] 公网：`http://8.163.18.183/agents-skill/` 首页可开
 - [ ] 抽查：`/agents/`、`/skills/`、`/rules/`、`/health/`
 - [ ] 抽查一角色页技能标签可跳转
@@ -37,7 +37,7 @@
 ## E. 回滚预案（书面确认）
 
 - [ ] 回滚触发条件已明确（如首页 5xx、大面积 404、错挂到 MechAssist）
-- [ ] 回滚步骤可执行：`git checkout <好 commit>` → `npm run build` → 重挂 `dist`，或恢复 `dist.bak.*`
+- [ ] 回滚步骤可执行：`git checkout <好 commit>` → `npm run build`（方案 B 无软链；必要时恢复 nginx 旧 alias）
 - [ ] 预计可在 5 分钟内恢复
 
 ## 放行签名

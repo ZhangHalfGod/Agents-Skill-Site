@@ -42,14 +42,16 @@ MCP_TOKEN=change-me-local-token npm run smoke
 - 公网 MCP：`http://8.163.18.183/agents-skill-mcp/mcp`
 - Cursor 样例：[`cursor-mcp.url.production.json.example`](cursor-mcp.url.production.json.example)
 
-## Cursor 配置
+## Cursor 配置（他人 / 本机）
 
-| 场景 | 样例 |
-|------|------|
+**完整步骤（点这里）→ [`CURSOR-SETUP.md`](CURSOR-SETUP.md)**
+
+| 场景 | 样例 JSON |
+|------|-----------|
+| 公网（推荐） | [`cursor-mcp.url.production.json.example`](cursor-mcp.url.production.json.example) |
 | 本机 R1 | [`cursor-mcp.url.json.example`](cursor-mcp.url.json.example) |
-| 公网 R2 | [`cursor-mcp.url.production.json.example`](cursor-mcp.url.production.json.example) |
 
-把 `<TOKEN>` 换成你的 `MCP_TOKEN`。选 URL **或** stdio，不必双开。
+摘要：在 `~/.cursor/mcp.json`（或项目 `.cursor/mcp.json`）写入 `url` + `Authorization: Bearer <MCP_TOKEN>`，URL 为 `http://8.163.18.183/agents-skill-mcp/mcp`。选 URL **或** stdio，不必双开。
 
 ## 环境变量
 

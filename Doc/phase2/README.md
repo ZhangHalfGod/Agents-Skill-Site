@@ -10,6 +10,9 @@
 | [01-mcp-server-plan.md](01-mcp-server-plan.md) | MCP Server 实现计划 | ✅ |
 | [02-remote-manifest.md](02-remote-manifest.md) | 远程 Manifest（stdio + 远程数据） | ✅ |
 | [03-remote-mcp-http.md](03-remote-mcp-http.md) | **远程 MCP（URL / HTTP）架构**（公网 Nginx + Token） | ✅ |
+| [04-zero-clone-share.md](04-zero-clone-share.md) | **他人零克隆**分享说明（R3） | ✅ |
+
+**Cursor 怎么配远程 MCP（操作手册）** → [`../../Code/mcp-remote/CURSOR-SETUP.md`](../../Code/mcp-remote/CURSOR-SETUP.md)
 
 后续计划命名：`04-*.md`… **每步改代码前先写计划**。  
 远程 MCP 功能分支：`feature/remote-mcp-http`。

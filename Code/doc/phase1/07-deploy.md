@@ -1,9 +1,10 @@
 # 07 — 生产部署笔记（阶段 1.5）
 
-> **主流程**：本机 `git push` → 服务器 `git pull` → 服务器 `npm ci && npm run build` → Nginx 指到 `dist`  
-> **形态**：α（Nginx `alias` 静态托管，**无** Node 常驻 / **无** PM2）  
+> **主流程**：本机 `git push` → 服务器 `git pull` → 服务器 `npm ci && npm run build` → Nginx 直接 alias 构建目录  
+> **形态**：α（Nginx `alias` 静态托管，**无** Node 常驻；网站**无** PM2）  
+> **方案 B（2026-07-11）**：**不再**使用 `/var/www/agents-skill-site/dist` 软链；`alias` 直指 `.vitepress/dist/`  
 > **冻结参数**：ADR-001 §5、`01-server-inventory.md`  
-> **验收**：`http://8.163.18.183/agents-skill/` 可开；不占用 3001–3003；不改现有 PM2
+> **验收**：`http://8.163.18.183/agents-skill/` 可开；不占用 3001–3003；不改现有 MechAssist PM2
 
 ## 1. 锁定参数
 
@@ -12,8 +13,7 @@
 | GitHub | `git@github.com:ZhangHalfGod/Agents-Skill-Site.git` |
 | 服务器目录 | `/var/www/agents-skill-site`（整仓 clone） |
 | 构建目录 | `/var/www/agents-skill-site/Code/code` |
-| 构建产物 | `Code/code/docs/.vitepress/dist/` |
-| Nginx 静态根（稳定路径） | `/var/www/agents-skill-site/dist` → 软链到上述产物 |
+| 构建产物 / Nginx alias | `/var/www/agents-skill-site/Code/code/docs/.vitepress/dist/` |
 | 对外 URL | `http://8.163.18.183/agents-skill/` |
 | 已占用勿碰 | `127.0.0.1:3001/3002/3003`；PM2：`mechassist-api` / `mcp-*` |
 
@@ -52,10 +52,8 @@ npm ci
 # 本仓通常已含 sync 后的 docs；无 standards 树时 sync 会自动跳过：
 npm run build
 
-# 稳定路径给 Nginx（每次发布可重跑）
-ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
-        /var/www/agents-skill-site/dist
-ls -la /var/www/agents-skill-site/dist/index.html
+# 方案 B：无需 ln 软链；确认构建产物即可
+ls -la /var/www/agents-skill-site/Code/code/docs/.vitepress/dist/index.html
 ```
 
 若希望服务器上也从 standards 再同步一遍，另 clone 内容仓并指定根目录：
@@ -79,13 +77,11 @@ cd Code/code
 npm ci                    # lock 有变时再跑；无变可省略
 npm run build             # 无 STANDARDS_ROOT 时自动跳过 sync
 
-ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
-        /var/www/agents-skill-site/dist
-
-# 纯静态，一般无需 reload Nginx；改过 nginx 配置才需要
+# 方案 B：无软链步骤；改过 nginx 才需要 reload
+ls -la docs/.vitepress/dist/index.html
 ```
 
-一键脚本备忘（可自行存为 `/var/www/agents-skill-site/deploy.sh`）：
+一键脚本备忘（仓库根 `deploy.sh`；方案 B 已去掉 `ln`）：
 
 ```bash
 #!/usr/bin/env bash
@@ -95,10 +91,11 @@ git pull origin main
 cd Code/code
 npm ci
 npm run build
-ln -sfn "$(pwd)/docs/.vitepress/dist" /var/www/agents-skill-site/dist
+test -f docs/.vitepress/dist/index.html
 echo "OK → http://8.163.18.183/agents-skill/"
 ```
-## 5. Nginx 现网实况与修改位置（2026-07-10 登记）
+
+## 5. Nginx 现网实况与修改位置（2026-07-10 登记；方案 B 更新 2026-07-11）
 
 ### 5.1 文件位置
 
@@ -142,7 +139,7 @@ http://8.163.18.183:80  （sites-available/mechassist）
   ├─ /api/voice/       → 127.0.0.1:3002
   ├─ /api              → 127.0.0.1:3002
   ├─ /auth             → 127.0.0.1:3002/api/auth
-  └─ /agents-skill/    → /var/www/agents-skill-site/dist/   ← 新增
+  └─ /agents-skill/    → …/Code/code/docs/.vitepress/dist/   ← 方案 B 直指构建目录
 ```
 
 ### 5.3 插入位置（推荐）
@@ -151,18 +148,18 @@ http://8.163.18.183:80  （sites-available/mechassist）
 
 也可插在 `location /` 之后；前缀匹配下 `/agents-skill/` 不会被 `/` 抢走。**不要**新建第二个 `listen 80` 的 `server`。
 
-插入内容：
+插入内容（**方案 B**；若现网仍是 `…/agents-skill-site/dist/`，请改成下面路径）：
 
 ```nginx
-    # --- agents-skill-site（形态 α；勿改 3001–3003）---
+    # --- agents-skill-site（形态 α / 方案 B；勿改 3001–3003）---
     location /agents-skill/ {
-        alias /var/www/agents-skill-site/dist/;
+        alias /var/www/agents-skill-site/Code/code/docs/.vitepress/dist/;
         index index.html;
         try_files $uri $uri/ /agents-skill/index.html;
     }
 ```
 
-注意：`alias` 路径末尾的 `/` 必须保留，与 `location /agents-skill/` 配对。
+注意：`alias` 路径末尾的 `/` 必须保留，与 `location /agents-skill/` 配对。**无需**再维护 `/var/www/agents-skill-site/dist` 软链。
 
 ### 5.4 改完校验
 
@@ -177,9 +174,10 @@ nginx -s reload
 不要用：`systemctl reload nginx`。
 
 ```bash
-curl -I http://127.0.0.1/agents-skill/
-# 期望 200（或带尾斜杠的跳转）；不应是 MechAssist 首页
-ls -la /var/www/agents-skill-site/dist/index.html   # 构建产物须存在
+curl -I -H 'Host: 8.163.18.183' http://127.0.0.1/agents-skill/
+# 或：curl -I http://8.163.18.183/agents-skill/
+# 期望 200；不应是 MechAssist 首页
+ls -la /var/www/agents-skill-site/Code/code/docs/.vitepress/dist/index.html
 ```
 
 回滚本站：删掉上述 `location /agents-skill/` 块 → `nginx -t` → `nginx -s reload`；MechAssist 其它 location 保持不动。
@@ -201,11 +199,9 @@ cd /var/www/agents-skill-site
 git log --oneline -5
 git checkout <上一好用的 commit>
 cd Code/code && npm run build
-ln -sfn /var/www/agents-skill-site/Code/code/docs/.vitepress/dist \
-        /var/www/agents-skill-site/dist
+# 方案 B：无需重挂软链；确认产物后即可（未改 nginx 则不用 reload）
+ls -la docs/.vitepress/dist/index.html
 ```
-
-或保留 `dist.bak.*` 目录后整目录换回。
 
 ## 8. 安全勾选
 

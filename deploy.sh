@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # 在 ECS 上：/var/www/agents-skill-site/deploy.sh
 # 用法：bash deploy.sh
+# 方案 B：Nginx 直接 alias 构建目录，无需 ln -sfn dist
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 CODE="$ROOT/Code/code"
+DIST="$CODE/docs/.vitepress/dist"
 
 cd "$ROOT"
 git pull origin main
@@ -13,6 +15,7 @@ cd "$CODE"
 npm ci
 npm run build
 
-ln -sfn "$CODE/docs/.vitepress/dist" "$ROOT/dist"
+test -f "$DIST/index.html"
 echo "OK → http://8.163.18.183/agents-skill/"
-ls -la "$ROOT/dist/index.html"
+echo "Nginx alias → $DIST/"
+ls -la "$DIST/index.html"

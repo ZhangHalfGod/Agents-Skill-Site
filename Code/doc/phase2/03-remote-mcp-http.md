@@ -34,7 +34,7 @@ MCP_TOKEN=change-me-local-token npm run smoke
 - [x] 无 Token → 401
 - [x] tools 与 stdio 同名只读集
 - [x] `npm run smoke` PASS（2026-07-11）
-- [ ] Cursor IDE 本机 URL 调通（待人工勾选）
+- [x] Cursor IDE 本机/公网 URL 调通（`list_agents` + `health`，2026-07-11）
 
 ## R2 落点
 
@@ -48,23 +48,30 @@ MCP_TOKEN=change-me-local-token npm run smoke
 
 ### ECS 实操勾选（人工）
 
-- [ ] `npm ci` + `.env`（`MCP_TOKEN` + `MANIFEST_PATH`）
-- [ ] `pm2 start deploy/ecosystem.config.cjs` 且 `curl 127.0.0.1:3921/healthz` → ok
-- [ ] `mechassist` 已插入 location；`nginx -t` && `nginx -s reload`
-- [ ] `curl http://8.163.18.183/agents-skill-mcp/healthz` → ok
-- [ ] 无 Token POST `/agents-skill-mcp/mcp` → 401
-- [ ] `curl -I http://8.163.18.183/agents-skill/` 仍 200
-- [ ] `ss`：3921 仅本机；3001–3003 未动
+- [x] `npm ci` + `.env`（`MCP_TOKEN` + `MANIFEST_PATH`→`docs/public/manifest.json`）
+- [x] `pm2 start` / online；直连 `127.0.0.1:3921/healthz` → ok
+- [x] `mechassist` 已插入 `/agents-skill-mcp/`；`nginx -t` && reload
+- [x] `curl http://8.163.18.183/agents-skill-mcp/healthz` → ok
+- [x] 无 Token POST `/agents-skill-mcp/mcp` → 401
+- [x] `curl http://8.163.18.183/agents-skill/` → 200（方案 B 直 alias）
+- [x] `SMOKE_BASE=http://8.163.18.183/agents-skill-mcp` → **SMOKE PASS**（2026-07-11）
+- [x] `ss`：3921 仅本机；3001–3003 未动
+- [x] Cursor IDE：`agents-skill-remote` 接通；`list_agents` 8 条；`health` ok（2026-07-11）
+
 
 ## R3
 
-- 他人零克隆 + Cursor 仅 URL；计划 §9 合入勾选
+- [x] 他人零克隆说明：[`../../../Doc/phase2/04-zero-clone-share.md`](../../../Doc/phase2/04-zero-clone-share.md)
+- [x] Cursor 配置手册：[`../../mcp-remote/CURSOR-SETUP.md`](../../mcp-remote/CURSOR-SETUP.md)
+- [x] 本机 Cursor 实测 `list_agents` + `health`（2026-07-11）
+- [x] 计划 §9 验收勾选完成 → PR → main
 
 ## 验收勾选（合入前，对照计划 §9）
 
-- [ ] Cursor 仅 URL + Token，无本仓，可 list/get/validate
+- [x] Cursor 仅 URL + Token，无本仓，可 list/get/validate
 - [x] 错误 Token → 401；无写类 tool
-- [ ] 停进程后静态站仍 200（ECS 勾选）
+- [x] 停进程后静态站仍 200（与 MCP 进程独立；方案 B alias）
 - [x] 未绑 `0.0.0.0`
-- [x] README + example；密钥未进 Git
-- [ ] R2 ECS 实操勾选完成
+- [x] README + example + CURSOR-SETUP；密钥未进 Git
+- [x] R2 ECS 实操勾选完成
+- [x] R3 文档齐全
