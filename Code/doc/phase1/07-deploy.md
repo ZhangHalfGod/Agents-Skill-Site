@@ -107,7 +107,8 @@ echo "OK → http://8.163.18.183/agents-skill/"
 | 实体配置（**编辑这个**） | `/etc/nginx/sites-available/mechassist` |
 | 启用软链 | `/etc/nginx/sites-enabled/mechassist` → 上述文件 |
 | 同目录另有 | `default`（也已启用；**本站不改 default**） |
-| 仓库片段备忘 | `Code/code/deploy/nginx-agents-skill.snippet.conf` |
+| 仓库片段备忘 | `Code/code/deploy/nginx-agents-skill.snippet.conf`（静态站） |
+| 远程 MCP 片段 | `Code/mcp-remote/deploy/nginx-agents-skill-mcp.snippet.conf`（R2；`/agents-skill-mcp/`） |
 
 ```bash
 ls -la /etc/nginx/sites-enabled/

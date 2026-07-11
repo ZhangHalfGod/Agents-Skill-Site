@@ -61,7 +61,18 @@ const token = resolveRequiredToken()
 /** @type {Record<string, StreamableHTTPServerTransport>} */
 const transports = {}
 
-const app = createMcpExpressApp({ host: HOST })
+/** 逗号分隔；设了则覆盖默认 localhost Host 校验（Nginx 未改写 Host 时用） */
+const allowedHosts = (process.env.ALLOWED_HOSTS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+
+const app = allowedHosts.length
+  ? createMcpExpressApp({
+      host: HOST,
+      allowedHosts: [...new Set([...allowedHosts, '127.0.0.1', 'localhost'])]
+    })
+  : createMcpExpressApp({ host: HOST })
 
 app.get('/healthz', (_req, res) => {
   res.json({

@@ -180,7 +180,7 @@ Code/doc/phase2/03-remote-mcp-http.md  # 实现笔记（有代码后再写）
 |------|------|------|
 | **R0** | 本计划 Accepted；目录脚手架就位 | ✅ 本文 Accepted；暴露面已确认为公网 Nginx + Token |
 | **R1** | 本地 `127.0.0.1` Streamable HTTP + Token；tools 对齐 stdio | ✅ `npm run smoke` PASS；Cursor IDE 待人工勾选 |
-| **R2** | Nginx location 片段 + 服务器部署说明 | 内网/公网 URL（带 Token）可调通 |
+| **R2** | Nginx location 片段 + 服务器部署说明 | ✅ 片段/PM2/文档已落 `Code/mcp-remote/deploy/`；ECS 粘贴与 pm2 start 待人工 |
 | **R3** | 他人零克隆验收；实现笔记勾选；PR → main | 文档与样例齐全 |
 
 每阶段改代码前：若架构有变，先改本文件再写代码。
@@ -205,7 +205,7 @@ Code/doc/phase2/03-remote-mcp-http.md  # 实现笔记（有代码后再写）
 | 暴露面 | **公网 Nginx `:80` + Bearer Token**（2026-07-11 确认；Tailscale-only 仅作备选变体，不改默认） |
 | 本地端口 | `3921`（可用环境变量覆盖） |
 | 探活 | `healthz` 无鉴权（实现时写死） |
-| 进程管理 | R2 文档化一种（pm2 或 systemd） |
+| 进程管理 | **PM2** 名 `agents-skill-mcp-remote`（2026-07-11 R2；与现网 mcp-* 并列，不改既有进程） |
 
 变更须改本表并留一行说明，再动后续代码。
 
