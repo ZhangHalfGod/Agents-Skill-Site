@@ -115,7 +115,7 @@
 | P2 | scan → validate → manifest 门禁 | **完成（已验收）** |
 | P2 | 「运行指引」（复制 Cursor 触发句） | **完成** |
 | P3 | Domains 灰度（建议先 ptp-nmos） | **完成**（ptp-nmos） |
-| P3 | 可选：MCP 暴露同一 manifest（list/get/validate） | 未开始 |
+| P3 | 可选：MCP 暴露同一 manifest（list/get/validate） | **MVP 已实现**（待 Cursor 接通勾选） |
 | 明确不做 | 网站内模型推理、多租户账号、替代 Cursor | 永久非目标* |
 
 \* 若未来要做执行引擎，必须**独立项目**，不得塞进本治理站；并先修订本文件北极星。
@@ -126,13 +126,14 @@
 
 | 文档 | 职责 | 相对本文件 |
 |------|------|------------|
-| [00-context.md](00-context.md) | 背景与目标叙述 | 服从本文件硬约束 |
-| [01-requirements.md](01-requirements.md) | 需求与验收 | 新增需求不得违反 §3 |
-| [02-architecture.md](02-architecture.md) | 架构叙述（早期） | 服从本文件；**技术栈以 ADR-001 为准** |
-| [03-uri-registry.md](03-uri-registry.md) | URI 注册 | 本文件强制「先注册后实现」 |
-| [04-progress-plan.md](04-progress-plan.md) | 进度与里程碑 | 节奏可调；方向不可违背本文件 |
-| [05-agent-skill-matrix.md](05-agent-skill-matrix.md) | 角色-技能权威映射 | 绑定关系的治理真源之一 |
-| [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md) | **技术栈与部署冻结** | 实现层宪法；换栈须新 ADR + §8 |
+| [phase1/00-context.md](phase1/00-context.md) | 背景与目标叙述 | 服从本文件硬约束 |
+| [phase1/01-requirements.md](phase1/01-requirements.md) | 需求与验收 | 新增需求不得违反 §3 |
+| [phase1/02-architecture.md](phase1/02-architecture.md) | 架构叙述（早期） | 服从本文件；**技术栈以 ADR-001 为准** |
+| [phase1/03-uri-registry.md](phase1/03-uri-registry.md) | URI 注册 | 本文件强制「先注册后实现」 |
+| [phase1/04-progress-plan.md](phase1/04-progress-plan.md) | 进度与里程碑 | 节奏可调；方向不可违背本文件 |
+| [phase1/05-agent-skill-matrix.md](phase1/05-agent-skill-matrix.md) | 角色-技能权威映射 | 绑定关系的治理真源之一 |
+| [phase2/00-cursor-mcp.md](phase2/00-cursor-mcp.md) | 二期 Cursor + MCP | 服从 §2 分层；MCP 不替网站 |
+| [`../Code/doc/phase1/ADR-001-architecture-and-stack.md`](../Code/doc/phase1/ADR-001-architecture-and-stack.md) | **技术栈与部署冻结** | 实现层宪法；换栈须新 ADR + §8 |
 
 **冲突裁决顺序**：`SYSTEM-DIRECTION` → **ADR-001** → L0 rules → 本目录 `01/02/03/05` → `04` 进度弹性调整。
 
@@ -198,6 +199,25 @@
 - **结论**：**锁定 A. VitePress**；部署锁定 `base=/agents-skill/`、`127.0.0.1:3010`（若用 serve）、公网 `http://8.163.18.183/agents-skill/`、目录 `/var/www/agents-skill-site`、PM2 名 `agents-skill-site`。  
 - **约束落地**：新增 `Code/doc/ADR-001-architecture-and-stack.md`；后续换栈须新 ADR + 本日志。  
 - **影响**：阶段 1.1 完成；可开始 `Code/code/` 脚手架初始化。
+
+### 2026-07-11-03｜远程 Manifest：他人本机 MCP 读公网静态索引
+
+- **背景**：Cursor 配置不应依赖本机仓库 docs；他人需共用同一份线上 agents 目录。  
+- **结论**：支持 `MANIFEST_URL`；推荐指向 `http://8.163.18.183/agents-skill/manifest.json`；stdio 仍在各人本机，**不**在 ECS 暴露 MCP 端口。  
+- **影响**：`02-remote-manifest.md`；共享配置 `cursor-mcp.shared.json.example`。
+
+### 2026-07-11-02｜二期 MCP Server 实现计划通过并落地
+
+- **背景**：按「先计划后改代码」推进 Cursor + MCP。  
+- **结论**：新增 `Doc/phase2/01-mcp-server-plan.md`；实现 `mcp/server.mjs`（stdio、只读 8 tools）+ 扩展 `catalog-api.mjs`；Cursor 样例入库。  
+- **约束**：只读 manifest；stderr 日志；不绑公网。  
+- **影响**：`Code/code` 增加 `@modelcontextprotocol/sdk` 依赖；P3 MCP 进入可接通状态。
+
+### 2026-07-11-01｜阶段 7 验收通过；启动二期 Cursor+MCP 规划
+
+- **背景**：公网已含 Domains/运行指引；需一期关门并规划 MCP。  
+- **结论**：阶段 7 完成（验收报告 + 死链 0）；operations 公网挂载延后二期；新增 `Doc/phase2/00-cursor-mcp.md`，MCP 只读同源 manifest，不替代网站。  
+- **影响**：CHANGELOG v1.2；P3 MCP 项改为规划中；文档按 `phase1/` / `phase2/` 分目录；下一步实现 stdio MCP Server。
 
 ### 2026-07-10-06｜1.5/4 验收通过；阶段 5+6 落地
 

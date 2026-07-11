@@ -1,6 +1,6 @@
 # agents-skill-site
 
-VitePress 治理发现站源码。约束见 [`../doc/ADR-001-architecture-and-stack.md`](../doc/ADR-001-architecture-and-stack.md)。
+VitePress 治理发现站源码。约束见 [`../doc/phase1/ADR-001-architecture-and-stack.md`](../doc/phase1/ADR-001-architecture-and-stack.md)。
 
 ## 本地开发
 
@@ -36,7 +36,15 @@ npm run validate
 
 本机要从 standards 更新正文：设好 `STANDARDS_ROOT` 后 `npm run sync`。
 
-生产发布见 [`../doc/07-deploy.md`](../doc/07-deploy.md)；放行勾选 [`../doc/08-release-checklist.md`](../doc/08-release-checklist.md)。
+生产发布见 [`../doc/phase1/07-deploy.md`](../doc/phase1/07-deploy.md)；放行勾选 [`../doc/phase1/08-release-checklist.md`](../doc/phase1/08-release-checklist.md)。
+
+二期 MCP：[`mcp/README.md`](mcp/README.md)；规划 [`../../Doc/phase2/01-mcp-server-plan.md`](../../Doc/phase2/01-mcp-server-plan.md)。
+
+```bash
+npm run mcp:health
+npm run mcp:server
+```
+
 
 ## 本地预览（模拟生产端口）
 

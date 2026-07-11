@@ -10,11 +10,20 @@
   "scripts": {
     "sync": "node scripts/sync-standards.mjs",
     "validate": "node scripts/validate-manifest.mjs",
+    "check:links": "node scripts/check-dead-links.mjs",
     "predev": "npm run sync && npm run validate",
     "dev": "vitepress dev docs",
     "prebuild": "npm run sync && npm run validate",
     "build": "vitepress build docs",
-    "preview": "vitepress preview docs --port 3010 --host 127.0.0.1"
+    "preview": "vitepress preview docs --port 3010 --host 127.0.0.1",
+    "accept": "npm run validate && npm run check:links",
+    "mcp:server": "node mcp/server.mjs",
+    "mcp:health": "node mcp/catalog-api.mjs health",
+    "mcp:health:remote": "MANIFEST_URL=http://8.163.18.183/agents-skill/manifest.json node mcp/catalog-api.mjs health"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "vitepress": "^1.6.3"

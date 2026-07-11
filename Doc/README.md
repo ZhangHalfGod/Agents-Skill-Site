@@ -1,73 +1,44 @@
-# All_URI — Agents / Skills / Rules 运行站工程文档入口
+# Doc — 工程文档入口
 
-> **状态**：**阶段 0～6 完成**；**1.5 / 4 已验收**；下一优先阶段 7 复盘  
-> **目标**：自建网站，用于浏览、检索、运行（按说明书触发）自有 `agents` / `skills` / `rules` 资产  
-> **内容源**：`Agents_Skill/standards/`（以 `common/` 为基线，`domains/` 为增强）
+> **状态**：**一期（阶段 0～7）已验收**；**二期**：Cursor + MCP  
+> **目标**：浏览 / 检索 / 按说明书触发 `agents` · `skills` · `rules`  
+> **内容源**：`standards/`（磁盘 Markdown 为 Source of Truth）
 
-## 系统级约束（最先读）
+## 先读（跨期）
 
 | 级别 | 文件 | 用途 |
 |:----:|------|------|
-| **S0** | **[SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md)** | **行进方向活文档** |
-| **ADR** | **[../Code/doc/ADR-001-architecture-and-stack.md](../Code/doc/ADR-001-architecture-and-stack.md)** | **架构 + 技术栈冻结（实现必遵）** |
+| **S0** | [SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md) | 行进方向活文档 |
+| **日志** | [CHANGELOG.md](CHANGELOG.md) | 版本与里程碑摘要 |
+| **ADR** | [../Code/doc/phase1/ADR-001-architecture-and-stack.md](../Code/doc/phase1/ADR-001-architecture-and-stack.md) | 技术栈冻结 |
 
-开工前勾选：`SYSTEM-DIRECTION.md` §9。重大改向只追加其 §8，禁止静默漂移。
-
-## 目录结构（当前）
+## 按期目录
 
 ```text
-All_URI/
-  Doc/     # 本目录：工程规划（方向/需求/URI/进度/矩阵）
-  Code/
-    doc/   # 开发过程技术细节、服务器清单、部署笔记
-    code/  # 网站源码（阶段 1 起）
+Doc/
+  SYSTEM-DIRECTION.md     # 跨期 S0
+  CHANGELOG.md            # 跨期
+  phase1/                 # 一期：建站 MVP（阶段 0～7）
+  phase2/                 # 二期：Cursor + MCP
+Code/doc/
+  00-dev-log.md           # 跨期开发日志
+  phase1/                 # 一期实现笔记（部署/验收/ADR）
+  phase2/                 # 二期实现笔记
 ```
 
-实现入口：[../Code/README.md](../Code/README.md)
-
-## 文档清单
-
-| 序号 | 文件 | 用途 |
-|:----:|------|------|
-| 00 | [00-context.md](00-context.md) | 背景、痛点、目标与非目标 |
-| 01 | [01-requirements.md](01-requirements.md) | 功能/非功能需求与验收口径 |
-| 02 | [02-architecture.md](02-architecture.md) | 站点架构、内容模型、技术选型建议 |
-| 03 | [03-uri-registry.md](03-uri-registry.md) | 全站 URI / 目录映射注册表（本目录核心） |
-| 04 | [04-progress-plan.md](04-progress-plan.md) | 分阶段实施计划与进度表 |
-| 05 | [05-agent-skill-matrix.md](05-agent-skill-matrix.md) | 标准角色 ↔ 技能标签 ↔ 说明书链接矩阵 |
+| 目录 | 说明 | 入口 |
+|------|------|------|
+| **[phase1/](phase1/)** | 需求、架构、URI、进度、矩阵 | [phase1/README.md](phase1/README.md) |
+| **[phase2/](phase2/)** | Cursor + MCP 消费本站索引 | [phase2/README.md](phase2/README.md) |
+| **实现跟踪** | [../Code/doc/](../Code/doc/README.md) | 同样按 phase1 / phase2 分放 |
 
 ## 一句话定位
 
-把 `standards` 从「仓库里的模板包」升级为「可浏览、可检索、可按角色说明书运行」的本地/内网站点；**磁盘上的 Markdown 仍是 source of truth**，网站是只读呈现 + 索引 + 触发指引层。
-
-## 与现有资产的关系
-
-```text
-Agents_Skill/
-  standards/          # 标准包（模板与领域增强，长期维护）
-  All_URI/
-    Doc/              # 工程规划
-    Code/doc/         # 实现期技术跟踪
-    Code/code/        # 网站工程（阶段 1）
-```
-
-- **Agents**：对应 `standards/common/agents/standard/*` 八大岗位角色 + 领域角色  
-- **Skills**：对应 `standards/common/skills/{custom,external}/*` + `domains/*/skills`  
-- **Rules**：对应 `standards/common/rules/{L0,L1,L2}` + `domains/*/rules`
-
-## 当前阶段边界
-
-| 做 | 不做 |
-|----|------|
-| 阶段 1 脚手架与 PM2 隔离部署设计 | 网站内模型推理 |
-| 服务器清单收集与端口避让 | 角色 md 写死部署 URL |
-| 本地/服务器静态站 | 与现有 mcp/api 进程混部 |
+网站 = 治理发现层；Cursor（及二期 MCP）= 执行层；**禁止**用 MCP 替代文档站。
 
 ## 修订记录
 
-| 日期 | 版本 | 说明 |
-|------|------|------|
-| 2026-07-10 | v0.1 | 初稿：工程文档 + 进度计划 + URI 注册表 |
-| 2026-07-10 | v0.2 | 新增 S0 `SYSTEM-DIRECTION.md` 系统级行进方向约束（活文档） |
-| 2026-07-10 | v0.3 | 阶段 0 完成；阶段 1 启动；创建 `Code/doc` + `Code/code` |
-| 2026-07-10 | v0.4 | ADR-001 冻结 VitePress 架构与技术栈 |
+| 日期 | 说明 |
+|------|------|
+| 2026-07-11 | 文档按一期 / 二期分目录整理 |
+| 2026-07-10 | 初稿至阶段 7；S0 / ADR-001 |

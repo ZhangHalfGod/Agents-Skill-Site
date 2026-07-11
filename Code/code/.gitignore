@@ -12,3 +12,6 @@ dist/
 # 若只想本地生成，可取消下一行注释并删除已跟踪的同步页
 # docs/agents/standard/
 # docs/public/manifest.json
+
+# 本机 Cursor MCP 绝对路径配置（勿提交）
+mcp/cursor-mcp.local.json

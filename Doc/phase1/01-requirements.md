@@ -102,8 +102,8 @@
 
 ## 5. 范围裁剪
 
-| 一期（MVP） | 二期 | 三期 |
-|-------------|------|------|
-| common agents/skills/rules 浏览 | domains 全量 | operations 需求包浏览器 |
-| 静态/半静态渲染 | 检索增强 | 「运行」与 Cursor 更深集成 |
-| 手工/脚本生成 manifest | 监听 standards 变更热更新 | 多项目 standards 切换 |
+| 一期（MVP · 已验收） | 二期（进行中规划） | 三期 |
+|---------------------|-------------------|------|
+| common agents/skills/rules 浏览 | **Cursor + MCP 只读 manifest**（见 [`../phase2/00-cursor-mcp.md`](../phase2/00-cursor-mcp.md)） | operations 需求包浏览器（脱敏/内网） |
+| Domains 灰度（ptp-nmos）+ 运行指引 | domains 扩域 / 检索增强 | 「运行」与 Cursor 更深集成 |
+| manifest + validate 门禁 | 监听 standards 热更新（可选） | 多项目 standards 切换 |

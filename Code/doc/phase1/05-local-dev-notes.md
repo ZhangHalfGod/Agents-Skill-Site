@@ -26,4 +26,4 @@ npm run preview  # http://127.0.0.1:3010/agents-skill/
 
 ## 生产部署
 
-完整步骤见 [`07-deploy.md`](07-deploy.md)（形态 α）。摘要：本机构建 → rsync `dist/` → 现网 Nginx 追加 `location /agents-skill/` → `nginx -t` + reload。
+完整步骤见 [`07-deploy.md`](07-deploy.md)（形态 α）。摘要：本机 push → 服务器 git pull + build → Nginx `location /agents-skill/`。

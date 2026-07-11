@@ -41,7 +41,7 @@ Agents_Skill/standards/   ← 唯一内容真源
 | 层 | 职责 | 实现落点 |
 |----|------|----------|
 | 治理发现 | 角色/技能/规则浏览、标签跳转、复制 `@` 触发句 | 本站前端页面 |
-| 索引契约 | URI 注册、角色-技能矩阵、manifest | `Doc/03`、`Doc/05`、构建生成物 |
+| 索引契约 | URI 注册、角色-技能矩阵、manifest | `Doc/phase1/03`、`Doc/phase1/05`、构建生成物 |
 | 内容真源 | 角色 md、SKILL.md、rules `.mdc` | `standards/`（本仓可 submodule/拷贝策略，见 §4） |
 | 执行 | 读说明书、改代码、调工具 | Cursor / 可选 MCP（**不在本站进程内**） |
 | 运行时宿主 | 进程、端口、反代、日志 | 阿里云 Ubuntu + PM2 + Nginx |
@@ -55,7 +55,7 @@ Agents_Skill/standards/   ← 唯一内容真源
 | `/skills/` | 技能目录 |
 | `/rules/` | 规则 L0/L1/L2 |
 
-完整 URI 以 `Doc/03-uri-registry.md` 为准；**先改注册表，再改路由**。
+完整 URI 以 `Doc/phase1/03-uri-registry.md` 为准；**先改注册表，再改路由**。
 
 ---
 
@@ -133,15 +133,15 @@ Agents_Skill/standards/   ← 唯一内容真源
 开发任一功能前自检：
 
 - [ ] 未在角色/技能源 md 写入 `8.163.18.183` 或生产 URL  
-- [ ] 新页面已登记 `Doc/03-uri-registry.md`  
-- [ ] Agent↔Skill 绑定改动已更新 `Doc/05-agent-skill-matrix.md`  
+- [ ] 新页面已登记 `Doc/phase1/03-uri-registry.md`  
+- [ ] Agent↔Skill 绑定改动已更新 `Doc/phase1/05-agent-skill-matrix.md`  
 - [ ] `base` 保持 `/agents-skill/`，本地预览用对应 base  
 - [ ] 不引入第二套 SSG/全栈框架  
 - [ ] 不实现聊天执行/模型推理  
 - [ ] 生产监听仅本机或纯静态，不直出公网 Node 端口  
 - [ ] 中文 UI/文档；无硬编码密钥  
 
-阶段推进仍服从 `Doc/04-progress-plan.md`：先 Agents MVP，再 Skills/Rules，再 scan 门禁。
+阶段推进仍服从 `Doc/phase1/04-progress-plan.md`：先 Agents MVP，再 Skills/Rules，再 scan 门禁。
 
 ---
 
@@ -150,10 +150,10 @@ Agents_Skill/standards/   ← 唯一内容真源
 | 文档 | 关系 |
 |------|------|
 | `Doc/SYSTEM-DIRECTION.md` | 方向宪法；本 ADR 是其技术落地 |
-| `Doc/02-architecture.md` | 早期架构叙述；**栈选型以本 ADR §3 为准**（VitePress 已锁定） |
-| `Code/doc/02-phase1-scaffold.md` | 阶段任务跟踪；服从本 ADR |
-| `Code/doc/01-server-inventory.md` | 主机事实源；端口/IP 以 01 为准，部署参数与本 ADR §5 对齐 |
-| `Code/doc/04-security-alignment.md` | 安全门禁；本 ADR 部署必须遵守 |
+| `Doc/phase1/02-architecture.md` | 早期架构叙述；**栈选型以本 ADR §3 为准**（VitePress 已锁定） |
+| `Code/doc/phase1/02-phase1-scaffold.md` | 阶段任务跟踪；服从本 ADR |
+| `Code/doc/phase1/01-server-inventory.md` | 主机事实源；端口/IP 以 01 为准，部署参数与本 ADR §5 对齐 |
+| `Code/doc/phase1/04-security-alignment.md` | 安全门禁；本 ADR 部署必须遵守 |
 
 **冲突裁决**：S0 → 本 ADR → `01` 实机事实 → 进度表弹性。
 

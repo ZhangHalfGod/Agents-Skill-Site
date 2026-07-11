@@ -2,7 +2,7 @@
 
 > **技术栈已冻结**：见 [`ADR-001-architecture-and-stack.md`](ADR-001-architecture-and-stack.md)（VitePress + `/agents-skill/` + 3010）。
 
-## 1. 目标（对齐 Doc/04 阶段 1）
+## 1. 目标（对齐 Doc/phase1/04 阶段 1）
 
 | ID | 任务 | 状态 |
 |----|------|:----:|

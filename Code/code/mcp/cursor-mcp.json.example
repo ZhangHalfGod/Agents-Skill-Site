@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "agents-skill-local-file": {
+      "command": "node",
+      "args": [
+        "REPLACE_WITH_ABSOLUTE_PATH/Agents-Skill-Site/Code/code/mcp/server.mjs"
+      ],
+      "env": {
+        "MANIFEST_PATH": "REPLACE_WITH_ABSOLUTE_PATH/Agents-Skill-Site/Code/code/docs/public/manifest.json"
+      }
+    },
+    "agents-skill": {
+      "command": "node",
+      "args": [
+        "REPLACE_WITH_ABSOLUTE_PATH/Agents-Skill-Site/Code/code/mcp/server.mjs"
+      ],
+      "env": {
+        "MANIFEST_URL": "http://8.163.18.183/agents-skill/manifest.json"
+      }
+    }
+  }
+}

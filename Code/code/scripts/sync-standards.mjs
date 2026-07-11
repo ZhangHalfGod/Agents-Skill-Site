@@ -465,7 +465,7 @@ function buildAgentExtras(agent) {
   const parts = []
   parts.push('## 技能标签（矩阵）')
   parts.push('')
-  parts.push('> 权威映射见 `Doc/05-agent-skill-matrix.md`。')
+  parts.push('> 权威映射见 `Doc/phase1/05-agent-skill-matrix.md`。')
   parts.push('')
   if (agent.skills?.length) {
     parts.push('**必显**', '', ...agent.skills.map(skillLink), '')

@@ -1,5 +1,26 @@
 # CHANGELOG — All_URI
 
+## 2026-07-11 — v1.4
+
+- **远程索引**：`MANIFEST_URL` 可读 `http://8.163.18.183/agents-skill/manifest.json`；计划 `Doc/phase2/02-remote-manifest.md`
+- 他人共用：`mcp/cursor-mcp.shared.json.example`（本机只跑 server，数据来自你的公网静态 JSON）
+- 不在 ECS 新开 MCP 端口
+
+## 2026-07-11 — v1.3
+
+- **二期 MCP MVP**：`Code/code/mcp/server.mjs`（stdio 只读）；计划 `Doc/phase2/01-mcp-server-plan.md`
+- Tools：health / list_agents / get_agent / list_skills / get_skill / list_rules / resolve_number / validate
+- Cursor 样例：`mcp/cursor-mcp.json.example`；本机路径样例 `cursor-mcp.local.json`（gitignore）
+- 下一步：Cursor 接通验收；可选 `02-cursor-usage` 使用剧本
+
+## 2026-07-11 — v1.2
+
+- **阶段 7 完成**：一期验收报告 `Code/doc/phase1/09-phase7-acceptance.md`；`npm run check:links` / `npm run accept`
+- **operations**：确认二期再做，一期不上公网
+- **二期规划**：[`Doc/phase2/00-cursor-mcp.md`](phase2/00-cursor-mcp.md) — Cursor + MCP 只读消费 manifest；骨架 `Code/code/mcp/catalog-api.mjs`
+- **文档整理**：`Doc/phase1|phase2`、`Code/doc/phase1|phase2` 分目录
+- 下一步：实现 MCP Server 并接入 Cursor（health / list_agents / get_agent）
+
 ## 2026-07-10 — v1.1
 
 - **验收**：阶段 1.5（ECS 上线）与阶段 4（validate/health）正式验收通过

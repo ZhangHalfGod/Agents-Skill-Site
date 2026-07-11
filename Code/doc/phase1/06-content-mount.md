@@ -1,6 +1,6 @@
 # 06 — content 挂载约定（阶段 1.4 / 2 / 3）
 
-> 对齐 ADR-001 §4、`Doc/02-architecture.md`、`Doc/05-agent-skill-matrix.md`。
+> 对齐 ADR-001 §4、`Doc/phase1/02-architecture.md`、`Doc/phase1/05-agent-skill-matrix.md`。
 
 ## 1. 原则
 
@@ -38,7 +38,7 @@ npm run build
 
 - 阶段 5：domains 灰度（建议先 ptp-nmos）
 - 阶段 6：运行指引（复制 Cursor 触发句等）
-- 发布放行：见 `Code/doc/08-release-checklist.md`
+- 发布放行：见 `Code/doc/phase1/08-release-checklist.md`
 
 ## 5. 验收
 

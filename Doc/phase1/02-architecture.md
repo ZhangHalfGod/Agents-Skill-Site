@@ -1,6 +1,6 @@
 # 02 — 架构设计
 
-> **技术栈与部署冻结**：以实现层 [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md) 为准（VitePress 已锁定）。本文保留内容模型与总体架构叙述。
+> **技术栈与部署冻结**：以实现层 [`../../Code/doc/phase1/ADR-001-architecture-and-stack.md`](../../Code/doc/phase1/ADR-001-architecture-and-stack.md) 为准（VitePress 已锁定）。本文保留内容模型与总体架构叙述。
 
 ## 1. 总体架构
 
@@ -103,7 +103,7 @@ URI 细节见 [03-uri-registry.md](03-uri-registry.md)。
 
 ## 4. 技术选型（已冻结，见 ADR-001）
 
-> **已锁定：VitePress。** 细节与换栈规则见 [`../Code/doc/ADR-001-architecture-and-stack.md`](../Code/doc/ADR-001-architecture-and-stack.md)。下表仅保留历史备选说明。
+> **已锁定：VitePress。** 细节与换栈规则见 [`../../Code/doc/phase1/ADR-001-architecture-and-stack.md`](../../Code/doc/phase1/ADR-001-architecture-and-stack.md)。下表仅保留历史备选说明。
 
 | 方案 | 状态 | 说明 |
 |------|:----:|------|

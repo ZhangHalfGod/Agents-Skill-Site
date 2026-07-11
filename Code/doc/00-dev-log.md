@@ -2,6 +2,29 @@
 
 > 只追加，不删改历史条目。
 
+## 2026-07-11（续 3）— 远程 MANIFEST_URL
+
+- 计划：`Doc/phase2/02-remote-manifest.md`。
+- `MANIFEST_URL` 读公网静态索引已冒烟；共享样例 `cursor-mcp.shared.json.example`。
+
+## 2026-07-11（续 2）— 二期 MCP Server 按计划落地
+
+- 先写计划：`Doc/phase2/01-mcp-server-plan.md`，再改代码。
+- 产出：`mcp/server.mjs` + 扩展 `catalog-api.mjs`；`npm run mcp:server` / `mcp:health`。
+- CLI 验收：health / resolve_number role 2 → Architect OK。
+
+## 2026-07-11（续）— 文档按一期/二期分目录
+
+- `Doc/phase1/`、`Doc/phase2/`；`Code/doc/phase1/`、`Code/doc/phase2/`。
+- 跨期保留：`SYSTEM-DIRECTION`、`CHANGELOG`、`00-dev-log`。
+- 二期主文：`Doc/phase2/00-cursor-mcp.md`（原 `06-phase2-cursor-mcp.md`）。
+
+## 2026-07-11 — 阶段 7 验收 + 二期 MCP 规划
+
+- 验收报告：`phase1/09-phase7-acceptance.md`；`npm run accept`（validate + 死链）通过。
+- operations：二期再做；一期不上公网。
+- 二期文档：`Doc/phase2/00-cursor-mcp.md`；骨架 `Code/code/mcp/catalog-api.mjs`。
+
 ## 2026-07-10（续 13）— 1.5/4 验收；阶段 5+6 完成
 
 - 验收：公网站点 + `/health/` OK → 1.5 与 4 正式通过。

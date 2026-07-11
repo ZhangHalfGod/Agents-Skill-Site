@@ -1,0 +1,19 @@
+{
+  "name": "agents-skill-mcp-remote",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remote Streamable HTTP MCP for Agents Skill Site (URL + Bearer Token)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.2.1"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^5.1.0",
+    "zod": "^3.25.76"
+  }
+}
