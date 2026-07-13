@@ -19,7 +19,7 @@
     "accept": "npm run validate && npm run check:links",
     "mcp:server": "node mcp/server.mjs",
     "mcp:health": "node mcp/catalog-api.mjs health",
-    "mcp:health:remote": "MANIFEST_URL=http://8.163.18.183/agents-skill/manifest.json node mcp/catalog-api.mjs health"
+    "mcp:health:remote": "MANIFEST_URL=http://YOUR_DEPLOYED_HOST/agents-skill/manifest.json node mcp/catalog-api.mjs health"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

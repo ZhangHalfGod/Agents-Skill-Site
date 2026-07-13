@@ -32,6 +32,12 @@ Code/doc/
 | **[phase2/](phase2/)** | Cursor + MCP 消费本站索引 | [phase2/README.md](phase2/README.md) |
 | **实现跟踪** | [../Code/doc/](../Code/doc/README.md) | 同样按 phase1 / phase2 分放 |
 
+## 运维记录
+
+| 文件 | 用途 |
+|------|------|
+| [branch-merge-record.md](branch-merge-record.md) | 分支合并记录（feature → main）与执行命令
+
 ## 一句话定位
 
 网站 = 治理发现层；Cursor（及二期 MCP）= 执行层；**禁止**用 MCP 替代文档站。

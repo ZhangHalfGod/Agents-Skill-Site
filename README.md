@@ -3,6 +3,7 @@
 > **把 AI 编码治理从「口头约定、散落文档」升级为「可浏览、可检索、可按说明书触发的组织级资产运行面」。**
 
 [![GitHub](https://img.shields.io/badge/GitHub-ZhangHalfGod%2FAgents--Skill--Site-blue?logo=github)](https://github.com/ZhangHalfGod/Agents-Skill-Site)
+[![Build](https://github.com/ZhangHalfGod/Agents-Skill-Site/actions/workflows/build.yml/badge.svg)](https://github.com/ZhangHalfGod/Agents-Skill-Site/actions/workflows/build.yml)
 [![VitePress](https://img.shields.io/badge/built%20with-VitePress-41b883?logo=vitepress)](https://vitepress.dev/)
 [![MCP](https://img.shields.io/badge/MCP-Server-6366f1?logo=modelcontextprotocol)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
