@@ -26,3 +26,6 @@ dist/
 
 # Cursor 本地配置（含绝对路径）
 .cursor/
+
+# Reasonix 内部配置
+reasonix.toml
