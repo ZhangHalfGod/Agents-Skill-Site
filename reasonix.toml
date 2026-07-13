@@ -1,2 +1,0 @@
-[permissions]
-allow = ["Bash(cd D:\\trae_git\\Agents-Skill-Site; Select-String -Path README.md -Pattern \"shields\\.io\" | ForEach-Object { $_.Line })"]
