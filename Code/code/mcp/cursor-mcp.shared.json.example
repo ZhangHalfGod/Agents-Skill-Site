@@ -1,12 +1,9 @@
 {
   "mcpServers": {
-    "agents-skill": {
-      "command": "node",
-      "args": [
-        "REPLACE_WITH_ABSOLUTE_PATH/Agents-Skill-Site/Code/code/mcp/server.mjs"
-      ],
-      "env": {
-        "MANIFEST_URL": "http://8.163.18.183/agents-skill/manifest.json"
+    "agents-skill-remote": {
+      "url": "http://YOUR_DEPLOYED_HOST/agents-skill-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_TOKEN>"
       }
     }
   }

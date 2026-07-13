@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "agents-skill-remote": {
-      "url": "http://8.163.18.183/agents-skill-mcp/mcp",
+      "url": "http://YOUR_DEPLOYED_HOST/agents-skill-mcp/mcp",
       "headers": {
-        "Authorization": "Bearer <TOKEN>"
+        "Authorization": "Bearer <YOUR_TOKEN>"
       }
     }
   }

@@ -15,7 +15,7 @@
         "REPLACE_WITH_ABSOLUTE_PATH/Agents-Skill-Site/Code/code/mcp/server.mjs"
       ],
       "env": {
-        "MANIFEST_URL": "http://8.163.18.183/agents-skill/manifest.json"
+        "MANIFEST_URL": "http://YOUR_DEPLOYED_HOST/agents-skill/manifest.json"
       }
     }
   }

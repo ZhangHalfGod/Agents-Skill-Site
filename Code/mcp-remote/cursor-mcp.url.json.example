@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "agents-skill-remote": {
+    "agents-skill-remote-local": {
       "url": "http://127.0.0.1:3921/mcp",
       "headers": {
-        "Authorization": "Bearer <TOKEN>"
+        "Authorization": "Bearer <YOUR_TOKEN>"
       }
     }
   }
