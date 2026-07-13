@@ -30,13 +30,14 @@ Code/doc/
 |------|------|------|
 | **[phase1/](phase1/)** | 需求、架构、URI、进度、矩阵 | [phase1/README.md](phase1/README.md) |
 | **[phase2/](phase2/)** | Cursor + MCP 消费本站索引 | [phase2/README.md](phase2/README.md) |
+| **[git/](git/)** | Git 操作：Fork、Upstream、分支合并 | [git/fork-and-upstream.md](git/fork-and-upstream.md) |
 | **实现跟踪** | [../Code/doc/](../Code/doc/README.md) | 同样按 phase1 / phase2 分放 |
 
 ## 运维记录
 
 | 文件 | 用途 |
 |------|------|
-| [branch-merge-record.md](branch-merge-record.md) | 分支合并记录（feature → main）与执行命令
+| [git/branch-merge-record.md](git/branch-merge-record.md) | 分支合并记录（feature → main）与执行命令
 
 ## 一句话定位
 

@@ -380,6 +380,24 @@ Agents-Skill-Site/
 
 ---
 
+## 🐱 Fork 开始你的定制版
+
+> 适用场景：你想基于本项目为你的公司或团队建立私有定制版，长期独立管理并定期同步上游更新。
+
+核心操作：
+
+1. **Fork**：在 GitHub 上打开本仓库，点击右上角 **Fork** 按钮
+2. **Clone**：`git clone https://github.com/你的用户名/Agents-Skill-Site.git`
+3. **添加 upstream**：`git remote add upstream https://github.com/ZhangHalfGod/Agents-Skill-Site.git`
+4. **定制**：修改 `standards/` 下的文件，运行 `npm run sync`
+5. **同步上游**：`git fetch upstream && git merge upstream/main`
+
+> 详细步骤及常见问题，见「[Git 操作指南](Doc/git/fork-and-upstream.md)」。
+
+同步上游时通常只在 `Code/` 和 `Doc/` 可能产生冲突，`standards/` 是你的私有内容，与上游不会冲突。
+
+---
+
 ## 常见问题
 
 ### 和市面上 MCP 服务有什么不同？
