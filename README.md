@@ -246,6 +246,10 @@ npm run dev
 
 ### 🛠 配置 Cursor MCP
 
+> **Token 生成**：在服务器上执行 `openssl rand -hex 32`，输出的 64 字符十六进制字串就是你的 Bearer Token。
+> 复制这个值，替换下方配置中的 `<YOUR_TOKEN>`（包括尖括号一起替换）。
+> 如果服务器没有 `openssl`，也可以用 `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` 生成。
+
 ```json
 // ~/.cursor/mcp.json 或项目 .cursor/mcp.json
 {
