@@ -1,5 +1,13 @@
 # CHANGELOG — All_URI
 
+## 2026-07-14 — v1.5-a1
+
+- **文档**：明确两仓 GitHub 关系  
+  - SoT：[`ZhangHalfGod/agents-skill-standards`](https://github.com/ZhangHalfGod/agents-skill-standards)  
+  - 本仓：[`ZhangHalfGod/Agents-Skill-Site`](https://github.com/ZhangHalfGod/Agents-Skill-Site)  
+  - 写入 `Doc/README.md`、`Doc/phase3/00-context.md` §1  
+- `.gitignore`：忽略本地 `Doc/debug.txt`
+
 ## 2026-07-14 — v1.5-a
 
 - **三期阶段 A**：`standards/operations/`（SoT：`agents-skill-standards`）

@@ -2,7 +2,17 @@
 
 > **状态**：**一期**已验收；**二期** Cursor + MCP MVP；**三期**：治理资产迭代闭环（规划中）  
 > **目标**：浏览 / 检索 / 按说明书触发 `agents` · `skills` · `rules`  
-> **内容源**：`standards/`（磁盘 Markdown 为 Source of Truth）
+> **内容源**：`standards/`（磁盘 Markdown 为 Source of Truth；**独立仓库**，见下表）
+
+## 相关 GitHub 仓库
+
+| 仓库 | GitHub | 职责 |
+|------|--------|------|
+| **本仓** | [ZhangHalfGod/Agents-Skill-Site](https://github.com/ZhangHalfGod/Agents-Skill-Site) | 发现站、MCP、工程文档（`Doc/` / `Code/doc/`） |
+| **SoT** | [ZhangHalfGod/agents-skill-standards](https://github.com/ZhangHalfGod/agents-skill-standards) | `standards/**`（agents · skills · rules · domains · operations） |
+| 个人 fork（例） | `MacAirM4/Agents-Skill-Site` | 私人迭代；`upstream` → 本仓 |
+
+改治理正文 → 在 **agents-skill-standards** 提交；本仓只做 sync / 站点 / MCP。拓扑细节见三期交接 [`phase3/00-context.md`](phase3/00-context.md) §1。
 
 ## 先读（跨期）
 
@@ -51,6 +61,7 @@ Code/doc/
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-14 | 入口补「相关 GitHub 仓库」；phase3 `00-context` 写明 SoT 仓 |
 | 2026-07-14 | 新增 phase3/ 交接与执行文档 |
 | 2026-07-11 | 文档按一期 / 二期分目录整理 |
 | 2026-07-10 | 初稿至阶段 7；S0 / ADR-001 |

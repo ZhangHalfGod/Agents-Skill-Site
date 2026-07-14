@@ -29,3 +29,6 @@ dist/
 
 # Reasonix 内部配置
 reasonix.toml
+
+# 本地调试草稿（勿入库）
+Doc/debug.txt

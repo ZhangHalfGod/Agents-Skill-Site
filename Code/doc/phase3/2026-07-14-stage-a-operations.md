@@ -2,8 +2,10 @@
 
 ## 工作区身份
 
-- 本仓：`Agents-Skill-Site` → `origin` = `ZhangHalfGod/Agents-Skill-Site`（上游）
-- SoT：`/Users/zhanghalfgod/Public/Work/agents-skill-standards/standards`（`ALT_STANDARDS`）
+- 本仓：`Agents-Skill-Site` → [`ZhangHalfGod/Agents-Skill-Site`](https://github.com/ZhangHalfGod/Agents-Skill-Site)（上游）
+- SoT：[`ZhangHalfGod/agents-skill-standards`](https://github.com/ZhangHalfGod/agents-skill-standards)  
+  本机：`/Users/zhanghalfgod/Public/Work/agents-skill-standards/standards`（`ALT_STANDARDS`）
+- 拓扑说明（交接必读）：[`Doc/phase3/00-context.md`](../../../Doc/phase3/00-context.md) §1
 
 ## 落地文件（standards 仓）
 

@@ -11,9 +11,24 @@
 
 | 本地路径 | GitHub | 角色 |
 |----------|--------|------|
-| **`/Users/zhanghalfgod/Public/Work/Agents-Skill-Site`**（本仓） | `ZhangHalfGod/Agents-Skill-Site` | **上游模板**；公网 ECS 部署来源 |
+| **`/Users/zhanghalfgod/Public/Work/Agents-Skill-Site`**（本仓） | [`ZhangHalfGod/Agents-Skill-Site`](https://github.com/ZhangHalfGod/Agents-Skill-Site) | **发现站 + MCP + 工程文档**；公网 ECS 部署来源 |
+| **`/Users/zhanghalfgod/Public/Work/agents-skill-standards`** | [`ZhangHalfGod/agents-skill-standards`](https://github.com/ZhangHalfGod/agents-skill-standards) | **治理资产 SoT**（`standards/`：agents · skills · rules · domains · **operations**） |
 | `/Users/zhanghalfgod/Public/Work/MacAirM4/Agents-Skill-Site` | `MacAirM4/Agents-Skill-Site` | **个人 fork**；MacAir 私人开发；`upstream` → 本仓 |
 | （尚未独立落盘/部署）BMWork | 公司层 fork（计划） | **组织变体**；公司 ECS 另部署 |
+
+### 1.1 两仓关系（必读）
+
+```text
+agents-skill-standards          Agents-Skill-Site
+  standards/**  ──npm run sync──►  Code/code/docs/**（只读派生）
+  （Git 写回 SoT）                 manifest / 网站 / MCP 只读索引
+```
+
+| 改什么 | 去哪个仓 | 备注 |
+|--------|----------|------|
+| Agent / Skill / Rule / Lesson（operations） | **agents-skill-standards** | 磁盘 Markdown = SoT；单独 commit / push |
+| 站点、MCP、Doc/phase*、URI 注册 | **Agents-Skill-Site**（本仓） | sync 时设 `STANDARDS_ROOT` 指向 standards 仓的 `standards/` |
+| 本机默认同步探测 | — | `Code/code/scripts/sync-standards.mjs` 的 `ALT_STANDARDS` = `../../../agents-skill-standards/standards` |
 
 三期**第一闭环**约定：先在本机把「Lesson → Skill 回灌」跑通；个人迭代可在 MacAir fork 试，通用沉淀再回灌上游。BMWork 部署后用独立 MCP，不与私人 fork 共用同一 manifest。
 
@@ -83,8 +98,8 @@
 ## 6. 新对话建议开场动作
 
 1. 读本文件 + [`02-execution-plan.md`](02-execution-plan.md)  
-2. 确认当前工作区是上游还是 MacAir fork（看 `git remote -v`）  
-3. 若改资产：先动文档/模板，再 `npm run sync` / validate；部署另议  
+2. 确认当前工作区是上游还是 MacAir fork（看 `git remote -v`）；改 SoT 时确认打开的是 **agents-skill-standards**  
+3. 若改资产：先改 standards 仓 → 本仓 `npm run sync` / validate；部署另议  
 4. 默认**先落地 A～B**（operations + Lesson Card + Skill 分层约定），再谈 MCP `profile` / `list_lessons`
 
 ---

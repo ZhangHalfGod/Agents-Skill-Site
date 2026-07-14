@@ -3,6 +3,8 @@
 > **本文档说明如何 fork 本仓库、添加上游跟踪、同步上游更新，以及推送自己的定制内容。**
 > 适用场景：你想基于 `Agents-Skill-Site` 为你的公司或团队建立私有定制版本。
 
+> **相关仓（勿混）**：治理正文 SoT 在独立仓库 [`ZhangHalfGod/agents-skill-standards`](https://github.com/ZhangHalfGod/agents-skill-standards)，不是本仓的子目录。站点 fork 与 standards fork 可分开维护；完整拓扑见 [`../phase3/00-context.md`](../phase3/00-context.md) §1。
+
 ---
 
 ## 目录
