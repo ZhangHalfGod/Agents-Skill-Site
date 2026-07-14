@@ -12,9 +12,9 @@
 | `/skills` | Skills 目录 | `standards/common/skills/README.md` | P0 | ready* |
 | `/rules` | Rules 目录 | `standards/common/rules/README.md` | P0 | ready* |
 | `/domains` | 领域增强 | `standards/domains/README.md` | P2 | **已挂载**（灰度） |
-| `/operations` | 需求归档 | `standards/operations/README.md` | P2 | ready* |
+| `/operations` | 项目实例 / Lesson | `standards/operations/README.md` | P2 | **三期源就绪**（公网挂载仍关） |
 
-\* 源文件 ready，站点页 planned。
+\* 源文件 ready，站点页 planned。`/operations`：源与模板已在三期阶段 A 落地；**默认不上公网**，本机可读即可。
 
 ## 2. Agents — 标准治理团队
 
@@ -111,7 +111,19 @@
 | 使用技能 1 | 跳转 `/skills/custom/common/ai-code-boundary` |
 | 使用角色 1,3 | 打开对比页或依次列出（二期） |
 
-## 8. 变更规则
+## 8. Operations（三期源就绪 · 公网默认关闭）
+
+| 站点 URI（预留） | 源路径 |
+|------------------|--------|
+| `/operations` | `standards/operations/README.md` |
+| `/operations/_template/lessons/lesson-card` | `standards/operations/_template/lessons/_lesson-card.template.md` |
+| `/operations/<project-id>` | `standards/operations/<project-id>/meta.md` |
+| `/operations/<project-id>/lessons/<slug>` | `standards/operations/<project-id>/lessons/<slug>.md` |
+
+示例项目：`macair-phase3-bootstrap`（Lesson：`2026-07-14-phase3-docs-bootstrap`）。  
+约束：raw lesson **禁止**直接覆盖 `common/`；公网站点本期不挂载本分区。
+
+## 9. 变更规则
 
 1. 新增角色/技能/规则：**先改 standards 源文件**，再更新本注册表，最后改站点路由。  
 2. 禁止站点私自发明与源树不一致的路径。  

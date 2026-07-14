@@ -1,5 +1,20 @@
 # CHANGELOG — All_URI
 
+## 2026-07-14 — v1.5-a
+
+- **三期阶段 A**：`standards/operations/`（SoT：`agents-skill-standards`）
+  - README（禁止 raw 覆盖 common）+ `_template/lessons/_lesson-card.template.md`
+  - 示例：`macair-phase3-bootstrap` + raw lesson `2026-07-14-phase3-docs-bootstrap`
+- URI：`Doc/phase1/03-uri-registry.md` — `/operations` 标为三期源就绪（公网仍关）
+- 下一步：阶段 B（stage-gate / PR 挂钩 + 触发句）
+
+## 2026-07-14 — v1.5-plan
+
+- **三期规划**：`Doc/phase3/` — 治理资产迭代闭环（Lesson Card → Skill 为主 / Agent / Rules）
+- 交接上下文：`Doc/phase3/00-context.md`（新对话必读）
+- 执行计划：`02-execution-plan.md`；operations/Lesson：`03`；上下文预算：`04`
+- 实现笔记落点：`Code/doc/phase3/`
+
 ## 2026-07-11 — v1.4
 
 - **远程索引**：`MANIFEST_URL` 可读 `http://8.163.18.183/agents-skill/manifest.json`；计划 `Doc/phase2/02-remote-manifest.md`
