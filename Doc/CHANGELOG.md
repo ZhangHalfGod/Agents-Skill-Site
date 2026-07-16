@@ -7,6 +7,8 @@
 - `npm run generate`（`sync` 别名）只刷 manifest/侧栏  
 - `docs/operations/` Lesson 模板 + 示例 `site-sot-inplace`  
 - 去掉「请勿手改 / 同步自 standards」页头误导  
+- **部署文档**：`07-deploy.md` / mcp-remote `deploy/README` 补 Host 探测、脏工作区、PM2 何时重启；主机用 `<PUBLIC_HOST>` 占位  
+
 
 
 ## 2026-07-14 — v1.5-a1

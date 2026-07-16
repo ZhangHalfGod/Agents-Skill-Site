@@ -16,6 +16,7 @@ npm ci
 npm run build
 
 test -f "$DIST/index.html"
-echo "OK → 部署完成，访问你的域名或 IP/agents-skill/"
+echo "OK → 部署完成，访问 http://<PUBLIC_HOST>/agents-skill/"
 echo "Nginx alias → $DIST/"
+echo "验收请带 Host：curl -H 'Host: <PUBLIC_HOST>' http://127.0.0.1/agents-skill/"
 ls -la "$DIST/index.html"

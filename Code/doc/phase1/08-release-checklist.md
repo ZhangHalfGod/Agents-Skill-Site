@@ -9,7 +9,7 @@
 - [ ] `npm run validate` **通过**（或 `npm run build` 内已跑 validate）
 - [ ] `docs/public/manifest.json` 含 8 agents + 11 skills
 - [ ] `/health/` 页或 `health.json` 显示 `ok: true` 与 contentHash
-- [ ] 未在 `standards/**` 角色 md 写入公网 IP / 部署 URL
+- [ ] 未在 `docs/agents/**` 等正文写入公网 IP / 部署 URL
 
 ## B. Git 与服务器
 
@@ -28,8 +28,8 @@
 
 ## D. 验收
 
-- [ ] `curl -I -H 'Host: 8.163.18.183' http://127.0.0.1/agents-skill/` → 200（或直接 curl 公网 IP）
-- [ ] 公网：`http://8.163.18.183/agents-skill/` 首页可开
+- [ ] `curl -I -H 'Host: <PUBLIC_HOST>' http://127.0.0.1/agents-skill/` → 200（或直接 curl 公网/域名）
+- [ ] 公网：`http://<PUBLIC_HOST>/agents-skill/` 首页可开；`manifest.json` 可读
 - [ ] 抽查：`/agents/`、`/skills/`、`/rules/`、`/health/`
 - [ ] 抽查一角色页技能标签可跳转
 - [ ] `pm2 list` 无异常（形态 α 不要求有 `agents-skill-site` 进程）

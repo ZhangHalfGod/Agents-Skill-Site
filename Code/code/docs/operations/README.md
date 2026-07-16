@@ -29,4 +29,4 @@ operations/
 3. Lesson 标 `merged`，写明合入路径  
 4. `cd Code/code && npm run generate && npm run validate`
 
-约定详情：[`Doc/phase3/03-lesson-card-and-operations.md`](../../../../Doc/phase3/03-lesson-card-and-operations.md)。
+约定详情见仓库工程文档（不在站点内链）：`Doc/phase3/03-lesson-card-and-operations.md`。
