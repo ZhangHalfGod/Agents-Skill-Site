@@ -1,11 +1,7 @@
 ---
 title: "Web 复杂产物构建"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-本页由 `npm run sync` 从 `standards/common/skills/external/web-artifacts-builder/SKILL.md` 同步生成，**请勿手改**。本站不执行模型推理。
-:::
 
 # Web 复杂产物构建
 
@@ -84,7 +80,7 @@ To test/visualize the artifact, use available tools (including other Skills or b
 
 ## 在 Cursor 中使用本技能
 
-1. `@` 引用：`standards/common/skills/external/web-artifacts-builder/SKILL.md`
-2. 或 `@` skills README 后说「使用技能 9」
+1. `@` 引用：`docs/skills/external/web-artifacts-builder/index.md`
+2. 或打开本页后按 checklist 执行（技能 9）
 
-本站不执行模型推理。
+本站不执行模型推理。正文真源即本页 Markdown。

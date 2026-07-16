@@ -8,35 +8,35 @@
 
 ## 1. 为什么要 operations
 
-S0：**模板与实例分离**——项目实例进 `operations/`，不回写污染 `common/`。
+S0：**模板与实例分离**——项目实例进 `operations/`，不回写污染可复用正文。
 
-| 层 | 路径（建议） | 可变性 |
+| 层 | 路径（本仓） | 可变性 |
 |----|--------------|--------|
-| 模板 | `standards/common/**` | 慢变、可复用 |
-| 领域 | `standards/domains/**` | 中变、域内复用 |
-| 实例 | `standards/operations/<project-id>/**` | 快变、项目绑定 |
+| 可复用 | `Code/code/docs/agents|skills|rules/**` | 慢变 |
+| 领域 | `Code/code/docs/domains/**` | 中变 |
+| 实例 | `Code/code/docs/operations/<project-id>/**` | 快变、项目绑定 |
 
-Lesson 属于**实例**；蒸馏后才升格到 common/domains。
+Lesson 属于**实例**；蒸馏后才升格到 skills/agents/rules（或 domains）。
 
-> 实际目录以仓库现有 `standards/` 布局为准；若尚无 `operations/`，阶段 A 创建。站点公网挂载可仍默认关闭。
+> 本仓入口：[`Code/code/docs/operations/README.md`](../../Code/code/docs/operations/README.md)。公网挂载默认可关。
 
 ---
 
 ## 2. 目录建议
 
 ```text
-standards/operations/
+Code/code/docs/operations/
   README.md
   _template/
     lessons/
       _lesson-card.template.md
   <project-id>/
-    meta.md                 # 可选：项目一句话、时间、负责人
+    meta.md
     lessons/
       2026-07-14-short-slug.md
 ```
 
-`project-id` 示例：`macair-phase3-bootstrap`、`bmwork-foo-service`。
+`project-id` 示例：`site-sot-inplace`、`bmwork-foo-service`。
 
 ---
 
@@ -93,7 +93,7 @@ related_skills: []     # 可选
 ## 4. 状态机
 
 ```text
-raw ──蒸馏──► distilled ──合入 standards──► merged
+raw ──蒸馏──► distilled ──合入 docs/skills|agents|rules──► merged
                  │
                  └──评审否决──► rejected
 ```
@@ -102,7 +102,7 @@ raw ──蒸馏──► distilled ──合入 standards──► merged
 |------|------|------|
 | `raw` | 现场记录 | 任何人 / Agent 代写文件 |
 | `distilled` | 已提炼可合入文案 | 人审 + 可协助起草 |
-| `merged` | 已进 common/domains，并 sync | 须 Git commit |
+| `merged` | 已进 docs 可复用正文，并 `npm run generate` | 须 Git commit |
 | `rejected` | 不升格（一次性问题） | 人审 |
 
 ---

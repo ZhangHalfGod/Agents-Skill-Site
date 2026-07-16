@@ -1,5 +1,14 @@
 # CHANGELOG — All_URI
 
+## 2026-07-16 — sot-inplace（方案 B）
+
+- **SoT 迁入本仓**：`Code/code/docs/**` 就地维护；废止外仓 `STANDARDS_ROOT` 日常 sync  
+- S0 v0.4 · 决策 `2026-07-16-01`  
+- `npm run generate`（`sync` 别名）只刷 manifest/侧栏  
+- `docs/operations/` Lesson 模板 + 示例 `site-sot-inplace`  
+- 去掉「请勿手改 / 同步自 standards」页头误导  
+
+
 ## 2026-07-14 — v1.5-a1
 
 - **文档**：明确两仓 GitHub 关系  

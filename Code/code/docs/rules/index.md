@@ -1,6 +1,6 @@
 # Rules
 
-Cursor Rules 分层浏览（对齐 `standards/common/rules/`）。源文件为 `.mdc`，本站只读呈现。
+规则分层浏览。真源：`docs/rules/**`（本仓就地维护；站点只读呈现，不注入 Cursor Rules）。
 
 ### L0（硬约束）
 
@@ -28,4 +28,4 @@ Cursor Rules 分层浏览（对齐 `standards/common/rules/`）。源文件为 `
 | [ptp-nmos-minimum-ops](/rules/L2/ptp-nmos-minimum-ops/) | PTP/NMOS 最低运维 | 是 |
 
 
-领域规则见 [Domains](/domains/)（可由 `site.config.json` / `ENABLE_DOMAINS` 开关）。在 Cursor 中可 `@` 对应 `.mdc`。
+领域规则见 [Domains](/domains/)（可由 `site.config.json` / `ENABLE_DOMAINS` 开关）。在 Cursor 中 `@` 对应 `docs/rules/...` 页面。

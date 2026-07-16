@@ -1,11 +1,7 @@
 ---
 title: "Skill 创建与评估"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-本页由 `npm run sync` 从 `standards/common/skills/external/skill-creator/SKILL.md` 同步生成，**请勿手改**。本站不执行模型推理。
-:::
 
 # Skill 创建与评估
 
@@ -488,7 +484,7 @@ _暂无标准角色强绑定（见矩阵或领域角色）。_
 
 ## 在 Cursor 中使用本技能
 
-1. `@` 引用：`standards/common/skills/external/skill-creator/SKILL.md`
-2. 或 `@` skills README 后说「使用技能 10」
+1. `@` 引用：`docs/skills/external/skill-creator/index.md`
+2. 或打开本页后按 checklist 执行（技能 10）
 
-本站不执行模型推理。
+本站不执行模型推理。正文真源即本页 Markdown。

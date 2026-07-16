@@ -12,9 +12,9 @@
 | `/skills` | Skills 目录 | `standards/common/skills/README.md` | P0 | ready* |
 | `/rules` | Rules 目录 | `standards/common/rules/README.md` | P0 | ready* |
 | `/domains` | 领域增强 | `standards/domains/README.md` | P2 | **已挂载**（灰度） |
-| `/operations` | 项目实例 / Lesson | `standards/operations/README.md` | P2 | **三期源就绪**（公网挂载仍关） |
+| `/operations` | 项目实例 / Lesson | `Code/code/docs/operations/README.md` | P2 | **本仓就绪**（公网挂载仍关） |
 
-\* 源文件 ready，站点页 planned。`/operations`：源与模板已在三期阶段 A 落地；**默认不上公网**，本机可读即可。
+\* `/operations`：源与模板在本仓 `docs/operations/`；**默认不上公网**，本机可读即可。
 
 ## 2. Agents — 标准治理团队
 
@@ -115,13 +115,13 @@
 
 | 站点 URI（预留） | 源路径 |
 |------------------|--------|
-| `/operations` | `standards/operations/README.md` |
-| `/operations/_template/lessons/lesson-card` | `standards/operations/_template/lessons/_lesson-card.template.md` |
-| `/operations/<project-id>` | `standards/operations/<project-id>/meta.md` |
-| `/operations/<project-id>/lessons/<slug>` | `standards/operations/<project-id>/lessons/<slug>.md` |
+| `/operations` | `Code/code/docs/operations/README.md` |
+| `/operations/_template/lessons/lesson-card` | `docs/operations/_template/lessons/_lesson-card.template.md` |
+| `/operations/<project-id>` | `docs/operations/<project-id>/meta.md` |
+| `/operations/<project-id>/lessons/<slug>` | `docs/operations/<project-id>/lessons/<slug>.md` |
 
-示例项目：`macair-phase3-bootstrap`（Lesson：`2026-07-14-phase3-docs-bootstrap`）。  
-约束：raw lesson **禁止**直接覆盖 `common/`；公网站点本期不挂载本分区。
+示例项目：`site-sot-inplace`（Lesson：`2026-07-16-sot-inplace-docs`）。
+约束：raw lesson **禁止**直接覆盖可复用正文；公网站点本期不挂载本分区。
 
 ## 9. 变更规则
 

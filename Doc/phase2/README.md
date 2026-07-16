@@ -28,7 +28,7 @@
 
 ## 硬约束（摘自 S0）
 
-- Source of Truth 仍是 `standards/`；MCP 与网站只读派生  
+- Source of Truth 是本仓 `Code/code/docs/**`；MCP 与网站消费 generate 后的索引  
 - MCP 补手不替脑；关闭 MCP 不影响网站  
 - 禁止角色 md 写死公网 URL  
 

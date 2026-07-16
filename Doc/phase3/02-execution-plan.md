@@ -11,8 +11,8 @@
 
 | 步骤 | 建议仓 |
 |------|--------|
-| 写三期文档 / 定模板（当前） | 本仓上游 `Work/Agents-Skill-Site` |
-| 试跑 Lesson → 本地 sync | 可在本仓或 MacAir fork |
+| 写三期文档 / 定模板 | 本仓上游 |
+| 试跑 Lesson → 改 docs → generate | 本仓或 MacAir fork |
 | 个人长期迭代 | MacAir fork；通用再 PR 上游 |
 | 公司资产 | BMWork（部署后） |
 
@@ -37,19 +37,19 @@
 
 ### 动作
 
-1. 新增 `standards/operations/README.md`（或仓内约定路径，与 URI 注册对齐）  
-2. 新增 `operations/_template/lessons/_lesson-card.template.md`（内容以 [`03`](03-lesson-card-and-operations.md) 为准）  
-3. 新增示例项目目录：`operations/macair-phase3-bootstrap/` + 至少 1 条 raw lesson（可用「建立三期文档」本身）  
-4. 更新 `Doc/phase1/03-uri-registry.md`：`/operations` 从占位改为三期就绪说明（若改站点再开）  
-5. **本期可不挂公网**；本地可浏览即可
+1. 本仓 `Code/code/docs/operations/README.md`  
+2. `_template/lessons/_lesson-card.template.md`（对齐 [`03`](03-lesson-card-and-operations.md)）  
+3. 示例项目（如 `site-sot-inplace/`）+ 至少 1 条 lesson  
+4. 更新 `Doc/phase1/03-uri-registry.md`：`/operations` 指向本仓 docs  
+5. **本期可不挂公网**；本地可读即可
 
 ### 验收
 
 - [x] 模板可复制生成 card  
 - [x] 示例 lesson frontmatter 合法  
-- [x] README 写清：禁止 raw 直接覆盖 common  
+- [x] README 写清：禁止 raw 直接覆盖可复用正文  
 
-> 落地日：2026-07-14 · SoT 路径 `agents-skill-standards/standards/operations/`  
+> 落地：2026-07-14（外仓）→ **2026-07-16 迁入本仓** `Code/code/docs/operations/`  
 
 ---
 
@@ -94,7 +94,7 @@
 
 1. 写收尾清单（可放 `operations/README.md` 或本目录附录）  
 2. 明确 status 流转：`raw → distilled → merged | rejected`  
-3. 升格时：改 standards → 更新矩阵（若绑 Agent）→ `npm run sync` → validate  
+3. 升格时：改 `docs/skills|agents|rules` → 更新矩阵（若绑 Agent）→ `npm run generate` → validate  
 
 ### 验收
 

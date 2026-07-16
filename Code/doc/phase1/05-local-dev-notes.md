@@ -14,7 +14,7 @@
 ```bash
 cd Code/code
 npm install
-npm run sync     # 从 standards 同步（默认 ../../../standards）
+npm run generate # 扫 docs → manifest / 侧栏（npm run sync 为别名）
 npm run dev      # http://localhost:5173/agents-skill/
 npm run build
 npm run preview  # http://127.0.0.1:3010/agents-skill/

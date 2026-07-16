@@ -29,20 +29,19 @@ agents-skill-site（本仓库 Code/code 构建产物）
   │  开发：VitePress dev
   │  生产：静态 dist 或 127.0.0.1:3010 serve（仅本机）
   ▼
-构建时扫描 / 拷贝（只读）
+generate（扫本仓 docs → manifest / 侧栏）
   ▼
-Agents_Skill/standards/   ← 唯一内容真源
-  common/agents | skills | rules
-  （domains / operations 二期）
+Code/code/docs/**   ← 唯一内容真源（就地维护）
+  agents | skills | rules | domains | operations
 ```
 
 ### 2.1 逻辑分层
 
 | 层 | 职责 | 实现落点 |
 |----|------|----------|
-| 治理发现 | 角色/技能/规则浏览、标签跳转、复制 `@` 触发句 | 本站前端页面 |
-| 索引契约 | URI 注册、角色-技能矩阵、manifest | `Doc/phase1/03`、`Doc/phase1/05`、构建生成物 |
-| 内容真源 | 角色 md、SKILL.md、rules `.mdc` | `standards/`（本仓可 submodule/拷贝策略，见 §4） |
+| 治理发现 | 角色/技能/规则浏览、标签跳转、复制 `@` 触发句 | 本站前端（渲染 `docs/**`） |
+| 索引契约 | URI 注册、角色-技能矩阵、manifest | `Doc/phase1/03`、`Doc/phase1/05`、generate 产物 |
+| 内容真源 | 角色 / 技能 / 规则 / Lesson Markdown | **本仓 `docs/**`**（见 §4） |
 | 执行 | 读说明书、改代码、调工具 | Cursor / 可选 MCP（**不在本站进程内**） |
 | 运行时宿主 | 进程、端口、反代、日志 | 阿里云 Ubuntu + PM2 + Nginx |
 
@@ -92,17 +91,16 @@ Agents_Skill/standards/   ← 唯一内容真源
 
 | 资产 | 位置 | 约定 |
 |------|------|------|
-| 工程规划 | `All_URI/Doc/` | 方向、需求、URI、进度、矩阵 |
-| 实现跟踪 | `All_URI/Code/doc/` | 服务器、ADR、踩坑、部署 |
-| 网站源码 | `All_URI/Code/code/` | 本 ADR 约束的 VitePress 工程 |
-| 标准内容 | `Agents_Skill/standards/`（或构建时可达副本） | SoT；站点只读消费 |
-| GitHub | `ZhangHalfGod/Agents-Skill-Site` | 当前推送根为 `All_URI` |
+| 工程规划 | `Doc/` | 方向、需求、URI、进度、矩阵 |
+| 实现跟踪 | `Code/doc/` | 服务器、ADR、踩坑、部署 |
+| 网站源码 | `Code/code/` | 本 ADR 约束的 VitePress 工程 |
+| 标准内容 | 本仓 `Code/code/docs/**` | SoT；直接编辑；`npm run generate` 刷索引 |
+| GitHub（本仓） | `ZhangHalfGod/Agents-Skill-Site` | 发现站 + MCP + 治理正文 |
 
-构建策略（一期默认）：
+构建策略：
 
-1. 开发机/CI：能读到 `standards` 相对路径（或配置 `STANDARDS_ROOT`）。  
-2. `npm run build` 前可跑扫描脚本生成侧栏/manifest（阶段 4 强化门禁）。  
-3. 服务器可只部署 `dist`，不必暴露整个 standards 树到公网磁盘（按发布方式定）。
+1. 改 `docs/**` 正文 → `npm run generate`（`predev`/`prebuild` 自动跑）。  
+2. 服务器只部署 `dist` 即可。
 
 ---
 

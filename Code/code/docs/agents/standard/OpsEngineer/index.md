@@ -1,11 +1,7 @@
 ---
 title: "运维工程师（OpsEngineer）"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-本页由 `npm run sync` 从 `standards/common/agents/standard/OpsEngineer/OpsEngineer.md` 同步生成，**请勿手改**。本站不执行模型推理。
-:::
 
 # 运维工程师（OpsEngineer）
 
@@ -97,7 +93,7 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 
 ## 技能标签（矩阵）
 
-> 权威映射见 `Doc/05-agent-skill-matrix.md`。
+> 权威映射见 `Doc/phase1/05-agent-skill-matrix.md`。
 
 **必显**
 
@@ -113,6 +109,6 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 
 ## 在 Cursor 中运行本角色
 
-<RunGuide role-id="OpsEngineer" role-path="standards/common/agents/standard/OpsEngineer/OpsEngineer.md" :skills='[{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/skills/custom/common/traceability-compliance"},{"id":"stage-gate-flow","label":"瀑布/敏捷阶段门禁","uri":"/skills/custom/common/stage-gate-flow"}]' />
+<RunGuide role-id="OpsEngineer" role-path="docs/agents/standard/OpsEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/skills/custom/common/traceability-compliance"},{"id":"stage-gate-flow","label":"瀑布/敏捷阶段门禁","uri":"/skills/custom/common/stage-gate-flow"}]' />
 
-本站只提供说明书与索引，**不执行模型推理**。
+本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。

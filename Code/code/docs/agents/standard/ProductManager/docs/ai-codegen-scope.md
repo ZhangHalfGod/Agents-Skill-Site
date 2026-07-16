@@ -1,11 +1,7 @@
 ---
 title: "AI 代码生成范围清单"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-本页由 `npm run sync` 从 `standards/common/agents/standard/ProductManager/AI代码生成范围清单.md` 同步生成，**请勿手改**。本站不执行模型推理。
-:::
 
 # AI 代码生成范围清单
 

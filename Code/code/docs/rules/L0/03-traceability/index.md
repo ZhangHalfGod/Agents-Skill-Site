@@ -1,11 +1,7 @@
 ---
 title: "L0 · 可追溯性"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-同步自 `.mdc`：`standards/common/rules/L0/03-traceability.mdc`。本站只读呈现，不注入 Cursor Rules。
-:::
 
 # L0 · 可追溯性
 
@@ -19,8 +15,8 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 - 层级：`L0`
 - 文件：`03-traceability.mdc`
 - alwaysApply：`true`
-- 源路径：`standards/common/rules/L0/03-traceability.mdc`
+- 真源：本页（`docs/…`）
 
 ## 在 Cursor 中使用
 
-`@standards/common/rules/L0/03-traceability.mdc`
+`@docs/rules/L0/03-traceability/index.md`

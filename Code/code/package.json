@@ -8,12 +8,13 @@
     "node": ">=22.2.1"
   },
   "scripts": {
-    "sync": "node scripts/sync-standards.mjs",
+    "generate": "node scripts/sync-standards.mjs",
+    "sync": "npm run generate",
     "validate": "node scripts/validate-manifest.mjs",
     "check:links": "node scripts/check-dead-links.mjs",
-    "predev": "npm run sync && npm run validate",
+    "predev": "npm run generate && npm run validate",
     "dev": "vitepress dev docs",
-    "prebuild": "npm run sync && npm run validate",
+    "prebuild": "npm run generate && npm run validate",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --port 3010 --host 127.0.0.1",
     "accept": "npm run validate && npm run check:links",

@@ -1,11 +1,7 @@
 ---
 title: "ptp-nmos · enhanced-ptp-nmos-rules"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-同步自领域规则 `.mdc`：`standards/domains/ptp-nmos/rules/enhanced-ptp-nmos-rules.mdc`。
-:::
 
 # ptp-nmos · enhanced-ptp-nmos-rules
 

@@ -1,10 +1,9 @@
 /**
- * standards → VitePress docs 只读同步。
- * SoT：Agents_Skill/standards；禁止回写。
+ * 本仓 docs → manifest / 侧栏 / 目录索引（generate）。
+ * SoT：Code/code/docs/**（就地真源）；直接改 md，再 npm run generate。
  *
- * STANDARDS_ROOT：可选。默认 ../../../standards（相对 Code/code）。
- * 若不存在：自动跳过（便于服务器只 clone 本仓后直接 npm run build）。
- * SKIP_SYNC=1：即使有 STANDARDS_ROOT 也强制跳过。
+ * 历史：曾从外部 STANDARDS_ROOT 拷贝正文；2026-07-16 起废止该日常流程。
+ * STANDARDS_ROOT / SKIP_SYNC 若仍设置：仅告警，行为与 generate 相同。
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -492,13 +491,13 @@ function buildAgentExtras(agent) {
       uri: meta?.uri || `/skills/${id}`
     }
   })
-  const rolePath = `standards/common/agents/standard/${agent.id}/${agent.id}.md`
+  const rolePath = `docs/agents/standard/${agent.id}/index.md`
   parts.push(
     '## 在 Cursor 中运行本角色',
     '',
     `<RunGuide role-id="${agent.id}" role-path="${rolePath}" :skills='${JSON.stringify(skillProps)}' />`,
     '',
-    '本站只提供说明书与索引，**不执行模型推理**。',
+    '本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。',
     ''
   )
   return parts.join('\n')
@@ -522,13 +521,14 @@ function buildSkillExtras(skill) {
   if (!skill.boundAgents?.length && !skill.recommendedAgents?.length) {
     parts.push('_暂无标准角色强绑定（见矩阵或领域角色）。_', '')
   }
+  const docsPath = `docs/${skill.sitePath.replace(/\\/g, '/')}`
   parts.push(
     '## 在 Cursor 中使用本技能',
     '',
-    `1. \`@\` 引用：\`standards/${skill.sourceRel.replace(/\\/g, '/')}\``,
-    `2. 或 \`@\` skills README 后说「使用技能 ${skill.index}」`,
+    `1. \`@\` 引用：\`${docsPath}\``,
+    `2. 或打开本页后按 checklist 执行（技能 ${skill.index}）`,
     '',
-    '本站不执行模型推理。',
+    '本站不执行模型推理。正文真源即本页 Markdown。',
     ''
   )
   return parts.join('\n')
@@ -538,18 +538,18 @@ function writeAgentsIndex(agents) {
   const rows = agents
     .map(
       (a) =>
-        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summary} | **已同步** |`
+        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summary} | **就绪** |`
     )
     .join('\n')
   const md = `# Agents
 
-标准治理团队角色目录（对齐 \`standards/common/agents/standard/\`）。
+标准治理团队角色目录。真源：\`docs/agents/standard/<Role>/\`（本仓就地维护）。
 
 | 序号 | 角色 | 一句话职责 | 状态 |
 |:----:|------|------------|:----:|
 ${rows}
 
-在 Cursor 中运行：\`@standards/common/agents/standard/<Role>/<Role>.md\`。
+在 Cursor 中运行：\`@docs/agents/standard/<Role>/index.md\`（相对 \`Code/code/\`）。
 
 <QuickJump />
 `
@@ -561,18 +561,18 @@ function writeSkillsIndex(skills) {
     .map((s) => {
       const uri = withSlash(SKILL_META[s.id].uri)
       const origin = s.origin === 'custom' ? '自定义' : '外部'
-      return `| ${s.index} | ${origin} | [${s.id}](${uri}) | ${s.summary} | **已同步** |`
+      return `| ${s.index} | ${origin} | [${s.id}](${uri}) | ${s.summary} | **就绪** |`
     })
     .join('\n')
   const md = `# Skills
 
-通用技能目录（对齐 \`standards/common/skills/\` 编号 1～11）。
+通用技能目录（编号 1～11）。真源：\`docs/skills/**\`（本仓就地维护）。
 
 | 序号 | 来源 | 技能 | 一句话用途 | 状态 |
 |:----:|:----:|------|------------|:----:|
 ${rows}
 
-在 Cursor 中：\`@standards/common/skills/README.md\` 后说「使用技能 N」，或直接 \`@\` 对应 \`SKILL.md\`。
+在 Cursor 中：\`@\` 对应技能页（如 \`docs/skills/custom/common/stage-gate-flow/index.md\`）。
 `
   fs.writeFileSync(path.join(DOCS_ROOT, 'skills', 'index.md'), md, 'utf8')
 }
@@ -598,13 +598,13 @@ ${rows}
 
   const md = `# Rules
 
-Cursor Rules 分层浏览（对齐 \`standards/common/rules/\`）。源文件为 \`.mdc\`，本站只读呈现。
+规则分层浏览。真源：\`docs/rules/**\`（本仓就地维护；站点只读呈现，不注入 Cursor Rules）。
 
 ${section('L0', '硬约束')}
 ${section('L1', '流程与协作')}
 ${section('L2', '场景最低限度')}
 
-领域规则见 [Domains](/domains/)（可由 \`site.config.json\` / \`ENABLE_DOMAINS\` 开关）。在 Cursor 中可 \`@\` 对应 \`.mdc\`。
+领域规则见 [Domains](/domains/)（可由 \`site.config.json\` / \`ENABLE_DOMAINS\` 开关）。在 Cursor 中 \`@\` 对应 \`docs/rules/...\` 页面。
 `
   fs.writeFileSync(path.join(DOCS_ROOT, 'rules', 'index.md'), md, 'utf8')
 }
@@ -703,7 +703,7 @@ function discoverRulesFromDocs() {
         name,
         title,
         siteUri: `/rules/${level}/${name}`,
-        sourceRel: `common/rules/${level}/${name}.mdc`,
+        sourceRel: `docs/rules/${level}/${name}/index.md`,
         sitePath: `rules/${level}/${name}/index.md`,
         alwaysApply: /alwaysApply：`true`/.test(raw)
       })
@@ -924,30 +924,33 @@ function syncDomains(standardsRoot) {
     const m = syncDomainPtpNmos(standardsRoot)
     if (m) out['ptp-nmos'] = m
   } else if (active.includes('ptp-nmos')) {
-    console.warn(
-      '[sync-standards] ptp-nmos 灰度开启但无 STANDARDS_ROOT；保留仓库内 domains 页'
-    )
+    console.log('[generate] ptp-nmos 灰度开启；使用仓库内 docs/domains 页')
   }
   writeDomainsPages(out)
   return out
 }
 
-/** 无 standards 时仍刷新 manifest（阶段 4.1 scan），供 validate / health 使用 */
-function scanRepoOnly(reason) {
-  console.warn(`[sync-standards] ${reason}；执行 repo scan 刷新 manifest`)
+/** 扫描本仓 docs，刷新 manifest / 侧栏 / 目录；不覆盖技能/规则正文 */
+function generateFromRepoDocs(reason) {
+  console.log(`[generate] ${reason}；SoT = docs/**`)
+  if (process.env.STANDARDS_ROOT) {
+    console.warn(
+      '[generate] STANDARDS_ROOT 已忽略（本仓 docs 为真源；不再从外仓拷贝正文）'
+    )
+  }
   const relatedDocs = []
   for (const agent of STANDARD_AGENTS) {
     for (const doc of agent.relatedDocs || []) {
       relatedDocs.push({
         siteUri: `/agents/standard/${agent.id}/docs/${doc.slug}`,
-        source: `standards/common/agents/standard/${agent.id}/${doc.sourceFile}`
+        source: `docs/agents/standard/${agent.id}/docs/${doc.slug}.md`
       })
     }
   }
   const rules = discoverRulesFromDocs()
   const domains = syncDomains(null)
   writeManifest({
-    standardsRoot: '(repo-docs)',
+    contentRoot: 'docs',
     agents: STANDARD_AGENTS,
     relatedDocs,
     skills: STANDARD_SKILLS,
@@ -959,13 +962,31 @@ function scanRepoOnly(reason) {
   writeSkillsIndex(STANDARD_SKILLS)
   writeRulesIndex(rules)
   patchAgentRunGuides()
+  patchSkillCursorHints()
   console.log(
-    `[sync-standards] scan 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules`
+    `[generate] 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules`
   )
 }
 
+/** 仅刷新技能页底部「在 Cursor 中使用」提示，不改正文 */
+function patchSkillCursorHints() {
+  for (const skill of STANDARD_SKILLS) {
+    const out = path.join(DOCS_ROOT, skill.sitePath)
+    if (!fs.existsSync(out)) continue
+    let raw = fs.readFileSync(out, 'utf8')
+    const marker = '## 关联角色（矩阵反向）'
+    const idx = raw.indexOf(marker)
+    if (idx === -1) {
+      raw = raw.trimEnd() + '\n\n' + buildSkillExtras(skill)
+    } else {
+      raw = raw.slice(0, idx) + buildSkillExtras(skill)
+    }
+    fs.writeFileSync(out, raw, 'utf8')
+  }
+}
+
 function writeManifest({
-  standardsRoot,
+  contentRoot,
   agents,
   relatedDocs,
   skills,
@@ -974,8 +995,10 @@ function writeManifest({
 }) {
   const manifest = {
     generatedAt: new Date().toISOString(),
-    standardsRoot: String(standardsRoot).replace(/\\/g, '/'),
-    note: 'agents + skills 1～11 + rules；domains 灰度；阶段 4 validate',
+    contentRoot: String(contentRoot || 'docs').replace(/\\/g, '/'),
+    /** @deprecated 兼容旧校验/读端；等于 contentRoot */
+    standardsRoot: String(contentRoot || 'docs').replace(/\\/g, '/'),
+    note: 'SoT=本仓 docs/**；agents + skills 1～11 + rules；domains 灰度',
     domainsEnabled: domainsEnabled(),
     domainsActive: loadSiteConfig().domains?.active || [],
     agents: agents.map((a) => ({
@@ -984,7 +1007,7 @@ function writeManifest({
       title: a.title,
       summary: a.summary,
       siteUri: `/agents/standard/${a.id}`,
-      source: `standards/common/agents/standard/${a.id}/${a.id}.md`,
+      source: `docs/agents/standard/${a.id}/index.md`,
       skills: a.skills,
       skillsRecommended: a.skillsRecommended
     })),
@@ -994,7 +1017,7 @@ function writeManifest({
       id: s.id,
       origin: s.origin,
       siteUri: SKILL_META[s.id].uri,
-      source: `standards/${s.sourceRel}`,
+      source: `docs/${s.sitePath.replace(/\\/g, '/')}`,
       boundAgents: s.boundAgents,
       recommendedAgents: s.recommendedAgents
     })),
@@ -1003,7 +1026,9 @@ function writeManifest({
       name: r.name,
       title: r.title,
       siteUri: `/rules/${r.level}/${r.name}`,
-      source: `standards/${r.sourceRel}`,
+      source: r.sourceRel.startsWith('docs/')
+        ? r.sourceRel
+        : `docs/${r.sitePath}`,
       alwaysApply: r.alwaysApply || false
     })),
     domains
@@ -1012,129 +1037,7 @@ function writeManifest({
 }
 
 function main() {
-  const standardsRoot = resolveStandardsRoot()
-  const forceSkip =
-    process.env.SKIP_SYNC === '1' ||
-    process.env.SKIP_SYNC === 'true'
-
-  if (forceSkip) {
-    scanRepoOnly('SKIP_SYNC=1')
-    return
-  }
-
-  if (!fs.existsSync(standardsRoot)) {
-    // 服务器通常只 clone 本仓：无 standards 时自动跳过内容同步，仍刷新 manifest
-    console.warn(
-      `[sync-standards] STANDARDS_ROOT 不存在: ${standardsRoot}；跳过内容同步，使用仓库内 docs`
-    )
-    console.warn(
-      '[sync-standards] 本机若需同步正文：设置 STANDARDS_ROOT 后执行 npm run sync'
-    )
-    scanRepoOnly('无 STANDARDS_ROOT')
-    return
-  }
-
-  console.log(`[sync-standards] standards = ${standardsRoot}`)
-
-  const relatedDocs = []
-  for (const agent of STANDARD_AGENTS) {
-    syncMarkdown({
-      standardsRoot,
-      sourceRel: `common/agents/standard/${agent.id}/${agent.id}.md`,
-      sitePath: `agents/standard/${agent.id}/index.md`,
-      title: agent.title,
-      extras: buildAgentExtras(agent)
-    })
-    console.log(`[sync-standards] OK agent ${agent.index}.${agent.id}`)
-    for (const doc of agent.relatedDocs || []) {
-      syncMarkdown({
-        standardsRoot,
-        sourceRel: `common/agents/standard/${agent.id}/${doc.sourceFile}`,
-        sitePath: `agents/standard/${agent.id}/docs/${doc.slug}.md`,
-        title: doc.title
-      })
-      relatedDocs.push({
-        siteUri: `/agents/standard/${agent.id}/docs/${doc.slug}`,
-        source: `standards/common/agents/standard/${agent.id}/${doc.sourceFile}`
-      })
-      console.log(`[sync-standards] OK   doc ${doc.slug}`)
-    }
-  }
-  patchAgentRunGuides()
-  writeAgentsIndex(STANDARD_AGENTS)
-
-  for (const skill of STANDARD_SKILLS) {
-    const meta = SKILL_META[skill.id]
-    const result = syncMarkdown({
-      standardsRoot,
-      sourceRel: skill.sourceRel,
-      sitePath: skill.sitePath,
-      title: meta.label,
-      extras: buildSkillExtras(skill),
-      rewriteRelativeRefs: true
-    })
-    console.log(`[sync-standards] OK skill ${skill.index}.${skill.id}`)
-    void result
-  }
-  writeSkillsIndex(STANDARD_SKILLS)
-
-  const rules = discoverRules(standardsRoot)
-  for (const rule of rules) {
-    const result = syncMarkdown({
-      standardsRoot,
-      sourceRel: rule.sourceRel,
-      sitePath: rule.sitePath,
-      title: `${rule.level} · ${rule.title}`,
-      notice: `同步自 \`.mdc\`：\`standards/${rule.sourceRel}\`。本站只读呈现，不注入 Cursor Rules。`,
-      extras: [
-        '## 元数据',
-        '',
-        `- 层级：\`${rule.level}\``,
-        `- 文件：\`${rule.name}.mdc\``,
-        `- 源路径：\`standards/${rule.sourceRel}\``,
-        ''
-      ].join('\n')
-    })
-    rule.alwaysApply = String(result.meta.alwaysApply || '') === 'true'
-    // rewrite extras with alwaysApply known
-    syncMarkdown({
-      standardsRoot,
-      sourceRel: rule.sourceRel,
-      sitePath: rule.sitePath,
-      title: `${rule.level} · ${rule.title}`,
-      notice: `同步自 \`.mdc\`：\`standards/${rule.sourceRel}\`。本站只读呈现，不注入 Cursor Rules。`,
-      extras: [
-        '## 元数据',
-        '',
-        `- 层级：\`${rule.level}\``,
-        `- 文件：\`${rule.name}.mdc\``,
-        `- alwaysApply：\`${rule.alwaysApply}\``,
-        `- 源路径：\`standards/${rule.sourceRel}\``,
-        '',
-        '## 在 Cursor 中使用',
-        '',
-        `\`@standards/${rule.sourceRel}\``,
-        ''
-      ].join('\n')
-    })
-    console.log(`[sync-standards] OK rule ${rule.level}/${rule.name}`)
-  }
-  writeRulesIndex(rules)
-
-  const domains = syncDomains(standardsRoot)
-  writeSidebars(STANDARD_AGENTS, STANDARD_SKILLS, rules)
-  writeManifest({
-    standardsRoot,
-    agents: STANDARD_AGENTS,
-    relatedDocs,
-    skills: STANDARD_SKILLS,
-    rules,
-    domains
-  })
-
-  console.log(
-    `[sync-standards] 完成：${STANDARD_AGENTS.length} 角色 + ${relatedDocs.length} 附属 + ${STANDARD_SKILLS.length} 技能 + ${rules.length} 规则 + domains=${Object.keys(domains).join(',') || 'none'}`
-  )
+  generateFromRepoDocs('本仓就地 docs')
 }
 
 main()

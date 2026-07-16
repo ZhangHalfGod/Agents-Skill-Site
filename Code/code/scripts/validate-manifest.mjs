@@ -119,7 +119,7 @@ function main() {
 
   if (!fs.existsSync(MANIFEST)) {
     console.error(`[validate] 缺少 manifest: ${MANIFEST}`)
-    console.error('[validate] 请先 npm run sync（或确保仓库内已有 docs/public/manifest.json）')
+    console.error('[validate] 请先 npm run generate（或确保仓库内已有 docs/public/manifest.json）')
     process.exit(1)
   }
 
@@ -224,7 +224,7 @@ function main() {
   manifest.contentHash = hash
   manifest.validatedAt = validatedAt
   manifest.validateOk = ok
-  manifest.note = 'agents + skills 1～11 + rules；阶段 4 validate 门禁'
+  manifest.note = 'SoT=本仓 docs/**；agents + skills 1～11 + rules；domains 灰度'
   fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n', 'utf8')
 
   writeHealthPage(health)

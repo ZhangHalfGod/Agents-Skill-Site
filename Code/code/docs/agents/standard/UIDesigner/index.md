@@ -1,11 +1,7 @@
 ---
 title: "UI 设计师（UIDesigner）"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-本页由 `npm run sync` 从 `standards/common/agents/standard/UIDesigner/UIDesigner.md` 同步生成，**请勿手改**。本站不执行模型推理。
-:::
 
 # UI 设计师（UIDesigner）
 
@@ -300,7 +296,7 @@ UI agents 拿到图片后，必须补齐“可工程化”的沉淀：
 
 ## 技能标签（矩阵）
 
-> 权威映射见 `Doc/05-agent-skill-matrix.md`。
+> 权威映射见 `Doc/phase1/05-agent-skill-matrix.md`。
 
 **必显**
 
@@ -313,6 +309,6 @@ UI agents 拿到图片后，必须补齐“可工程化”的沉淀：
 
 ## 在 Cursor 中运行本角色
 
-<RunGuide role-id="UIDesigner" role-path="standards/common/agents/standard/UIDesigner/UIDesigner.md" :skills='[{"id":"frontend-design","label":"前端设计","uri":"/skills/external/frontend-design"},{"id":"doc-coauthoring","label":"文档协作","uri":"/skills/external/doc-coauthoring"},{"id":"ai-code-boundary","label":"AI 生成代码边界","uri":"/skills/custom/common/ai-code-boundary"}]' />
+<RunGuide role-id="UIDesigner" role-path="docs/agents/standard/UIDesigner/index.md" :skills='[{"id":"frontend-design","label":"前端设计","uri":"/skills/external/frontend-design"},{"id":"doc-coauthoring","label":"文档协作","uri":"/skills/external/doc-coauthoring"},{"id":"ai-code-boundary","label":"AI 生成代码边界","uri":"/skills/custom/common/ai-code-boundary"}]' />
 
-本站只提供说明书与索引，**不执行模型推理**。
+本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。

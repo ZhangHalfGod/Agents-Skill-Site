@@ -3,7 +3,7 @@
 > **本文档说明如何 fork 本仓库、添加上游跟踪、同步上游更新，以及推送自己的定制内容。**
 > 适用场景：你想基于 `Agents-Skill-Site` 为你的公司或团队建立私有定制版本。
 
-> **相关仓（勿混）**：治理正文 SoT 在独立仓库 [`ZhangHalfGod/agents-skill-standards`](https://github.com/ZhangHalfGod/agents-skill-standards)，不是本仓的子目录。站点 fork 与 standards fork 可分开维护；完整拓扑见 [`../phase3/00-context.md`](../phase3/00-context.md) §1。
+> **SoT**：治理正文在本仓 `Code/code/docs/**`（就地维护）。见 [`../phase3/00-context.md`](../phase3/00-context.md) §1 与 S0 `2026-07-16-01`。
 
 ---
 
@@ -88,16 +88,23 @@ git remote -v
 ```bash
 cd Code/code
 npm ci
-npm run dev       # 启动本地预览
+npm run dev       # 启动本地预览（用本仓已入库的派生 docs）
 ```
 
-修改 `standards/` 下的文件，然后运行 `npm run sync` 同步到网站和 MCP。
+治理正文与站点同仓：直接改 `Code/code/docs/**`（角色 / 技能 / 规则 / Lesson）。
+
+```bash
+cd Code/code
+# 编辑 docs/agents|skills|rules|operations/...
+npm run generate   # 刷新 manifest / 侧栏（npm run sync 为同义别名）
+npm run dev
+```
 
 ### 第五步：推送你的定制
 
 ```bash
 git add -A
-git commit -m "feat: 定制公司角色定义和技能"
+git commit -m "feat: 定制角色与技能正文"
 git push origin main
 ```
 
@@ -132,7 +139,7 @@ git push origin main
 | `Code/` 目录 | 低 | 上游改进框架，你的定制一般不动这里 |
 | `Doc/` 目录 | 低 | 工程文档，你的定制通常新增而非修改 |
 | `README.md` | 中 | 你改了项目介绍，上游也可能更新 |
-| `standards/` | **无** | 上游是通用模板，你是公司真实内容，**完全不相交** |
+| `Code/code/docs/**` | 中 | 你的定制正文与上游模板可能冲突，合并时按需保留 |
 
 解决冲突：
 

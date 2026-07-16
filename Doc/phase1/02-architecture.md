@@ -21,14 +21,14 @@
 │                      ▼                                    │
 │              manifest.json（生成物）                       │
 └──────────────────────┬──────────────────────────────────┘
-                       │ 只读挂载 / 构建时拷贝
+                       │ generate（manifest / 侧栏）
 ┌──────────────────────▼──────────────────────────────────┐
-│  Source of Truth：Agents_Skill/standards/                 │
-│  common/agents | common/skills | common/rules | domains   │
+│  Source of Truth：本仓 Code/code/docs/**                   │
+│  agents | skills | rules | domains | operations           │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**关键约束**：网站是呈现与索引层；**禁止**把业务实例写回 `common/` 模板。
+**关键约束**：正文与站点同仓；**禁止**把项目 Lesson 直接污染可复用技能/角色正文。
 
 ## 2. 内容模型
 

@@ -1,11 +1,7 @@
 ---
 title: "L2 · PTP/NMOS 最低运维"
-description: 只读同步自 standards；请改源文件后执行 npm run sync
+description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ---
-
-::: info Source of Truth
-同步自 `.mdc`：`standards/common/rules/L2/ptp-nmos-minimum-ops.mdc`。本站只读呈现，不注入 Cursor Rules。
-:::
 
 # L2 · PTP/NMOS 最低运维
 
@@ -18,8 +14,8 @@ description: 只读同步自 standards；请改源文件后执行 npm run sync
 - 层级：`L2`
 - 文件：`ptp-nmos-minimum-ops.mdc`
 - alwaysApply：`true`
-- 源路径：`standards/common/rules/L2/ptp-nmos-minimum-ops.mdc`
+- 真源：本页（`docs/…`）
 
 ## 在 Cursor 中使用
 
-`@standards/common/rules/L2/ptp-nmos-minimum-ops.mdc`
+`@docs/rules/L2/ptp-nmos-minimum-ops/index.md`
