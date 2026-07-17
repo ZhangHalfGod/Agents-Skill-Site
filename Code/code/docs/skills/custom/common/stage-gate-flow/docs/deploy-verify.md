@@ -1,6 +1,19 @@
 # 部署验收清单（回灌自 Lesson）
 
-> 来源 Lesson：`docs/operations/ecs-deploy-host404/lessons/2026-07-17-nginx-host-false-404.md`（merged）
+> 来源 Lesson：  
+> - `docs/operations/ecs-deploy-host404/lessons/2026-07-17-nginx-host-false-404.md`（merged）  
+> - `docs/operations/stage-gate-exit-evidence/lessons/2026-07-17-mcp-health-not-host-curl.md`（merged）
+
+## 证据分层（出门时分开勾）
+
+| 证据 | 能证明 | 不能证明 |
+|------|--------|----------|
+| Cursor 侧 `agents-skill-remote` / `health` 绿 | MCP 索引可读、同源 manifest | 静态站 Nginx、带 Host 的 HTTP 200 |
+| ECS 上带 Host 的静态站 + `manifest.json` curl | 站点与索引经 Nginx 可达 | — |
+| ECS 上带 Host 的 `/agents-skill-mcp/healthz` | MCP HTTP 探活 | 静态站页面内容 |
+
+本机**无 SSH** 时：MCP health 可记「部分证据」；静态站 Host 探测标「待 ECS 补跑」，**勿默认部署项全绿**。  
+仍禁止无 Host 的 `curl 127.0.0.1` 误判 404。
 
 ## 静态站 / manifest
 

@@ -20,7 +20,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 - [ ] 上一阶段未通过则**不**进入下一阶段
 - [ ] 核心层 / 网关 / 安全 / 架构改动已附《核心模块AI生成红色记录》（或明确不适用）
 - [ ] **本阶段 Lesson**：已写入 `docs/operations/<project>/lessons/`，或勾选「本阶段无新教训」
-- [ ] （若涉及上线/部署）已按 [部署验收清单](./docs/deploy-verify.md) 验证，勿用无 Host 的 `curl 127.0.0.1` 误判 404
+- [ ] （若涉及上线/部署）已按 [部署验收清单](./docs/deploy-verify.md) 验证：MCP health 与带 Host 的静态站探测**分开记证据**；勿用无 Host 的 `curl 127.0.0.1` 误判 404
 
 ## 拦截提示
 

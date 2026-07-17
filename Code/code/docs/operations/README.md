@@ -74,3 +74,4 @@ raw ──蒸馏──► distilled ──合入 docs/** ──► merged
 |------------|------|
 | `site-sot-inplace` | SoT 迁入本仓 docs |
 | `ecs-deploy-host404` | Nginx Host 假 404 / 部署验收 → 已 merged 进 stage-gate-flow |
+| `stage-gate-exit-evidence` | 出门时 MCP health ≠ 完整 Host 部署验收 → merged 进 deploy-verify |
