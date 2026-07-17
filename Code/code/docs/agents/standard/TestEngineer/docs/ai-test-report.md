@@ -1,24 +1,12 @@
 ---
-title: "AI 代码测试报告"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "ai-test-report"
+description: English stub — full playbook in Chinese locale
 ---
 
-# AI 代码测试报告
+# ai-test-report
 
-## 测试范围
-- 功能：
-- 边界：
-- 异常：
+> **English stub.** Full content (Chinese SoT): [/zh/agents/standard/TestEngineer/docs/ai-test-report](/zh/agents/standard/TestEngineer/docs/ai-test-report)
 
-## 测试执行
-- 用例总数：
-- 通过：
-- 失败：
+Related document stub.
 
-## 问题清单
-- 严重：
-- 一般：
-
-## 结论
-- 是否满足上线门禁：
-
+Edit the source of truth at `docs/zh/agents/standard/TestEngineer/docs/ai-test-report.md`.

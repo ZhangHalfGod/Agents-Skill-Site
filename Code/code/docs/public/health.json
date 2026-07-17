@@ -1,9 +1,9 @@
 {
   "ok": true,
-  "validatedAt": "2026-07-17T05:11:12.117Z",
+  "validatedAt": "2026-07-17T06:17:53.825Z",
   "contentHash": "11551bc5b589d320",
-  "generatedAt": "2026-07-17T05:11:11.655Z",
-  "standardsRoot": "docs",
+  "generatedAt": "2026-07-17T06:17:53.303Z",
+  "standardsRoot": "docs/zh",
   "counts": {
     "agents": 8,
     "skills": 11,

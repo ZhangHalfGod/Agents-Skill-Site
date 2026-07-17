@@ -1,25 +1,12 @@
 ---
-title: "版本映射与发布说明"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "version-release"
+description: English stub — full playbook in Chinese locale
 ---
 
-# 版本映射与发布说明
+# version-release
 
-## 版本映射
-- Prompt 版本：
-- 代码版本：
-- 部署标识：
+> **English stub.** Full content (Chinese SoT): [/zh/agents/standard/OpsEngineer/docs/version-release](/zh/agents/standard/OpsEngineer/docs/version-release)
 
-## 发布计划
-- 发布时间：
-- 影响范围：
-- 灰度策略：
+Related document stub.
 
-## 回滚方案
-- 回滚触发条件：
-- 回滚步骤：
-
-## 发布后验证
-- 关键指标：
-- 观察窗口：
-
+Edit the source of truth at `docs/zh/agents/standard/OpsEngineer/docs/version-release.md`.

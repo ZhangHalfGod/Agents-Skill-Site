@@ -4,4 +4,6 @@ title: "High Concurrency"
 
 # High Concurrency
 
-占位：尚未灰度。源目录 `standards/domains/high-concurrency/`。
+Placeholder (not in gray release).
+
+[Chinese hub](/zh/domains/)

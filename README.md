@@ -11,7 +11,9 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 > **What this repo is**: VitePress discovery site + MCP index + **governance source of truth**.  
-> **SoT**: `Code/code/docs/**` (agents · skills · rules · operations). Edit Markdown, then `npm run generate` to refresh the index.  
+> **SoT (full Chinese playbooks)**: `Code/code/docs/zh/**`. English site stubs under `docs/**` (root locale). Edit Markdown, then `npm run generate`.  
+> **Site languages**: English default (`/agents-skill/`) · Chinese (`/agents-skill/zh/`) — switch in the VitePress nav.  
+> **Engineering docs (EN highlights)**: [`Doc/en/README.md`](Doc/en/README.md).  
 > **No longer required**: external `standards/` + `STANDARDS_ROOT` sync (legacy flow retired).
 
 ---

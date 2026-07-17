@@ -1,9 +1,9 @@
 /**
  * 本仓 docs → manifest / 侧栏 / 目录索引（generate）。
- * SoT：Code/code/docs/**（就地真源）；直接改 md，再 npm run generate。
+ * SoT：Code/code/docs/zh/**（中文全文）；英文 root 为 stub/索引（VitePress locales）。
  *
  * 历史：曾从外部 STANDARDS_ROOT 拷贝正文；2026-07-16 起废止该日常流程。
- * STANDARDS_ROOT / SKIP_SYNC 若仍设置：仅告警，行为与 generate 相同。
+ * 2026-07-17：i18n — SoT 迁入 docs/zh；manifest.source = docs/zh/...
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -12,11 +12,34 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const CODE_ROOT = path.resolve(__dirname, '..')
 const DOCS_ROOT = path.join(CODE_ROOT, 'docs')
+/** 中文全文真源（VitePress locale zh） */
+const SOT_ROOT = path.join(DOCS_ROOT, 'zh')
+const CONTENT_ROOT = 'docs/zh'
 const MANIFEST_OUT = path.join(DOCS_ROOT, 'public', 'manifest.json')
 const SIDEBAR_AGENTS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.agents.generated.json')
 const SIDEBAR_SKILLS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.skills.generated.json')
 const SIDEBAR_RULES = path.join(DOCS_ROOT, '.vitepress', 'sidebar.rules.generated.json')
 const SIDEBAR_DOMAINS = path.join(DOCS_ROOT, '.vitepress', 'sidebar.domains.generated.json')
+const SIDEBAR_AGENTS_ZH = path.join(
+  DOCS_ROOT,
+  '.vitepress',
+  'sidebar.agents.zh.generated.json'
+)
+const SIDEBAR_SKILLS_ZH = path.join(
+  DOCS_ROOT,
+  '.vitepress',
+  'sidebar.skills.zh.generated.json'
+)
+const SIDEBAR_RULES_ZH = path.join(
+  DOCS_ROOT,
+  '.vitepress',
+  'sidebar.rules.zh.generated.json'
+)
+const SIDEBAR_DOMAINS_ZH = path.join(
+  DOCS_ROOT,
+  '.vitepress',
+  'sidebar.domains.zh.generated.json'
+)
 const SITE_CONFIG = path.join(CODE_ROOT, 'site.config.json')
 const DEFAULT_STANDARDS = path.resolve(CODE_ROOT, '../../../standards')
 const ALT_STANDARDS = path.resolve(
@@ -453,11 +476,11 @@ function syncMarkdown({
 function skillLink(id) {
   const meta = SKILL_META[id]
   if (!meta) return `- \`${id}\``
-  return `- [${meta.label}](${withSlash(meta.uri)})（\`${id}\`）`
+  return `- [${meta.label}](${withSlash(`/zh${meta.uri}`)})（\`${id}\`）`
 }
 
 function agentLink(id) {
-  return `- [${id}](${withSlash(`/agents/standard/${id}`)})`
+  return `- [${id}](${withSlash(`/zh/agents/standard/${id}`)})`
 }
 
 function buildAgentExtras(agent) {
@@ -476,7 +499,7 @@ function buildAgentExtras(agent) {
     parts.push('## 相关文档', '')
     for (const d of agent.relatedDocs) {
       parts.push(
-        `- [${d.title}](/agents/standard/${agent.id}/docs/${d.slug})`
+        `- [${d.title}](/zh/agents/standard/${agent.id}/docs/${d.slug})`
       )
     }
     parts.push('')
@@ -488,10 +511,10 @@ function buildAgentExtras(agent) {
     return {
       id,
       label: meta?.label || id,
-      uri: meta?.uri || `/skills/${id}`
+      uri: meta ? `/zh${meta.uri}` : `/zh/skills/${id}`
     }
   })
-  const rolePath = `docs/agents/standard/${agent.id}/index.md`
+  const rolePath = `docs/zh/agents/standard/${agent.id}/index.md`
   parts.push(
     '## 在 Cursor 中运行本角色',
     '',
@@ -521,7 +544,7 @@ function buildSkillExtras(skill) {
   if (!skill.boundAgents?.length && !skill.recommendedAgents?.length) {
     parts.push('_暂无标准角色强绑定（见矩阵或领域角色）。_', '')
   }
-  const docsPath = `docs/${skill.sitePath.replace(/\\/g, '/')}`
+  const docsPath = `docs/zh/${skill.sitePath.replace(/\\/g, '/')}`
   parts.push(
     '## 在 Cursor 中使用本技能',
     '',
@@ -535,57 +558,98 @@ function buildSkillExtras(skill) {
 }
 
 function writeAgentsIndex(agents) {
-  const rows = agents
+  const rowsZh = agents
     .map(
       (a) =>
-        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summary} | **就绪** |`
+        `| ${a.index} | [${a.id}](${withSlash(`/zh/agents/standard/${a.id}`)}) | ${a.summary} | **就绪** |`
     )
     .join('\n')
-  const md = `# Agents
+  const mdZh = `# Agents
 
-标准治理团队角色目录。真源：\`docs/agents/standard/<Role>/\`（本仓就地维护）。
+标准治理团队角色目录。真源：\`docs/zh/agents/standard/<Role>/\`（本仓就地维护）。
 
 | 序号 | 角色 | 一句话职责 | 状态 |
 |:----:|------|------------|:----:|
-${rows}
+${rowsZh}
 
-在 Cursor 中运行：\`@docs/agents/standard/<Role>/index.md\`（相对 \`Code/code/\`）。
+在 Cursor 中运行：\`@docs/zh/agents/standard/<Role>/index.md\`（相对 \`Code/code/\`）。
 
 <QuickJump />
 `
-  fs.writeFileSync(path.join(DOCS_ROOT, 'agents', 'index.md'), md, 'utf8')
+  fs.writeFileSync(path.join(SOT_ROOT, 'agents', 'index.md'), mdZh, 'utf8')
+
+  const rowsEn = agents
+    .map(
+      (a) =>
+        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summary} | [ZH full](${withSlash(`/zh/agents/standard/${a.id}`)}) |`
+    )
+    .join('\n')
+  const mdEn = `# Agents
+
+Standard governance roles. Full playbooks (Chinese SoT): \`docs/zh/agents/standard/<Role>/\`.
+
+| # | Role | Summary | Full (ZH) |
+|:----:|------|------------|:----:|
+${rowsEn}
+
+English pages are stubs until translated. In Cursor: \`@docs/zh/agents/standard/<Role>/index.md\`.
+
+<QuickJump />
+`
+  fs.mkdirSync(path.join(DOCS_ROOT, 'agents'), { recursive: true })
+  fs.writeFileSync(path.join(DOCS_ROOT, 'agents', 'index.md'), mdEn, 'utf8')
 }
 
 function writeSkillsIndex(skills) {
-  const rows = skills
+  const rowsZh = skills
     .map((s) => {
-      const uri = withSlash(SKILL_META[s.id].uri)
+      const uri = withSlash(`/zh${SKILL_META[s.id].uri}`)
       const origin = s.origin === 'custom' ? '自定义' : '外部'
       return `| ${s.index} | ${origin} | [${s.id}](${uri}) | ${s.summary} | **就绪** |`
     })
     .join('\n')
-  const md = `# Skills
+  const mdZh = `# Skills
 
-通用技能目录（编号 1～11）。真源：\`docs/skills/**\`（本仓就地维护）。
+通用技能目录（编号 1～11）。真源：\`docs/zh/skills/**\`。
 
 | 序号 | 来源 | 技能 | 一句话用途 | 状态 |
 |:----:|:----:|------|------------|:----:|
-${rows}
+${rowsZh}
 
-在 Cursor 中：\`@\` 对应技能页（如 \`docs/skills/custom/common/stage-gate-flow/index.md\`）。
+在 Cursor 中：\`@\` 对应 \`docs/zh/skills/...\` 页面。
 `
-  fs.writeFileSync(path.join(DOCS_ROOT, 'skills', 'index.md'), md, 'utf8')
+  fs.writeFileSync(path.join(SOT_ROOT, 'skills', 'index.md'), mdZh, 'utf8')
+
+  const rowsEn = skills
+    .map((s) => {
+      const uri = withSlash(SKILL_META[s.id].uri)
+      const zhUri = withSlash(`/zh${SKILL_META[s.id].uri}`)
+      return `| ${s.index} | [${s.id}](${uri}) | ${s.summary} | [ZH full](${zhUri}) |`
+    })
+    .join('\n')
+  const mdEn = `# Skills
+
+Skill catalog (1–11). Full Chinese SoT: \`docs/zh/skills/**\`.
+
+| # | Skill | Summary | Full (ZH) |
+|:----:|------|------------|:----:|
+${rowsEn}
+
+English pages are stubs until translated. Cursor: \`@docs/zh/skills/...\`.
+`
+  fs.mkdirSync(path.join(DOCS_ROOT, 'skills'), { recursive: true })
+  fs.writeFileSync(path.join(DOCS_ROOT, 'skills', 'index.md'), mdEn, 'utf8')
 }
 
 function writeRulesIndex(rules) {
   const byLevel = { L0: [], L1: [], L2: [] }
   for (const r of rules) byLevel[r.level].push(r)
 
-  const section = (level, title) => {
+  const sectionZh = (level, title) => {
     const rows = byLevel[level]
       .map(
         (r) =>
-          `| [${r.name}](${withSlash(`/rules/${level}/${r.name}`)}) | ${r.title} | ${r.alwaysApply ? '是' : '—'} |`
+          `| [${r.name}](${withSlash(`/zh/rules/${level}/${r.name}`)}) | ${r.title} | ${r.alwaysApply ? '是' : '—'} |`
       )
       .join('\n')
     return `### ${level}（${title}）
@@ -596,17 +660,45 @@ ${rows}
 `
   }
 
-  const md = `# Rules
+  const mdZh = `# Rules
 
-规则分层浏览。真源：\`docs/rules/**\`（本仓就地维护；站点只读呈现，不注入 Cursor Rules）。
+规则分层浏览。真源：\`docs/zh/rules/**\`。
 
-${section('L0', '硬约束')}
-${section('L1', '流程与协作')}
-${section('L2', '场景最低限度')}
+${sectionZh('L0', '硬约束')}
+${sectionZh('L1', '流程与协作')}
+${sectionZh('L2', '场景最低限度')}
 
-领域规则见 [Domains](/domains/)（可由 \`site.config.json\` / \`ENABLE_DOMAINS\` 开关）。在 Cursor 中 \`@\` 对应 \`docs/rules/...\` 页面。
+领域规则见 [Domains](/zh/domains/)。在 Cursor 中 \`@\` 对应 \`docs/zh/rules/...\`。
 `
-  fs.writeFileSync(path.join(DOCS_ROOT, 'rules', 'index.md'), md, 'utf8')
+  fs.writeFileSync(path.join(SOT_ROOT, 'rules', 'index.md'), mdZh, 'utf8')
+
+  const sectionEn = (level, title) => {
+    const rows = byLevel[level]
+      .map(
+        (r) =>
+          `| [${r.name}](${withSlash(`/rules/${level}/${r.name}`)}) | ${r.title} | [ZH](${withSlash(`/zh/rules/${level}/${r.name}`)}) |`
+      )
+      .join('\n')
+    return `### ${level} (${title})
+
+| Rule | Topic | Full (ZH) |
+|------|------|:-----------:|
+${rows}
+`
+  }
+
+  const mdEn = `# Rules
+
+Layered rules. Full Chinese SoT: \`docs/zh/rules/**\`.
+
+${sectionEn('L0', 'Hard constraints')}
+${sectionEn('L1', 'Process')}
+${sectionEn('L2', 'Scenario')}
+
+Domains: [Domains](/domains/) · Chinese: [Domains ZH](/zh/domains/).
+`
+  fs.mkdirSync(path.join(DOCS_ROOT, 'rules'), { recursive: true })
+  fs.writeFileSync(path.join(DOCS_ROOT, 'rules', 'index.md'), mdEn, 'utf8')
 }
 
 function writeJson(filePath, data) {
@@ -620,10 +712,24 @@ function writeSidebars(agents, skills, rules) {
       {
         text: 'Agents',
         items: [
-          { text: '角色目录', link: '/agents/' },
+          { text: 'Role catalog', link: '/agents/' },
           ...agents.map((a) => ({
             text: `${a.index}. ${a.id}`,
             link: withSlash(`/agents/standard/${a.id}`)
+          }))
+        ]
+      }
+    ]
+  })
+  writeJson(SIDEBAR_AGENTS_ZH, {
+    '/zh/agents/': [
+      {
+        text: 'Agents',
+        items: [
+          { text: '角色目录', link: '/zh/agents/' },
+          ...agents.map((a) => ({
+            text: `${a.index}. ${a.id}`,
+            link: withSlash(`/zh/agents/standard/${a.id}`)
           }))
         ]
       }
@@ -635,7 +741,7 @@ function writeSidebars(agents, skills, rules) {
       {
         text: 'Skills',
         items: [
-          { text: '技能目录', link: '/skills/' },
+          { text: 'Skill catalog', link: '/skills/' },
           ...skills.map((s) => ({
             text: `${s.index}. ${s.id}`,
             link: withSlash(SKILL_META[s.id].uri)
@@ -644,10 +750,25 @@ function writeSidebars(agents, skills, rules) {
       }
     ]
   })
+  writeJson(SIDEBAR_SKILLS_ZH, {
+    '/zh/skills/': [
+      {
+        text: 'Skills',
+        items: [
+          { text: '技能目录', link: '/zh/skills/' },
+          ...skills.map((s) => ({
+            text: `${s.index}. ${s.id}`,
+            link: withSlash(`/zh${SKILL_META[s.id].uri}`)
+          }))
+        ]
+      }
+    ]
+  })
 
-  const ruleItems = [{ text: '规则目录', link: '/rules/' }]
+  const ruleItemsEn = [{ text: 'Rule catalog', link: '/rules/' }]
+  const ruleItemsZh = [{ text: '规则目录', link: '/zh/rules/' }]
   for (const level of ['L0', 'L1', 'L2']) {
-    ruleItems.push({
+    ruleItemsEn.push({
       text: level,
       items: rules
         .filter((r) => r.level === level)
@@ -656,9 +777,21 @@ function writeSidebars(agents, skills, rules) {
           link: withSlash(`/rules/${level}/${r.name}`)
         }))
     })
+    ruleItemsZh.push({
+      text: level,
+      items: rules
+        .filter((r) => r.level === level)
+        .map((r) => ({
+          text: r.name,
+          link: withSlash(`/zh/rules/${level}/${r.name}`)
+        }))
+    })
   }
   writeJson(SIDEBAR_RULES, {
-    '/rules/': [{ text: 'Rules', items: ruleItems }]
+    '/rules/': [{ text: 'Rules', items: ruleItemsEn }]
+  })
+  writeJson(SIDEBAR_RULES_ZH, {
+    '/zh/rules/': [{ text: 'Rules', items: ruleItemsZh }]
   })
 }
 
@@ -688,7 +821,7 @@ function discoverRules(standardsRoot) {
 function discoverRulesFromDocs() {
   const rules = []
   for (const level of ['L0', 'L1', 'L2']) {
-    const dir = path.join(DOCS_ROOT, 'rules', level)
+    const dir = path.join(SOT_ROOT, 'rules', level)
     if (!fs.existsSync(dir)) continue
     for (const name of fs.readdirSync(dir)) {
       const indexMd = path.join(dir, name, 'index.md')
@@ -703,7 +836,7 @@ function discoverRulesFromDocs() {
         name,
         title,
         siteUri: `/rules/${level}/${name}`,
-        sourceRel: `docs/rules/${level}/${name}/index.md`,
+        sourceRel: `docs/zh/rules/${level}/${name}/index.md`,
         sitePath: `rules/${level}/${name}/index.md`,
         alwaysApply: /alwaysApply：`true`/.test(raw)
       })
@@ -718,7 +851,7 @@ function discoverRulesFromDocs() {
 
 function patchAgentRunGuides() {
   for (const agent of STANDARD_AGENTS) {
-    const out = path.join(DOCS_ROOT, 'agents', 'standard', agent.id, 'index.md')
+    const out = path.join(SOT_ROOT, 'agents', 'standard', agent.id, 'index.md')
     if (!fs.existsSync(out)) continue
     let raw = fs.readFileSync(out, 'utf8')
     const marker = '## 技能标签（矩阵）'
@@ -738,67 +871,123 @@ function writeDomainsPages(domainManifest) {
   const enabled = domainsEnabled()
   const active = new Set(cfg.domains?.active || [])
 
+  fs.mkdirSync(path.join(SOT_ROOT, 'domains'), { recursive: true })
   fs.mkdirSync(path.join(DOCS_ROOT, 'domains'), { recursive: true })
 
-  const rows = catalog
+  const rowsZh = catalog
     .map((d) => {
       const isActive = enabled && active.has(d.id)
-      const link = isActive ? `[${d.title}](/domains/${d.id}/)` : d.title
+      const link = isActive ? `[${d.title}](/zh/domains/${d.id}/)` : d.title
       const status = !enabled ? '总开关关闭' : isActive ? '**灰度中**' : '占位'
       return `| \`${d.id}\` | ${link} | ${d.summary} | ${status} |`
     })
     .join('\n')
 
-  const md = `---
+  const mdZh = `---
 title: "Domains"
 description: 领域增强灰度入口
 ---
 
 # Domains
 
-领域增强目录（对齐 \`standards/domains/\`）。**common 浏览不依赖本区**；关闭开关后本站其余分区仍可用。
+领域增强目录。真源：\`docs/zh/domains/**\`。
 
 | 领域 ID | 名称 | 说明 | 状态 |
 |---------|------|------|:----:|
-${rows}
+${rowsZh}
 
 ### 开关
 
 - 配置：\`Code/code/site.config.json\` → \`domains.enabled\` / \`domains.active\`
-- 环境变量：\`ENABLE_DOMAINS=0\` 可强制关闭（优先于配置）
+- 环境变量：\`ENABLE_DOMAINS=0\` 可强制关闭
 
 当前：\`${enabled ? 'enabled' : 'disabled'}\`；灰度：\`${[...active].join(', ') || '（无）'}\`
 `
-  fs.writeFileSync(path.join(DOCS_ROOT, 'domains', 'index.md'), md, 'utf8')
+  fs.writeFileSync(path.join(SOT_ROOT, 'domains', 'index.md'), mdZh, 'utf8')
 
-  const sidebarItems = [{ text: '领域目录', link: '/domains/' }]
+  const rowsEn = catalog
+    .map((d) => {
+      const isActive = enabled && active.has(d.id)
+      const link = isActive
+        ? `[${d.title}](/domains/${d.id}/)`
+        : d.title
+      const status = !enabled ? 'off' : isActive ? '**active**' : 'stub'
+      return `| \`${d.id}\` | ${link} | ${d.summary} | ${status} |`
+    })
+    .join('\n')
+
+  const mdEn = `---
+title: "Domains"
+description: Domain packs (gray release)
+---
+
+# Domains
+
+Full Chinese content: [/zh/domains/](/zh/domains/).
+
+| ID | Name | Summary | Status |
+|---------|------|------|:----:|
+${rowsEn}
+`
+  fs.writeFileSync(path.join(DOCS_ROOT, 'domains', 'index.md'), mdEn, 'utf8')
+
+  const sidebarItemsEn = [{ text: 'Domain catalog', link: '/domains/' }]
+  const sidebarItemsZh = [{ text: '领域目录', link: '/zh/domains/' }]
   if (enabled) {
     for (const d of catalog) {
       if (!active.has(d.id)) {
-        const stub = path.join(DOCS_ROOT, 'domains', d.id, 'index.md')
-        ensureDir(stub)
+        const stubZh = path.join(SOT_ROOT, 'domains', d.id, 'index.md')
+        const stubEn = path.join(DOCS_ROOT, 'domains', d.id, 'index.md')
+        ensureDir(stubZh)
+        ensureDir(stubEn)
         fs.writeFileSync(
-          stub,
-          `---\ntitle: "${d.title}"\n---\n\n# ${d.title}\n\n占位：尚未灰度。源目录 \`standards/domains/${d.id}/\`。\n`,
+          stubZh,
+          `---\ntitle: "${d.title}"\n---\n\n# ${d.title}\n\n占位：尚未灰度。\n`,
+          'utf8'
+        )
+        fs.writeFileSync(
+          stubEn,
+          `---\ntitle: "${d.title}"\n---\n\n# ${d.title}\n\nPlaceholder (not in gray release).\n\n[Chinese hub](/zh/domains/)\n`,
           'utf8'
         )
         continue
       }
-      sidebarItems.push({ text: d.title, link: withSlash(`/domains/${d.id}`) })
+      sidebarItemsEn.push({ text: d.title, link: withSlash(`/domains/${d.id}`) })
+      sidebarItemsZh.push({
+        text: d.title,
+        link: withSlash(`/zh/domains/${d.id}`)
+      })
       const dm = domainManifest?.[d.id]
       if (dm) {
         for (const a of dm.agents || []) {
-          sidebarItems.push({
+          sidebarItemsEn.push({
             text: `Agent · ${a.id}`,
-            link: withSlash(a.siteUri)
+            link: withSlash(a.siteUri.replace(/^\/zh/, '') || a.siteUri)
+          })
+          sidebarItemsZh.push({
+            text: `Agent · ${a.id}`,
+            link: withSlash(
+              a.siteUri.startsWith('/zh')
+                ? a.siteUri
+                : `/zh${a.siteUri}`
+            )
           })
         }
+      } else {
+        // in-repo domain pages under zh
+        sidebarItemsEn.push({
+          text: `${d.title} (EN stub)`,
+          link: withSlash(`/domains/${d.id}`)
+        })
       }
     }
   }
 
   writeJson(SIDEBAR_DOMAINS, {
-    '/domains/': [{ text: 'Domains', items: sidebarItems }]
+    '/domains/': [{ text: 'Domains', items: sidebarItemsEn }]
+  })
+  writeJson(SIDEBAR_DOMAINS_ZH, {
+    '/zh/domains/': [{ text: 'Domains', items: sidebarItemsZh }]
   })
 }
 
@@ -930,27 +1119,31 @@ function syncDomains(standardsRoot) {
   return out
 }
 
-/** 扫描本仓 docs，刷新 manifest / 侧栏 / 目录；不覆盖技能/规则正文 */
+/** 扫描本仓 docs/zh，刷新 manifest / 双语言侧栏 / 目录；不覆盖技能/规则正文 */
 function generateFromRepoDocs(reason) {
-  console.log(`[generate] ${reason}；SoT = docs/**`)
+  console.log(`[generate] ${reason}；SoT = ${CONTENT_ROOT}/**`)
   if (process.env.STANDARDS_ROOT) {
     console.warn(
-      '[generate] STANDARDS_ROOT 已忽略（本仓 docs 为真源；不再从外仓拷贝正文）'
+      '[generate] STANDARDS_ROOT 已忽略（本仓 docs/zh 为真源；不再从外仓拷贝正文）'
     )
+  }
+  if (!fs.existsSync(SOT_ROOT)) {
+    console.error(`[generate] 缺少 SoT 目录: ${SOT_ROOT}`)
+    process.exit(1)
   }
   const relatedDocs = []
   for (const agent of STANDARD_AGENTS) {
     for (const doc of agent.relatedDocs || []) {
       relatedDocs.push({
         siteUri: `/agents/standard/${agent.id}/docs/${doc.slug}`,
-        source: `docs/agents/standard/${agent.id}/docs/${doc.slug}.md`
+        source: `docs/zh/agents/standard/${agent.id}/docs/${doc.slug}.md`
       })
     }
   }
   const rules = discoverRulesFromDocs()
   const domains = syncDomains(null)
   writeManifest({
-    contentRoot: 'docs',
+    contentRoot: CONTENT_ROOT,
     agents: STANDARD_AGENTS,
     relatedDocs,
     skills: STANDARD_SKILLS,
@@ -961,17 +1154,18 @@ function generateFromRepoDocs(reason) {
   writeAgentsIndex(STANDARD_AGENTS)
   writeSkillsIndex(STANDARD_SKILLS)
   writeRulesIndex(rules)
+  ensureEnglishStubs(STANDARD_AGENTS, STANDARD_SKILLS, rules, relatedDocs)
   patchAgentRunGuides()
   patchSkillCursorHints()
   console.log(
-    `[generate] 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules`
+    `[generate] 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules（SoT=${CONTENT_ROOT}）`
   )
 }
 
 /** 仅刷新技能页底部「在 Cursor 中使用」提示，不改正文 */
 function patchSkillCursorHints() {
   for (const skill of STANDARD_SKILLS) {
-    const out = path.join(DOCS_ROOT, skill.sitePath)
+    const out = path.join(SOT_ROOT, skill.sitePath)
     if (!fs.existsSync(out)) continue
     let raw = fs.readFileSync(out, 'utf8')
     const marker = '## 关联角色（矩阵反向）'
@@ -985,6 +1179,68 @@ function patchSkillCursorHints() {
   }
 }
 
+/** 英文 root 短页：避免 404；全文见 /zh/... */
+function ensureEnglishStubs(agents, skills, rules, relatedDocs) {
+  const writeStub = (relPath, title, zhLink, summary) => {
+    const out = path.join(DOCS_ROOT, relPath)
+    ensureDir(out)
+    const body = `---
+title: "${title}"
+description: English stub — full playbook in Chinese locale
+---
+
+# ${title}
+
+> **English stub.** Full content (Chinese SoT): [${zhLink}](${zhLink})
+
+${summary || ''}
+
+Edit the source of truth at \`docs/zh/${relPath.replace(/\\/g, '/')}\`.
+`
+    fs.writeFileSync(out, body, 'utf8')
+  }
+
+  for (const a of agents) {
+    writeStub(
+      `agents/standard/${a.id}/index.md`,
+      a.id,
+      `/zh/agents/standard/${a.id}/`,
+      a.summary
+    )
+  }
+  for (const s of skills) {
+    const rel = s.sitePath
+    const zhPath = `/zh/${rel.replace(/\/index\.md$/, '/')}`
+    writeStub(rel, s.id, zhPath, s.summary)
+  }
+  for (const r of rules) {
+    writeStub(
+      `rules/${r.level}/${r.name}/index.md`,
+      r.name,
+      `/zh/rules/${r.level}/${r.name}/`,
+      r.title
+    )
+  }
+  for (const d of relatedDocs || []) {
+    const fileRel = `${d.siteUri.replace(/^\//, '')}.md`
+    writeStub(
+      fileRel,
+      path.basename(d.siteUri),
+      `/zh${d.siteUri}`,
+      'Related document stub.'
+    )
+  }
+
+  if (fs.existsSync(path.join(SOT_ROOT, 'domains', 'ptp-nmos'))) {
+    writeStub(
+      'domains/ptp-nmos/index.md',
+      'PTP / NMOS',
+      '/zh/domains/ptp-nmos/',
+      'Domain pack gray release.'
+    )
+  }
+}
+
 function writeManifest({
   contentRoot,
   agents,
@@ -995,10 +1251,10 @@ function writeManifest({
 }) {
   const manifest = {
     generatedAt: new Date().toISOString(),
-    contentRoot: String(contentRoot || 'docs').replace(/\\/g, '/'),
+    contentRoot: String(contentRoot || CONTENT_ROOT).replace(/\\/g, '/'),
     /** @deprecated 兼容旧校验/读端；等于 contentRoot */
-    standardsRoot: String(contentRoot || 'docs').replace(/\\/g, '/'),
-    note: 'SoT=本仓 docs/**；agents + skills 1～11 + rules；domains 灰度',
+    standardsRoot: String(contentRoot || CONTENT_ROOT).replace(/\\/g, '/'),
+    note: 'SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～11 + rules；domains 灰度',
     domainsEnabled: domainsEnabled(),
     domainsActive: loadSiteConfig().domains?.active || [],
     agents: agents.map((a) => ({
@@ -1007,7 +1263,7 @@ function writeManifest({
       title: a.title,
       summary: a.summary,
       siteUri: `/agents/standard/${a.id}`,
-      source: `docs/agents/standard/${a.id}/index.md`,
+      source: `docs/zh/agents/standard/${a.id}/index.md`,
       skills: a.skills,
       skillsRecommended: a.skillsRecommended
     })),
@@ -1017,7 +1273,7 @@ function writeManifest({
       id: s.id,
       origin: s.origin,
       siteUri: SKILL_META[s.id].uri,
-      source: `docs/${s.sitePath.replace(/\\/g, '/')}`,
+      source: `docs/zh/${s.sitePath.replace(/\\/g, '/')}`,
       boundAgents: s.boundAgents,
       recommendedAgents: s.recommendedAgents
     })),
@@ -1028,7 +1284,7 @@ function writeManifest({
       siteUri: `/rules/${r.level}/${r.name}`,
       source: r.sourceRel.startsWith('docs/')
         ? r.sourceRel
-        : `docs/${r.sitePath}`,
+        : `docs/zh/${r.sitePath}`,
       alwaysApply: r.alwaysApply || false
     })),
     domains
@@ -1037,7 +1293,7 @@ function writeManifest({
 }
 
 function main() {
-  generateFromRepoDocs('本仓就地 docs')
+  generateFromRepoDocs('本仓 docs/zh SoT + 英文 stub')
 }
 
 main()

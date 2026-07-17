@@ -1,25 +1,12 @@
 ---
-title: "AI 代码生成范围清单"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "ai-codegen-scope"
+description: English stub — full playbook in Chinese locale
 ---
 
-# AI 代码生成范围清单
+# ai-codegen-scope
 
-## 模块信息
-- 模块名：
-- 版本：
-- 负责人：
+> **English stub.** Full content (Chinese SoT): [/zh/agents/standard/ProductManager/docs/ai-codegen-scope](/zh/agents/standard/ProductManager/docs/ai-codegen-scope)
 
-## 功能点
-1.
-2.
+Related document stub.
 
-## AI 可生成范围
--
-
-## 禁止 AI 生成范围
--
-
-## 验收标准
--
-
+Edit the source of truth at `docs/zh/agents/standard/ProductManager/docs/ai-codegen-scope.md`.

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-17T05:11:11.655Z",
-  "contentRoot": "docs",
-  "standardsRoot": "docs",
-  "note": "SoT=本仓 docs/**；agents + skills 1～11 + rules；domains 灰度",
+  "generatedAt": "2026-07-17T06:17:53.303Z",
+  "contentRoot": "docs/zh",
+  "standardsRoot": "docs/zh",
+  "note": "SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～11 + rules；domains 灰度",
   "domainsEnabled": true,
   "domainsActive": [
     "ptp-nmos"
@@ -14,7 +14,7 @@
       "title": "产品经理（ProductManager）",
       "summary": "需求边界、验收标准、范围清单与红色记录触发条件",
       "siteUri": "/agents/standard/ProductManager",
-      "source": "docs/agents/standard/ProductManager/index.md",
+      "source": "docs/zh/agents/standard/ProductManager/index.md",
       "skills": [
         "stage-gate-flow",
         "ai-code-boundary"
@@ -29,7 +29,7 @@
       "title": "架构师（Architect）",
       "summary": "架构约束、接口与模型、Prompt 架构审核",
       "siteUri": "/agents/standard/Architect",
-      "source": "docs/agents/standard/Architect/index.md",
+      "source": "docs/zh/agents/standard/Architect/index.md",
       "skills": [
         "stage-gate-flow",
         "ai-code-boundary",
@@ -43,7 +43,7 @@
       "title": "开发负责人（DevLead）",
       "summary": "Prompt 终版、小批量生成、初审与 CR",
       "siteUri": "/agents/standard/DevLead",
-      "source": "docs/agents/standard/DevLead/index.md",
+      "source": "docs/zh/agents/standard/DevLead/index.md",
       "skills": [
         "stage-gate-flow",
         "prompt-versioning",
@@ -57,7 +57,7 @@
       "title": "测试工程师（TestEngineer）",
       "summary": "测试设计与报告、上线门禁依据",
       "siteUri": "/agents/standard/TestEngineer",
-      "source": "docs/agents/standard/TestEngineer/index.md",
+      "source": "docs/zh/agents/standard/TestEngineer/index.md",
       "skills": [
         "stage-gate-flow",
         "traceability-compliance"
@@ -72,7 +72,7 @@
       "title": "安全工程师（SecurityEngineer）",
       "summary": "安全扫描、合规与整改闭环",
       "siteUri": "/agents/standard/SecurityEngineer",
-      "source": "docs/agents/standard/SecurityEngineer/index.md",
+      "source": "docs/zh/agents/standard/SecurityEngineer/index.md",
       "skills": [
         "traceability-compliance"
       ],
@@ -86,7 +86,7 @@
       "title": "运维工程师（OpsEngineer）",
       "summary": "版本映射、发布、灰度与回滚",
       "siteUri": "/agents/standard/OpsEngineer",
-      "source": "docs/agents/standard/OpsEngineer/index.md",
+      "source": "docs/zh/agents/standard/OpsEngineer/index.md",
       "skills": [
         "traceability-compliance"
       ],
@@ -100,7 +100,7 @@
       "title": "UI 设计师（UIDesigner）",
       "summary": "UI 规范、还原度与受控出图约束",
       "siteUri": "/agents/standard/UIDesigner",
-      "source": "docs/agents/standard/UIDesigner/index.md",
+      "source": "docs/zh/agents/standard/UIDesigner/index.md",
       "skills": [
         "frontend-design",
         "doc-coauthoring"
@@ -115,7 +115,7 @@
       "title": "标准 NMOS 工程师（NmosEngineer）",
       "summary": "NMOS IS-04/IS-05 校验、Registry 注入验证、证据固化",
       "siteUri": "/agents/standard/NmosEngineer",
-      "source": "docs/agents/standard/NmosEngineer/index.md",
+      "source": "docs/zh/agents/standard/NmosEngineer/index.md",
       "skills": [
         "stage-gate-flow",
         "traceability-compliance"
@@ -126,27 +126,27 @@
   "relatedDocs": [
     {
       "siteUri": "/agents/standard/ProductManager/docs/ai-codegen-scope",
-      "source": "docs/agents/standard/ProductManager/docs/ai-codegen-scope.md"
+      "source": "docs/zh/agents/standard/ProductManager/docs/ai-codegen-scope.md"
     },
     {
       "siteUri": "/agents/standard/Architect/docs/architecture-constraints",
-      "source": "docs/agents/standard/Architect/docs/architecture-constraints.md"
+      "source": "docs/zh/agents/standard/Architect/docs/architecture-constraints.md"
     },
     {
       "siteUri": "/agents/standard/DevLead/docs/reference-notes",
-      "source": "docs/agents/standard/DevLead/docs/reference-notes.md"
+      "source": "docs/zh/agents/standard/DevLead/docs/reference-notes.md"
     },
     {
       "siteUri": "/agents/standard/TestEngineer/docs/ai-test-report",
-      "source": "docs/agents/standard/TestEngineer/docs/ai-test-report.md"
+      "source": "docs/zh/agents/standard/TestEngineer/docs/ai-test-report.md"
     },
     {
       "siteUri": "/agents/standard/SecurityEngineer/docs/ai-security-report",
-      "source": "docs/agents/standard/SecurityEngineer/docs/ai-security-report.md"
+      "source": "docs/zh/agents/standard/SecurityEngineer/docs/ai-security-report.md"
     },
     {
       "siteUri": "/agents/standard/OpsEngineer/docs/version-release",
-      "source": "docs/agents/standard/OpsEngineer/docs/version-release.md"
+      "source": "docs/zh/agents/standard/OpsEngineer/docs/version-release.md"
     }
   ],
   "skills": [
@@ -155,7 +155,7 @@
       "id": "ai-code-boundary",
       "origin": "custom",
       "siteUri": "/skills/custom/common/ai-code-boundary",
-      "source": "docs/skills/custom/common/ai-code-boundary/index.md",
+      "source": "docs/zh/skills/custom/common/ai-code-boundary/index.md",
       "boundAgents": [
         "ProductManager",
         "Architect"
@@ -170,7 +170,7 @@
       "id": "traceability-compliance",
       "origin": "custom",
       "siteUri": "/skills/custom/common/traceability-compliance",
-      "source": "docs/skills/custom/common/traceability-compliance/index.md",
+      "source": "docs/zh/skills/custom/common/traceability-compliance/index.md",
       "boundAgents": [
         "Architect",
         "DevLead",
@@ -187,7 +187,7 @@
       "id": "prompt-versioning",
       "origin": "custom",
       "siteUri": "/skills/custom/common/prompt-versioning",
-      "source": "docs/skills/custom/common/prompt-versioning/index.md",
+      "source": "docs/zh/skills/custom/common/prompt-versioning/index.md",
       "boundAgents": [
         "DevLead"
       ],
@@ -200,7 +200,7 @@
       "id": "stage-gate-flow",
       "origin": "custom",
       "siteUri": "/skills/custom/common/stage-gate-flow",
-      "source": "docs/skills/custom/common/stage-gate-flow/index.md",
+      "source": "docs/zh/skills/custom/common/stage-gate-flow/index.md",
       "boundAgents": [
         "ProductManager",
         "Architect",
@@ -217,7 +217,7 @@
       "id": "doc-coauthoring",
       "origin": "external",
       "siteUri": "/skills/external/doc-coauthoring",
-      "source": "docs/skills/external/doc-coauthoring/index.md",
+      "source": "docs/zh/skills/external/doc-coauthoring/index.md",
       "boundAgents": [],
       "recommendedAgents": [
         "ProductManager",
@@ -230,7 +230,7 @@
       "id": "mcp-builder",
       "origin": "external",
       "siteUri": "/skills/external/mcp-builder",
-      "source": "docs/skills/external/mcp-builder/index.md",
+      "source": "docs/zh/skills/external/mcp-builder/index.md",
       "boundAgents": [],
       "recommendedAgents": []
     },
@@ -239,7 +239,7 @@
       "id": "frontend-design",
       "origin": "external",
       "siteUri": "/skills/external/frontend-design",
-      "source": "docs/skills/external/frontend-design/index.md",
+      "source": "docs/zh/skills/external/frontend-design/index.md",
       "boundAgents": [],
       "recommendedAgents": [
         "UIDesigner"
@@ -250,7 +250,7 @@
       "id": "webapp-testing",
       "origin": "external",
       "siteUri": "/skills/external/webapp-testing",
-      "source": "docs/skills/external/webapp-testing/index.md",
+      "source": "docs/zh/skills/external/webapp-testing/index.md",
       "boundAgents": [],
       "recommendedAgents": [
         "TestEngineer",
@@ -262,7 +262,7 @@
       "id": "web-artifacts-builder",
       "origin": "external",
       "siteUri": "/skills/external/web-artifacts-builder",
-      "source": "docs/skills/external/web-artifacts-builder/index.md",
+      "source": "docs/zh/skills/external/web-artifacts-builder/index.md",
       "boundAgents": [],
       "recommendedAgents": [
         "UIDesigner"
@@ -273,7 +273,7 @@
       "id": "skill-creator",
       "origin": "external",
       "siteUri": "/skills/external/skill-creator",
-      "source": "docs/skills/external/skill-creator/index.md",
+      "source": "docs/zh/skills/external/skill-creator/index.md",
       "boundAgents": [],
       "recommendedAgents": []
     },
@@ -282,7 +282,7 @@
       "id": "Human",
       "origin": "external",
       "siteUri": "/skills/external/Human",
-      "source": "docs/skills/external/Human/index.md",
+      "source": "docs/zh/skills/external/Human/index.md",
       "boundAgents": [],
       "recommendedAgents": []
     }
@@ -293,7 +293,7 @@
       "name": "01-language-and-safety",
       "title": "语言与安全",
       "siteUri": "/rules/L0/01-language-and-safety",
-      "source": "docs/rules/L0/01-language-and-safety/index.md",
+      "source": "docs/zh/rules/L0/01-language-and-safety/index.md",
       "alwaysApply": true
     },
     {
@@ -301,7 +301,7 @@
       "name": "02-core-boundary",
       "title": "核心边界",
       "siteUri": "/rules/L0/02-core-boundary",
-      "source": "docs/rules/L0/02-core-boundary/index.md",
+      "source": "docs/zh/rules/L0/02-core-boundary/index.md",
       "alwaysApply": true
     },
     {
@@ -309,7 +309,7 @@
       "name": "03-traceability",
       "title": "可追溯性",
       "siteUri": "/rules/L0/03-traceability",
-      "source": "docs/rules/L0/03-traceability/index.md",
+      "source": "docs/zh/rules/L0/03-traceability/index.md",
       "alwaysApply": true
     },
     {
@@ -317,7 +317,7 @@
       "name": "01-stage-gate",
       "title": "六阶段门禁",
       "siteUri": "/rules/L1/01-stage-gate",
-      "source": "docs/rules/L1/01-stage-gate/index.md",
+      "source": "docs/zh/rules/L1/01-stage-gate/index.md",
       "alwaysApply": false
     },
     {
@@ -325,7 +325,7 @@
       "name": "02-prompt-review",
       "title": "Prompt 评审",
       "siteUri": "/rules/L1/02-prompt-review",
-      "source": "docs/rules/L1/02-prompt-review/index.md",
+      "source": "docs/zh/rules/L1/02-prompt-review/index.md",
       "alwaysApply": false
     },
     {
@@ -333,7 +333,7 @@
       "name": "03-batch-and-cr",
       "title": "批量与 CR",
       "siteUri": "/rules/L1/03-batch-and-cr",
-      "source": "docs/rules/L1/03-batch-and-cr/index.md",
+      "source": "docs/zh/rules/L1/03-batch-and-cr/index.md",
       "alwaysApply": false
     },
     {
@@ -341,7 +341,7 @@
       "name": "concurrency-minimum-capacity",
       "title": "并发与容量基线",
       "siteUri": "/rules/L2/concurrency-minimum-capacity",
-      "source": "docs/rules/L2/concurrency-minimum-capacity/index.md",
+      "source": "docs/zh/rules/L2/concurrency-minimum-capacity/index.md",
       "alwaysApply": false
     },
     {
@@ -349,7 +349,7 @@
       "name": "dialog-minimum-safety",
       "title": "对话最低安全",
       "siteUri": "/rules/L2/dialog-minimum-safety",
-      "source": "docs/rules/L2/dialog-minimum-safety/index.md",
+      "source": "docs/zh/rules/L2/dialog-minimum-safety/index.md",
       "alwaysApply": false
     },
     {
@@ -357,7 +357,7 @@
       "name": "mcp-minimum-contract",
       "title": "MCP 最低契约",
       "siteUri": "/rules/L2/mcp-minimum-contract",
-      "source": "docs/rules/L2/mcp-minimum-contract/index.md",
+      "source": "docs/zh/rules/L2/mcp-minimum-contract/index.md",
       "alwaysApply": false
     },
     {
@@ -365,12 +365,12 @@
       "name": "ptp-nmos-minimum-ops",
       "title": "PTP/NMOS 最低运维",
       "siteUri": "/rules/L2/ptp-nmos-minimum-ops",
-      "source": "docs/rules/L2/ptp-nmos-minimum-ops/index.md",
+      "source": "docs/zh/rules/L2/ptp-nmos-minimum-ops/index.md",
       "alwaysApply": true
     }
   ],
   "domains": {},
   "contentHash": "11551bc5b589d320",
-  "validatedAt": "2026-07-17T05:11:12.117Z",
+  "validatedAt": "2026-07-17T06:17:53.825Z",
   "validateOk": true
 }

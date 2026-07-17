@@ -3,8 +3,8 @@ layout: home
 title: Agents Skill Site
 hero:
   name: Agents Skill Site
-  text: 治理资产发现站
-  tagline: agents / skills / rules — 磁盘 Markdown 为 Source of Truth；本站只做浏览、索引与运行指引
+  text: Governance discovery site
+  tagline: agents / skills / rules — Markdown on disk is the Source of Truth; this site browses, indexes, and guides runtime use
   actions:
     - theme: brand
       text: Agents
@@ -17,11 +17,13 @@ hero:
       link: /rules/
 features:
   - title: Agents
-    details: 标准八角色正文、技能标签、运行指引与编号跳转
+    details: Eight standard roles, skill tags, run guides, and numbered jump
   - title: Skills
-    details: 编号 1～11 的 SKILL.md 正文与反向角色关联
+    details: Skills 1–11 with reverse role bindings (full text in Chinese locale)
   - title: Rules / Domains
-    details: L0/L1/L2 规则；Domains 可灰度开关（默认 ptp-nmos）
+    details: L0/L1/L2 rules; Domains gray-release (default ptp-nmos)
 ---
 
 <QuickJump />
+
+> Full Chinese playbooks: switch language to **简体中文** in the nav, or open [/zh/](/zh/).

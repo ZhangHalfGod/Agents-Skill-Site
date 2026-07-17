@@ -11,7 +11,9 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 > **本仓做什么**：VitePress 发现站 + MCP 索引 + **治理正文真源**。  
-> **真源**：`Code/code/docs/**`（agents · skills · rules · operations）。直接改 Markdown，再 `npm run generate` 刷新索引。  
+> **真源（中文全文）**：`Code/code/docs/zh/**`。英文站为 stub（`docs/**` root）。直接改 Markdown，再 `npm run generate`。  
+> **站点语言**：英文默认 `/agents-skill/` · 中文 `/agents-skill/zh/`（顶栏切换）。  
+> **工程文档英文精选**：[`Doc/en/README.md`](Doc/en/README.md)。  
 > **不再依赖**：外仓 `standards/` + `STANDARDS_ROOT` sync（历史流程已废止）。
 
 ---

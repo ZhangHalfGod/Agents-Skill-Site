@@ -1,23 +1,12 @@
 ---
-title: "AI 代码安全报告"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "ai-security-report"
+description: English stub — full playbook in Chinese locale
 ---
 
-# AI 代码安全报告
+# ai-security-report
 
-## 扫描范围
-- 代码范围：
-- 配置范围：
+> **English stub.** Full content (Chinese SoT): [/zh/agents/standard/SecurityEngineer/docs/ai-security-report](/zh/agents/standard/SecurityEngineer/docs/ai-security-report)
 
-## 风险发现
-- 高危：
-- 中危：
-- 低危：
+Related document stub.
 
-## 整改情况
-- 已整改：
-- 待整改：
-
-## 结论
-- 是否允许进入上线阶段：
-
+Edit the source of truth at `docs/zh/agents/standard/SecurityEngineer/docs/ai-security-report.md`.

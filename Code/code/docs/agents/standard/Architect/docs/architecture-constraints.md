@@ -1,27 +1,12 @@
 ---
-title: "架构约束与接口数据模型"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "architecture-constraints"
+description: English stub — full playbook in Chinese locale
 ---
 
-# 架构约束与接口数据模型
+# architecture-constraints
 
-## 模块信息
-- 模块名：
-- 版本：
+> **English stub.** Full content (Chinese SoT): [/zh/agents/standard/Architect/docs/architecture-constraints](/zh/agents/standard/Architect/docs/architecture-constraints)
 
-## 架构约束
-- 分层约束：
-- 核心边界：
-- 可扩展点：
+Related document stub.
 
-## 接口契约
-- 接口名：
-- 入参：
-- 出参：
-- 错误语义：
-
-## 数据模型
-- 实体：
-- 字段：
-- 校验规则：
-
+Edit the source of truth at `docs/zh/agents/standard/Architect/docs/architecture-constraints.md`.

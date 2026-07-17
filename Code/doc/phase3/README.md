@@ -18,9 +18,15 @@
 | 阶段 B 落地 | ✅ 2026-07-17 |
 | 阶段 C 落地 | ✅ 2026-07-17 |
 | 阶段 D 落地 | ✅ 2026-07-17 |
+| VitePress i18n（root=en /zh） | ✅ 2026-07-17（见 [`i18n-vitepress.md`](i18n-vitepress.md)） |
 | 阶段 E/F | ⬜ 可选后置 |
 
 ## 日志
+
+### 2026-07-17（续）
+
+- **VitePress locales**：root=English，`/zh/`=中文全文 SoT（`docs/zh/**`）；`Doc/en/` 精选镜像。  
+- 笔记：[`i18n-vitepress.md`](i18n-vitepress.md)。
 
 ### 2026-07-17
 

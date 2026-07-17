@@ -1,9 +1,11 @@
 # Doc — 工程文档入口
 
-> **状态**：**一期**已验收；**二期** Cursor + MCP MVP；**三期**：治理资产迭代闭环（规划中）  
+> **状态**：**一期**已验收；**二期** Cursor + MCP MVP；**三期**：治理资产迭代闭环  
 > **目标**：浏览 / 检索 / 按说明书触发 `agents` · `skills` · `rules`  
-> **内容源（SoT）**：本仓 `Code/code/docs/**`（agents · skills · rules · operations）。改完后 `npm run generate`。  
-> **仓库首页 README**：默认英文 [`../README.md`](../README.md) · 中文 [`../README.zh-CN.md`](../README.zh-CN.md)
+> **内容源（SoT）**：本仓 `Code/code/docs/zh/**`（中文全文）；英文站 stub 在 `docs/**` root。改完后 `npm run generate`。  
+> **仓库首页 README**：默认英文 [`../README.md`](../README.md) · 中文 [`../README.zh-CN.md`](../README.zh-CN.md)  
+> **工程文档英文精选**：[`en/README.md`](en/README.md)  
+> **发现站语言**：VitePress `root`=en · `/zh/`=中文（顶栏切换）
 
 ## 相关 GitHub 仓库
 
@@ -21,15 +23,17 @@
 | **S0** | [SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md) | 行进方向活文档 |
 | **日志** | [CHANGELOG.md](CHANGELOG.md) | 版本与里程碑摘要 |
 | **Demo** | [guides/mcp-work-then-distill-demo.md](guides/mcp-work-then-distill-demo.md) | MCP → 干活 → Lesson 蒸馏 → 上传（跨项目流程） |
+| **EN** | [en/README.md](en/README.md) | 工程文档英文精选镜像 |
 | **ADR** | [../Code/doc/phase1/ADR-001-architecture-and-stack.md](../Code/doc/phase1/ADR-001-architecture-and-stack.md) | 技术栈冻结 |
 
 ## 按期目录
 
 ```text
 Doc/
-  SYSTEM-DIRECTION.md     # 跨期 S0
+  SYSTEM-DIRECTION.md     # 跨期 S0（中文真源）
   CHANGELOG.md            # 跨期
   guides/                 # 跨项目使用 Demo / 指南
+  en/                     # 工程文档英文精选镜像
   phase1/                 # 一期：建站 MVP（阶段 0～7）
   phase2/                 # 二期：Cursor + MCP
   phase3/                 # 三期：治理资产迭代闭环
@@ -63,6 +67,7 @@ Code/doc/
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-17 | VitePress i18n（root=en /zh）+ `Doc/en` 精选；SoT=`docs/zh` |
 | 2026-07-17 | 新增 `guides/mcp-work-then-distill-demo.md`（MCP→蒸馏→上传流程 Demo） |
 | 2026-07-16 | **B 方案落地**：本仓 `docs/**` 就地 SoT；废止外仓 sync 日常流程 |
 | 2026-07-14 | 入口补「相关 GitHub 仓库」；phase3 `00-context` 写明 SoT 仓 |

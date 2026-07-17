@@ -1,0 +1,17 @@
+{
+  "/zh/domains/": [
+    {
+      "text": "Domains",
+      "items": [
+        {
+          "text": "领域目录",
+          "link": "/zh/domains/"
+        },
+        {
+          "text": "PTP / NMOS",
+          "link": "/zh/domains/ptp-nmos/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,23 +1,12 @@
 ---
-title: "L1 · 六阶段门禁"
-description: 本仓 docs 真源；直接编辑本页后 npm run generate
+title: "01-stage-gate"
+description: English stub — full playbook in Chinese locale
 ---
 
-# L1 · 六阶段门禁
+# 01-stage-gate
 
-1. 必须按需求、设计、开发、测试、安全、上线顺序推进。
-2. 每阶段必须有明确输入、输出与完成状态。
-3. 上一阶段未完成，不得进入下一阶段。
-4. 涉及核心模块或架构层改动时，阶段输出必须包含《核心模块AI生成红色记录》并在门禁中校验。
-5. 阶段出门须处理 Lesson：已写入 `docs/operations/<project>/lessons/`，或显式勾选「本阶段无新教训」（见技能 `stage-gate-flow`）。
+> **English stub.** Full content (Chinese SoT): [/zh/rules/L1/01-stage-gate/](/zh/rules/L1/01-stage-gate/)
 
-## 元数据
+六阶段门禁
 
-- 层级：`L1`
-- 文件：`01-stage-gate.mdc`
-- alwaysApply：`false`
-- 真源：本页（`docs/…`）
-
-## 在 Cursor 中使用
-
-`@docs/rules/L1/01-stage-gate/index.md`
+Edit the source of truth at `docs/zh/rules/L1/01-stage-gate/index.md`.

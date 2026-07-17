@@ -4,11 +4,15 @@
       "text": "Domains",
       "items": [
         {
-          "text": "领域目录",
+          "text": "Domain catalog",
           "link": "/domains/"
         },
         {
           "text": "PTP / NMOS",
+          "link": "/domains/ptp-nmos/"
+        },
+        {
+          "text": "PTP / NMOS (EN stub)",
           "link": "/domains/ptp-nmos/"
         }
       ]

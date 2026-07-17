@@ -1,10 +1,14 @@
 # 流程 Demo：MCP 查资产 → 干活 → Lesson 蒸馏 → 上传
 
+**Language / 语言:** [English](../en/guides/mcp-work-then-distill-demo.md) | [中文](mcp-work-then-distill-demo.md)
+
 > **文档级别**：使用指南（跨项目可复用）  
 > **日期**：2026-07-17  
 > **一句话**：MCP 只读发现「用哪份说明书」；干活与沉淀写在仓库 Markdown；索引用 generate 刷新；MCP **不写**正文。
 
 本页是一条**端到端参考流程**。目录名可换成你项目里的约定；下面用虚构项目举例，文末附本仓对照。
+
+> **本仓 SoT**：完整治理正文在 `Code/code/docs/zh/**`；MCP `source` 形如 `docs/zh/skills/...`。英文发现站为 stub，顶栏可切「简体中文」。
 
 ---
 
@@ -212,16 +216,17 @@ flowchart LR
 
 | Demo 概念 | 本仓落点 |
 |-----------|----------|
-| 治理正文 | `Code/code/docs/**` |
-| Lesson | `Code/code/docs/operations/<project>/lessons/` |
-| 模板 | `.../operations/_template/lessons/_lesson-card.template.md` |
-| 主 skill 例 | `docs/skills/custom/common/stage-gate-flow/index.md` |
+| 治理正文（中文全文 SoT） | `Code/code/docs/zh/**` |
+| 英文发现站 stub | `Code/code/docs/**`（VitePress root） |
+| Lesson | `Code/code/docs/zh/operations/<project>/lessons/` |
+| 模板 | `.../zh/operations/_template/lessons/_lesson-card.template.md` |
+| 主 skill 例 | `docs/zh/skills/custom/common/stage-gate-flow/index.md` |
 | 部署细则例 | `.../stage-gate-flow/docs/deploy-verify.md` |
 | generate | `cd Code/code && npm run generate && npm run validate` |
-| 远程 MCP | Cursor `agents-skill-remote`（只读） |
+| 远程 MCP | Cursor `agents-skill-remote`（只读；`source` → `docs/zh/...`） |
 | 真实回灌例 | `stage-gate-exit-evidence` → deploy-verify「证据分层」 |
 
-工程规划细节见 [`Doc/phase3/`](../phase3/README.md)；Lesson 状态机见 [`operations/README`](../../Code/code/docs/operations/README.md)。
+工程规划细节见 [`Doc/phase3/`](../phase3/README.md)；Lesson 状态机见 [`operations/README`](../../Code/code/docs/zh/operations/README.md)。英文精选：[`Doc/en/`](../en/README.md)。
 
 ---
 
@@ -229,4 +234,5 @@ flowchart LR
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-17 | i18n：SoT → `docs/zh`；补英文镜像与语言互链 |
 | 2026-07-17 | 初稿：跨项目流程 Demo（MCP → 干活 → 蒸馏 → 上传） |
