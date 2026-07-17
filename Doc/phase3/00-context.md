@@ -91,7 +91,9 @@ Code/code/docs/**          ← SoT（直接改 Markdown）
 1. 读本文件 + [`02-execution-plan.md`](02-execution-plan.md)  
 2. `git remote -v` 确认上游 / fork  
 3. 改资产：直接改 `Code/code/docs/**` → `npm run generate` / validate；部署另议  
-4. 默认**先落地 A～B**（operations + Lesson Card + Skill 分层约定）
+4. 需要沉淀时触发句：  
+   `记一条 lesson：<现象>。项目 <project-id>。按 operations Lesson Card 模板写入文件。`  
+5. 执行纪律：先 MCP `list_*` / `get_*`，再按需 `@` 正文（[`04-context-budget.md`](04-context-budget.md)）
 
 ---
 

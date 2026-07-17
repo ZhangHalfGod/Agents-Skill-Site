@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-17 — phase3 B～D（迭代闭环）
+
+- **阶段 B**：Lesson 出门检查 + 触发句；`.github/PULL_REQUEST_TEMPLATE.md` 治理沉淀勾选  
+- **阶段 C**：`stage-gate-flow` 瘦身（主页清单 + `docs/` 长文）；引用 `04-context-budget`  
+- **阶段 D**：`operations` 收尾清单 / 状态机；真实 Lesson `ecs-deploy-host404` merged → `deploy-verify.md`  
+- 分支：`feature/phase3-loop`；E/F（MCP list_lessons / 多 Profile）未做  
+
 ## 2026-07-16 — sot-inplace（方案 B）
 
 - **SoT 迁入本仓**：`Code/code/docs/**` 就地维护；废止外仓 `STANDARDS_ROOT` 日常 sync  
