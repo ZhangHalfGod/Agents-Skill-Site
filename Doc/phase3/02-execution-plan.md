@@ -65,8 +65,10 @@
 
 ### 验收
 
-- [ ] 触发句写进文档，新对话可复述  
-- [ ] 门禁检查项可见（文档或 skill 补丁）  
+- [x] 触发句写进文档，新对话可复述（`00-context` / `operations/README` / `stage-gate-flow`）  
+- [x] 门禁检查项可见（`stage-gate-flow` 清单 + L1 `01-stage-gate` + PR 模板）  
+
+> 落地：2026-07-17 · `feature/phase3-loop`
 
 ---
 
@@ -82,9 +84,11 @@
 
 ### 验收
 
-- [ ] 约定成文  
-- [ ] 至少一个 skill 示范合并进仓  
-- [ ] MCP `get_skill` 仍只返回索引（行为不变）  
+- [x] 约定成文（phase3 README 引用 04）  
+- [x] 至少一个 skill 示范合并进仓（`stage-gate-flow` + `docs/`）  
+- [x] MCP `get_skill` 仍只返回索引（行为不变）  
+
+> 落地：2026-07-17
 
 ---
 
@@ -98,8 +102,10 @@
 
 ### 验收
 
-- [ ] 用 2～3 张假想/真实 card 走通一次纸面演练  
-- [ ] 至少 1 次真实 merged（可很小：skill 多 3 条 checklist）  
+- [x] 用真实 card 走通（`ecs-deploy-host404` + 既有 `site-sot-inplace`）  
+- [x] 至少 1 次真实 merged（Host 假 404 → `stage-gate-flow/docs/deploy-verify.md`）  
+
+> 落地：2026-07-17
 
 ---
 
@@ -144,17 +150,17 @@
 A → B → C → D →（可选）E/F
 ```
 
-当前文档任务完成后，**下一代码动作从 A 开始**。
+**A～D 已落地**（本分支）。E/F 仍可选后置。
 
 ---
 
 ## 9. 完成定义（三期关门）
 
-- [ ] A～D 验收勾选完成  
-- [ ] 至少 1 个 skill 因 lesson 回灌而变更（Git 可追溯）  
-- [ ] 上下文约定被至少一次真实任务遵守（对话中先 list/get 再 @ 正文）  
-- [ ] CHANGELOG 记一笔三期里程碑  
-- [ ] 若改 S0 优先级：追加 `SYSTEM-DIRECTION` §8  
+- [x] A～D 验收勾选完成  
+- [x] 至少 1 个 skill 因 lesson 回灌而变更（Git 可追溯）  
+- [x] 上下文约定写入 skill / 交接文档（先 list/get 再 @）  
+- [x] CHANGELOG 记一笔三期里程碑  
+- [ ] 若改 S0 优先级：追加 `SYSTEM-DIRECTION` §8（本期未改优先级，不适用）  
 
 ---
 

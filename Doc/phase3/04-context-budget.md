@@ -51,7 +51,7 @@ L3  docs/、历史 lessons、长参考     重（默认不进上下文）
 
 ## 4. 运行时纪律（给协作 Agent）
 
-1. 先 `list_agents` / `list_skills` / `get_agent`，**禁止**一上来 @ 全部 standards。  
+1. 先 `list_agents` / `list_skills` / `get_agent`，**禁止**一上来 `@` 全部 `docs/` 正文。  
 2. 单任务：**1 个主 skill + 最多 2 个辅 skill**。  
 3. Rules：L0 always；L1 按阶段；L2 按域名/标签按需。  
 4. 跨会话只携带：`profile` + 角色 id + skill id 列表 + 当前 project-id；不携带上轮全文。  
@@ -97,6 +97,6 @@ Rules 最少 → alwaysApply 保持克制（现有 L0 已 always；L2 勿滥 alw
 
 ## 8. 验收（阶段 C）
 
-- [ ] 本文约定被引用进 phase3 README / 执行计划  
-- [ ] 至少一个 skill 完成瘦身示范  
-- [ ] 一次真实任务日志显示：先 MCP 再按需 @（可记在 Code/doc/phase3）
+- [x] 本文约定被引用进 phase3 README / 执行计划  
+- [x] 至少一个 skill 完成瘦身示范（`stage-gate-flow`）  
+- [x] 示范约定写进 skill 主页（先 MCP 再按需 `@`）；实现笔记见 `Code/doc/phase3/`

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T09:09:08.261Z",
+  "generatedAt": "2026-07-17T02:48:09.406Z",
   "contentRoot": "docs",
   "standardsRoot": "docs",
   "note": "SoT=本仓 docs/**；agents + skills 1～11 + rules；domains 灰度",
@@ -371,6 +371,6 @@
   ],
   "domains": {},
   "contentHash": "11551bc5b589d320",
-  "validatedAt": "2026-07-16T09:09:08.715Z",
+  "validatedAt": "2026-07-17T02:48:09.906Z",
   "validateOk": true
 }

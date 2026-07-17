@@ -1,8 +1,9 @@
 # Doc/phase3 — 第三期：治理资产迭代闭环
 
-> **状态**：规划中（2026-07-14 起）  
-> **前提**：一期网站 ✅ · 二期远程 MCP ✅  
-> **原则**：先计划后改代码；服从 [`../SYSTEM-DIRECTION.md`](../SYSTEM-DIRECTION.md)
+> **状态**：B～D 落地中（`feature/phase3-loop`）· A ✅  
+> **前提**：一期网站 ✅ · 二期远程 MCP ✅ · SoT=本仓 docs  
+> **原则**：先计划后改代码；服从 [`../SYSTEM-DIRECTION.md`](../SYSTEM-DIRECTION.md)  
+> **上下文预算**：执行时遵守 [`04-context-budget.md`](04-context-budget.md)（先 MCP 再按需 `@`）
 
 ## 新对话从哪读
 
