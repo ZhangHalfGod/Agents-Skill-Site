@@ -13,7 +13,7 @@
 |--------|------|
 | **[`ZhangHalfGod/Agents-Skill-Site`](https://github.com/ZhangHalfGod/Agents-Skill-Site)**（本仓） | **发现站 + MCP + 治理正文 SoT**（`Code/code/docs/**`）+ 工程文档 |
 | 个人 fork（例：`MacAirM4/Agents-Skill-Site`） | 私人迭代；`upstream` → 本仓 |
-| 公司 fork（BMWork，计划） | 组织变体；独立部署 / 独立 manifest |
+| 公司 fork（OrgFork，计划） | 组织变体；独立部署 / 独立 manifest |
 
 ### 1.1 真源与生成物（必读）
 

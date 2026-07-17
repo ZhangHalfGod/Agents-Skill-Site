@@ -26,7 +26,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 - REQ 需求包：`operations/requests/<year>/<REQ-ID>/00-context.md` ~ `07-*.md`
 - 阶段文档：`phases/phase-*/` 下各阶段路线图、检查清单与验证笔记
 - 架构设计：`02-architecture.md`（含数据流程图、运行证据映射）
-- 代码锚点：`nmos_client_helper.c`、`bm_main.cpp`、`bm_node_device.c`、`nmos_ai100_wrapper.cpp` 等
+- 代码锚点：`nmos_client_helper.c`、`main.cpp`、`node_device.c`、`nmos_ai100_wrapper.cpp` 等
 - 运行日志：`debug.txt`、`nmos_daemon_guard.log`、`web-server.log`
 
 ## 输出
@@ -39,7 +39,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ## 执行步骤
 
 ### 1. IS-04 链路验证
-1. 确认 Node 进程启动日志：`[DEVLEAD] BM_START` → `reg_done=1` → `registry resolved`
+1. 确认 Node 进程启动日志：`[DEVLEAD] NODE_START` → `reg_done=1` → `registry resolved`
 2. 访问 Node API：`GET /x-nmos/node/v1.3/self` 核对 `api.endpoints`、`clocks`、`interfaces`
 3. 访问 Query API：`GET /x-nmos/query/v1.3/nodes`、`/devices`、`/senders`、`/receivers`
 4. 执行 `nmos-dump-query.ps1`，确认 `Singleton404` 为空
@@ -80,7 +80,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ### 进程间通信（MVC）
 | 方向 | mtype | 关键载荷 |
 |------|-------|---------|
-| ARM → NMOS | 888 | `BM_NMOS_STRING_REGISRY_1/2`、`DEVICE_INFO` |
+| ARM → NMOS | 888 | `NMOS_STRING_REGISTRY_1/2`、`DEVICE_INFO` |
 | NMOS → ARM | 666 | `REGISTER_REQ`、状态更新 |
 
 ### 常用代码锚点
@@ -88,8 +88,8 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 |------|------|---------|
 | MVC 组包 | `nmos_client_srv.c` | `check_arm_nmos_event`、`nmos_pack_registry_info` |
 | 设备映射 | `nmos_client_helper.c` | `nmos_get_device_map_info`、`node_group_map` |
-| Registry 注入 | `bm_main.cpp` | `bm_nmos_get_device_registry_info` |
-| Node 实现绑定 | `bm_120p_rx_node_implementation.cpp` | `make_node_implementation` |
+| Registry 注入 | `main.cpp` | `nmos_get_device_registry_info` |
+| Node 实现绑定 | `rx_node_implementation.cpp` | `make_node_implementation` |
 | SDP 生成 | `nmos_ai100_wrapper.cpp` | `setup_video_common`、`make_sdp_parameters` |
 
 ## 门禁判定规范

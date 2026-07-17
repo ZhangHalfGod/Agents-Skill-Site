@@ -36,7 +36,7 @@ Code/code/docs/operations/
       2026-07-14-short-slug.md
 ```
 
-`project-id` 示例：`site-sot-inplace`、`bmwork-foo-service`。
+`project-id` 示例：`site-sot-inplace`、`org-foo-service`。
 
 ---
 

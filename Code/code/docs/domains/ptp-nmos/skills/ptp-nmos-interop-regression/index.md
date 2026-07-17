@@ -13,7 +13,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ## 必读参考
 1. `standards/domains/ptp-nmos/README.md`
 2. `standards/domains/ptp-nmos/knowledge/interop/nmos-is0405-aes67-st2110-checklist.md`
-3. `standards/domains/ptp-nmos/knowledge/interop/nmos-bm-node-regression-matrix-template.md`
+3. `standards/domains/ptp-nmos/knowledge/interop/nmos-node-regression-matrix-template.md`
 4. `Important/04-NMOS/README.md`
 5. `Important/03-PTP/README.md`
 

@@ -14,7 +14,7 @@
 | 写三期文档 / 定模板 | 本仓上游 |
 | 试跑 Lesson → 改 docs → generate | 本仓或 MacAir fork |
 | 个人长期迭代 | MacAir fork；通用再 PR 上游 |
-| 公司资产 | BMWork（部署后） |
+| 公司资产 | OrgFork（部署后） |
 
 新对话请先 `git remote -v` 确认身份。
 
@@ -29,7 +29,7 @@
 | **C** | 上下文预算落地 | Skill/Agent 分层约定；抽 1～2 个 skill 示范瘦身 | P1 |
 | **D** | 蒸馏 SOP | 周/项目收尾清单；升格决策树可执行 | P1 |
 | **E** | MCP 只读增强（可选） | `list_lessons` 或 `profile` 设计 + 实现 | P2 |
-| **F** | 多 Profile 部署说明 | MacAir / BMWork 配置样例（可不立刻部署） | P2 |
+| **F** | 多 Profile 部署说明 | MacAir / OrgFork 配置样例（可不立刻部署） | P2 |
 
 ---
 
@@ -134,8 +134,8 @@
 
 ### 动作
 
-1. 文档化三套 Cursor MCP 条目样例：`upstream` / `macair` / `bmwork`  
-2. BMWork：部署清单引用二期 `CURSOR-SETUP` + 独立 Token  
+1. 文档化三套 Cursor MCP 条目样例：`upstream` / `macair` / `orgfork`  
+2. OrgFork：部署清单引用二期 `CURSOR-SETUP` + 独立 Token  
 3. MacAir：优先本机 stdio + 本地 manifest，或私有 HTTP  
 
 ### 验收

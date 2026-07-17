@@ -17,7 +17,7 @@
 - 项目进行中能稳定留下 Lesson Card  
 - 收尾能明确：升 Skill / 改 Agent / 升 Rule / 丢弃  
 - Agent 执行时仍按需加载，不因资产变多而上下文爆炸  
-- MacAir / BMWork / 上游可用不同 Catalog Profile，互不污染
+- MacAir / OrgFork / 上游可用不同 Catalog Profile，互不污染
 
 ---
 
@@ -42,7 +42,7 @@
 | 网站内 Agent 推理 | S0 永久非目标 |
 | 自动把聊天全量压进 skill | 不可追溯、易含密钥 |
 | 一次大爆炸重构全部 skill | 小步回灌 |
-| 本三期强制部署 BMWork ECS | 文档先定边界；部署另开 |
+| 本三期强制部署公司 OrgFork ECS | 文档先定边界；部署另开 |
 
 ---
 
@@ -64,7 +64,7 @@
 Catalog Profile（环境变量 / MCP 条目）
   upstream  → 公网 ECS 已部署
   macair    → MacAirM4 fork（本机或私有 MCP）
-  bmwork    → 公司 fork（待部署）
+  orgfork   → 公司 fork（待部署）
 
 Project Overlay（实例，不污染 common）
   operations/<project-id>/
@@ -86,12 +86,12 @@ ZhangHalfGod/Agents-Skill-Site   ← 本目录本地仓（上游）
         │
    ┌────┴────┐
    ▼         ▼
-MacAirM4   BMWork（计划）
+MacAirM4   OrgFork（计划）
  fork       fork
 私人迭代    公司迭代
 ```
 
-**回馈规则**：仅通用、脱敏后的 Skill/Rule 升上游；公司特有留 BMWork；个人习惯留 MacAir。
+**回馈规则**：仅通用、脱敏后的 Skill/Rule 升上游；公司特有留 OrgFork；个人习惯留 MacAir。
 
 ---
 
