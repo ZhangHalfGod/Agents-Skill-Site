@@ -2,7 +2,8 @@
 
 > **状态**：**一期**已验收；**二期** Cursor + MCP MVP；**三期**：治理资产迭代闭环（规划中）  
 > **目标**：浏览 / 检索 / 按说明书触发 `agents` · `skills` · `rules`  
-> **内容源（SoT）**：本仓 `Code/code/docs/**`（agents · skills · rules · operations）。改完后 `npm run generate`。
+> **内容源（SoT）**：本仓 `Code/code/docs/**`（agents · skills · rules · operations）。改完后 `npm run generate`。  
+> **仓库首页 README**：默认英文 [`../README.md`](../README.md) · 中文 [`../README.zh-CN.md`](../README.zh-CN.md)
 
 ## 相关 GitHub 仓库
 
