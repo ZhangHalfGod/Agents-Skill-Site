@@ -19,6 +19,7 @@
 |:----:|------|------|
 | **S0** | [SYSTEM-DIRECTION.md](SYSTEM-DIRECTION.md) | 行进方向活文档 |
 | **日志** | [CHANGELOG.md](CHANGELOG.md) | 版本与里程碑摘要 |
+| **Demo** | [guides/mcp-work-then-distill-demo.md](guides/mcp-work-then-distill-demo.md) | MCP → 干活 → Lesson 蒸馏 → 上传（跨项目流程） |
 | **ADR** | [../Code/doc/phase1/ADR-001-architecture-and-stack.md](../Code/doc/phase1/ADR-001-architecture-and-stack.md) | 技术栈冻结 |
 
 ## 按期目录
@@ -27,6 +28,7 @@
 Doc/
   SYSTEM-DIRECTION.md     # 跨期 S0
   CHANGELOG.md            # 跨期
+  guides/                 # 跨项目使用 Demo / 指南
   phase1/                 # 一期：建站 MVP（阶段 0～7）
   phase2/                 # 二期：Cursor + MCP
   phase3/                 # 三期：治理资产迭代闭环
@@ -60,6 +62,7 @@ Code/doc/
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-17 | 新增 `guides/mcp-work-then-distill-demo.md`（MCP→蒸馏→上传流程 Demo） |
 | 2026-07-16 | **B 方案落地**：本仓 `docs/**` 就地 SoT；废止外仓 sync 日常流程 |
 | 2026-07-14 | 入口补「相关 GitHub 仓库」；phase3 `00-context` 写明 SoT 仓 |
 | 2026-07-14 | 新增 phase3/ 交接与执行文档 |

@@ -16,6 +16,7 @@
 
 ## 📖 目录
 
+- [流程 Demo：MCP → 干活 → 蒸馏 → 上传](#流程-demomcp--干活--蒸馏--上传)
 - [背景：AI 编码工具的「治理真空」](#背景ai-编码工具的治理真空)
 - [痛点：为什么团队协作总出问题](#痛点为什么团队协作总出问题)
 - [本项目解决的问题](#本项目解决的问题)
@@ -24,6 +25,22 @@
 - [使用场景](#使用场景)
 - [目录结构](#目录结构)
 - [常见问题](#常见问题)
+
+---
+
+## 流程 Demo：MCP → 干活 → 蒸馏 → 上传
+
+端到端参考（目录名可换成你自己的项目，文内有虚构举例 + 本仓对照）：
+
+**[Doc/guides/mcp-work-then-distill-demo.md](Doc/guides/mcp-work-then-distill-demo.md)**
+
+```text
+MCP 只读查索引 → @ source 正文干活/出门
+  → 写 Lesson（文件，不经 MCP）→ 蒸馏进 skill/agent/rule
+  → generate + validate → commit/push → 服务器 pull + build
+```
+
+要点：MCP **不写**正文；蒸馏与上传走 Git 与构建，无需为 MCP 单独实现写接口。
 
 ---
 
@@ -312,7 +329,7 @@ pm2 save
 
 > **团队沉淀了新规范** → 写 Lesson（`docs/operations/.../lessons/`）→ 蒸馏后改 `docs/skills|agents|rules` → `npm run generate` → Git commit
 
-每一次改进都记录在案，可追溯、可回退、可 review。
+每一次改进都记录在案，可追溯、可回退、可 review。端到端步骤见上方 [流程 Demo](#流程-demomcp--干活--蒸馏--上传)。
 
 ### 场景四：组织级标准化
 
@@ -332,6 +349,7 @@ Agents-Skill-Site/                   # 本仓：发现站 + MCP + docs 真源
 ├── Doc/                             # 工程文档（规划 / 架构 / 决策）
 │   ├── SYSTEM-DIRECTION.md          #   S0 系统级约束（必读）
 │   ├── CHANGELOG.md                 #   版本里程碑记录
+│   ├── guides/                      #   跨项目流程 Demo（MCP→蒸馏→上传）
 │   ├── phase1/                      #   一期规划（网站 MVP）
 │   ├── phase2/                      #   二期规划（Cursor + MCP）
 │   └── phase3/                      #   三期（含两仓拓扑说明）
