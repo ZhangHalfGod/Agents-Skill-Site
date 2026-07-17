@@ -1,9 +1,6 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { withBase, useRouter, useData } from 'vitepress'
-
-const input = ref('')
-const hint = ref('示例：使用角色 2　或　使用技能 1 / role 2 / skill 1')
 
 const AGENTS = {
   1: '/agents/standard/ProductManager/',
@@ -32,6 +29,16 @@ const SKILLS = {
 
 const { localeIndex } = useData()
 const router = useRouter()
+const input = ref('')
+const hint = ref('')
+
+const isEn = computed(() => localeIndex.value === 'root')
+
+watchEffect(() => {
+  hint.value = isEn.value
+    ? 'Example: role 2 or skill 1'
+    : '示例：使用角色 2　或　使用技能 1'
+})
 
 const localePrefix = computed(() =>
   localeIndex.value === 'root' ? '' : `/${localeIndex.value}`
@@ -50,7 +57,9 @@ function go() {
   if (m) {
     const path = AGENTS[Number(m[1])]
     if (!path) {
-      hint.value = `未知角色序号 ${m[1]}（1～8）`
+      hint.value = isEn.value
+        ? `Unknown role index ${m[1]} (1–8)`
+        : `未知角色序号 ${m[1]}（1～8）`
       return
     }
     router.go(withBase(withLocale(path)))
@@ -63,32 +72,32 @@ function go() {
   if (m) {
     const path = SKILLS[Number(m[1])]
     if (!path) {
-      hint.value = `未知技能序号 ${m[1]}（1～11）`
+      hint.value = isEn.value
+        ? `Unknown skill index ${m[1]} (1–11)`
+        : `未知技能序号 ${m[1]}（1～11）`
       return
     }
     router.go(withBase(withLocale(path)))
     return
   }
-  hint.value = '请输入「使用角色 N」或「使用技能 N」 / role N / skill N'
+  hint.value = isEn.value
+    ? 'Enter “role N” or “skill N”'
+    : '请输入「使用角色 N」或「使用技能 N」'
 }
 </script>
 
 <template>
   <div class="quick-jump">
-    <h3>{{ localeIndex === 'root' ? 'Number jump' : '编号快捷跳转' }}</h3>
+    <h3>{{ isEn ? 'Number jump' : '编号快捷跳转' }}</h3>
     <div class="row">
       <input
         v-model="input"
         type="text"
-        :placeholder="
-          localeIndex === 'root'
-            ? 'role 2 / skill 1'
-            : '使用角色 2 / 使用技能 1'
-        "
+        :placeholder="isEn ? 'role 2 / skill 1' : '使用角色 2 / 使用技能 1'"
         @keyup.enter="go"
       />
       <button type="button" @click="go">
-        {{ localeIndex === 'root' ? 'Go' : '跳转' }}
+        {{ isEn ? 'Go' : '跳转' }}
       </button>
     </div>
     <p class="hint">{{ hint }}</p>

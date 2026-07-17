@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L1/03-batch-and-cr/](/zh/rules/L1/03-batch-and-cr/)
 
-批量与 CR
+Batch and CR
 
 Edit the source of truth at `docs/zh/rules/L1/03-batch-and-cr/index.md`.

@@ -1,12 +1,12 @@
 ---
-title: "ai-codegen-scope"
+title: "AI code-generation scope list"
 description: English stub — full playbook in Chinese locale
 ---
 
-# ai-codegen-scope
+# AI code-generation scope list
 
 > **English stub.** Full content (Chinese SoT): [/zh/agents/standard/ProductManager/docs/ai-codegen-scope](/zh/agents/standard/ProductManager/docs/ai-codegen-scope)
 
-Related document stub.
+AI code-generation scope list
 
 Edit the source of truth at `docs/zh/agents/standard/ProductManager/docs/ai-codegen-scope.md`.

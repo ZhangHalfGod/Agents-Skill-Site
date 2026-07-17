@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L0/03-traceability/](/zh/rules/L0/03-traceability/)
 
-可追溯性
+Traceability
 
 Edit the source of truth at `docs/zh/rules/L0/03-traceability/index.md`.

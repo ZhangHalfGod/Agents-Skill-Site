@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { withBase } from 'vitepress'
+import { withBase, useData } from 'vitepress'
 
 const props = defineProps({
   roleId: { type: String, required: true },
@@ -12,28 +12,93 @@ const props = defineProps({
   activation: { type: String, default: '' }
 })
 
+const { localeIndex } = useData()
+const isEn = computed(() => localeIndex.value === 'root')
 const status = ref('')
 
+function skillDocsPath(s) {
+  if (s.source) return s.source
+  const uri = String(s.uri || '')
+    .replace(/^\/zh(?=\/)/, '')
+    .replace(/\/$/, '')
+  const docsPrefix = props.rolePath.startsWith('docs/zh/')
+    ? 'docs/zh'
+    : 'docs'
+  if (uri.startsWith('/skills/')) {
+    return `${docsPrefix}${uri}/index.md`
+  }
+  return `${docsPrefix}/skills/${s.id}/index.md`
+}
+
+const activationLine = computed(() => {
+  if (props.activation) return props.activation
+  return isEn.value
+    ? `As ${props.roleId}, follow the role playbook for the current task.`
+    : `以 ${props.roleId} 身份，按角色说明书执行当前任务。`
+})
+
 const triggerText = computed(() => {
-  const lines = [
-    `@${props.rolePath}`,
-    props.activation ? props.activation : `以 ${props.roleId} 身份，按角色说明书执行当前任务。`
-  ]
+  const lines = [`@${props.rolePath}`, activationLine.value]
   if (props.skills.length) {
     lines.push('')
-    lines.push('建议按序阅读技能：')
+    lines.push(
+      isEn.value
+        ? 'Suggested skill reading order:'
+        : '建议按序阅读技能：'
+    )
     props.skills.forEach((s, i) => {
-      lines.push(`${i + 1}. @standards/.../${s.id}/SKILL.md （或打开站点 ${s.uri}）`)
+      const docs = skillDocsPath(s)
+      lines.push(
+        isEn.value
+          ? `${i + 1}. @${docs} (or open site ${s.uri})`
+          : `${i + 1}. @${docs} （或打开站点 ${s.uri}）`
+      )
     })
   }
   return lines.join('\n')
 })
 
 const exportMd = computed(() => {
+  if (isEn.value) {
+    const skillLines = props.skills
+      .map(
+        (s, i) =>
+          `${i + 1}. \`${s.id}\` — site ${s.uri} — source \`${skillDocsPath(s)}\``
+      )
+      .join('\n')
+    return [
+      `# Task context — ${props.roleId}`,
+      '',
+      `Generated: ${new Date().toISOString()}`,
+      '',
+      '## Role',
+      '',
+      `- ID: \`${props.roleId}\``,
+      `- Path: \`${props.rolePath}\``,
+      `- Cursor: \`@${props.rolePath}\``,
+      props.activation ? `- Activation: ${props.activation}` : '',
+      '',
+      '## Bound skills (suggested order)',
+      '',
+      skillLines || '_None_',
+      '',
+      '## How to use',
+      '',
+      '1. In Cursor, `@` the role markdown',
+      '2. Optionally `@` skill pages in order',
+      '3. Paste the activation line and describe the task',
+      '',
+      '> Exported from Agents Skill Site; this site does not run model inference.',
+      ''
+    ]
+      .filter((l) => l !== '')
+      .join('\n')
+  }
+
   const skillLines = props.skills
     .map(
       (s, i) =>
-        `${i + 1}. \`${s.id}\` — 站点 ${s.uri} — 源 \`standards/...\``
+        `${i + 1}. \`${s.id}\` — 站点 ${s.uri} — 源 \`${skillDocsPath(s)}\``
     )
     .join('\n')
   return [
@@ -55,7 +120,7 @@ const exportMd = computed(() => {
     '## 使用方式',
     '',
     '1. 在 Cursor 中 `@` 角色 md',
-    '2. 按序 `@` 技能 SKILL.md（可选）',
+    '2. 按序 `@` 技能页（可选）',
     '3. 粘贴一句话激活并描述任务',
     '',
     '> 本清单由 Agents Skill Site 导出；网站不执行模型推理。',
@@ -68,9 +133,13 @@ const exportMd = computed(() => {
 async function copyTrigger() {
   try {
     await navigator.clipboard.writeText(triggerText.value)
-    status.value = '已复制触发句到剪贴板'
+    status.value = isEn.value
+      ? 'Copied trigger to clipboard'
+      : '已复制触发句到剪贴板'
   } catch {
-    status.value = '复制失败，请手动选择下方文本'
+    status.value = isEn.value
+      ? 'Copy failed — select the preview text manually'
+      : '复制失败，请手动选择下方文本'
   }
 }
 
@@ -82,36 +151,56 @@ function downloadMd() {
   a.download = `task-context-${props.roleId}.md`
   a.click()
   URL.revokeObjectURL(url)
-  status.value = '已下载任务上下文清单'
+  status.value = isEn.value
+    ? 'Downloaded task context checklist'
+    : '已下载任务上下文清单'
 }
 
 function skillHref(uri) {
-  return withBase(uri.endsWith('/') ? uri : `${uri}/`)
+  const path = uri.endsWith('/') ? uri : `${uri}/`
+  // EN pages pass uri without /zh; ZH pages pass /zh/...
+  return withBase(path)
 }
 </script>
 
 <template>
   <div class="run-guide">
-    <h3>运行指引</h3>
-    <p class="hint">本站不执行推理；复制后到 Cursor 粘贴使用。</p>
+    <h3>{{ isEn ? 'Run guide' : '运行指引' }}</h3>
+    <p class="hint">
+      {{
+        isEn
+          ? 'This site does not run inference; copy and paste into Cursor.'
+          : '本站不执行推理；复制后到 Cursor 粘贴使用。'
+      }}
+    </p>
 
     <div class="actions">
-      <button type="button" @click="copyTrigger">复制 Cursor 触发句</button>
-      <button type="button" class="secondary" @click="downloadMd">导出任务上下文 .md</button>
+      <button type="button" @click="copyTrigger">
+        {{ isEn ? 'Copy Cursor trigger' : '复制 Cursor 触发句' }}
+      </button>
+      <button type="button" class="secondary" @click="downloadMd">
+        {{ isEn ? 'Export task context .md' : '导出任务上下文 .md' }}
+      </button>
     </div>
     <p v-if="status" class="hint">{{ status }}</p>
 
-    <h4>绑定技能读取顺序</h4>
+    <h4>{{ isEn ? 'Bound skill reading order' : '绑定技能读取顺序' }}</h4>
     <ol v-if="skills.length">
       <li v-for="s in skills" :key="s.id">
         <a :href="skillHref(s.uri)">{{ s.label || s.id }}</a>
-        <code>（{{ s.id }}）</code>
+        <code>{{ isEn ? `(${s.id})` : `（${s.id}）` }}</code>
       </li>
     </ol>
-    <p v-else class="hint">本角色暂无矩阵必显技能。</p>
+    <p v-else class="hint">
+      {{
+        isEn
+          ? 'No required skills in the matrix for this role.'
+          : '本角色暂无矩阵必显技能。'
+      }}
+    </p>
 
     <details>
-      <summary>预览触发句</summary>
+      <summary>{{ isEn ? 'Preview trigger' : '预览触发句' }}</summary>
       <pre><code>{{ triggerText }}</code></pre>
     </details>
   </div>

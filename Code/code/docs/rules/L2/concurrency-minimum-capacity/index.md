@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L2/concurrency-minimum-capacity/](/zh/rules/L2/concurrency-minimum-capacity/)
 
-并发与容量基线
+Concurrency and capacity baseline
 
 Edit the source of truth at `docs/zh/rules/L2/concurrency-minimum-capacity/index.md`.

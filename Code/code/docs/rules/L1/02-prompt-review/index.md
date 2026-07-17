@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L1/02-prompt-review/](/zh/rules/L1/02-prompt-review/)
 
-Prompt 评审
+Prompt review
 
 Edit the source of truth at `docs/zh/rules/L1/02-prompt-review/index.md`.

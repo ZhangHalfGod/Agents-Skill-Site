@@ -17,13 +17,13 @@ hero:
       link: /rules/
 features:
   - title: Agents
-    details: Eight standard roles, skill tags, run guides, and numbered jump
+    details: Eight standard roles with English playbooks, skill tags, run guides, and numbered jump
   - title: Skills
-    details: Skills 1–11 with reverse role bindings (full text in Chinese locale)
+    details: Skills 1–11 with English playbooks and reverse role bindings
   - title: Rules / Domains
     details: L0/L1/L2 rules; Domains gray-release (default ptp-nmos)
 ---
 
 <QuickJump />
 
-> Full Chinese playbooks: switch language to **简体中文** in the nav, or open [/zh/](/zh/).
+> Chinese SoT (MCP / Cursor `@` via manifest): switch to **简体中文** or open [/zh/](/zh/). Rules and some related docs may still be English stubs.

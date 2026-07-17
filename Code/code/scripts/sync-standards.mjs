@@ -1,13 +1,17 @@
 /**
  * 本仓 docs → manifest / 侧栏 / 目录索引（generate）。
- * SoT：Code/code/docs/zh/**（中文全文）；英文 root 为 stub/索引（VitePress locales）。
+ * SoT（MCP / Cursor @）：Code/code/docs/zh/**（中文全文）。
+ * 英文 VitePress root：docs/agents|skills/** 全文（en-*-bodies.mjs）；rules/domains 仍可为 stub。
  *
  * 历史：曾从外部 STANDARDS_ROOT 拷贝正文；2026-07-16 起废止该日常流程。
  * 2026-07-17：i18n — SoT 迁入 docs/zh；manifest.source = docs/zh/...
+ * 2026-07-17：英文 Role/Skill 独立全文，不再 stub 跳转中文。
  */
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { AGENT_BODIES } from './en-agent-bodies.mjs'
+import { SKILL_BODIES } from './en-skill-bodies.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const CODE_ROOT = path.resolve(__dirname, '..')
@@ -47,46 +51,63 @@ const ALT_STANDARDS = path.resolve(
   '../../../agents-skill-standards/standards'
 )
 
-/** @type {Record<string, { label: string, uri: string }>} */
+/** @type {Record<string, { label: string, labelEn: string, uri: string }>} */
 const SKILL_META = {
   'ai-code-boundary': {
     label: 'AI 生成代码边界',
+    labelEn: 'AI code boundary',
     uri: '/skills/custom/common/ai-code-boundary'
   },
   'traceability-compliance': {
     label: '全流程可追溯与合规',
+    labelEn: 'Traceability & compliance',
     uri: '/skills/custom/common/traceability-compliance'
   },
   'prompt-versioning': {
     label: 'Prompt 工程化规范',
+    labelEn: 'Prompt versioning',
     uri: '/skills/custom/common/prompt-versioning'
   },
   'stage-gate-flow': {
     label: '瀑布/敏捷阶段门禁',
+    labelEn: 'Stage-gate flow',
     uri: '/skills/custom/common/stage-gate-flow'
   },
   'doc-coauthoring': {
     label: '文档协作',
+    labelEn: 'Doc co-authoring',
     uri: '/skills/external/doc-coauthoring'
   },
-  'mcp-builder': { label: 'MCP 构建', uri: '/skills/external/mcp-builder' },
+  'mcp-builder': {
+    label: 'MCP 构建',
+    labelEn: 'MCP builder',
+    uri: '/skills/external/mcp-builder'
+  },
   'frontend-design': {
     label: '前端设计',
+    labelEn: 'Frontend design',
     uri: '/skills/external/frontend-design'
   },
   'webapp-testing': {
     label: 'Web 应用测试',
+    labelEn: 'Webapp testing',
     uri: '/skills/external/webapp-testing'
   },
   'web-artifacts-builder': {
     label: 'Web 复杂产物构建',
+    labelEn: 'Web artifacts builder',
     uri: '/skills/external/web-artifacts-builder'
   },
   'skill-creator': {
     label: 'Skill 创建与评估',
+    labelEn: 'Skill creator',
     uri: '/skills/external/skill-creator'
   },
-  Human: { label: '去 AI 腔（Human）', uri: '/skills/external/Human' }
+  Human: {
+    label: '去 AI 腔（Human）',
+    labelEn: 'Human tone',
+    uri: '/skills/external/Human'
+  }
 }
 
 /** 标准八角色（Doc/03 + Doc/05） */
@@ -96,12 +117,15 @@ const STANDARD_AGENTS = [
     id: 'ProductManager',
     title: '产品经理（ProductManager）',
     summary: '需求边界、验收标准、范围清单与红色记录触发条件',
+    summaryEn:
+      'Scope boundaries, acceptance criteria, codegen range list, and red-record triggers',
     skills: ['stage-gate-flow', 'ai-code-boundary'],
     skillsRecommended: ['doc-coauthoring'],
     relatedDocs: [
       {
         slug: 'ai-codegen-scope',
         title: 'AI 代码生成范围清单',
+        titleEn: 'AI code-generation scope list',
         sourceFile: 'AI代码生成范围清单.md'
       }
     ]
@@ -111,12 +135,15 @@ const STANDARD_AGENTS = [
     id: 'Architect',
     title: '架构师（Architect）',
     summary: '架构约束、接口与模型、Prompt 架构审核',
+    summaryEn:
+      'Architecture constraints, interfaces and models, prompt architecture review',
     skills: ['stage-gate-flow', 'ai-code-boundary', 'traceability-compliance'],
     skillsRecommended: [],
     relatedDocs: [
       {
         slug: 'architecture-constraints',
         title: '架构约束与接口数据模型',
+        titleEn: 'Architecture constraints and interface data model',
         sourceFile: '架构约束与接口数据模型.md'
       }
     ]
@@ -126,12 +153,15 @@ const STANDARD_AGENTS = [
     id: 'DevLead',
     title: '开发负责人（DevLead）',
     summary: 'Prompt 终版、小批量生成、初审与 CR',
+    summaryEn:
+      'Final prompts, small-batch generation, first-pass review and CR',
     skills: ['stage-gate-flow', 'prompt-versioning', 'traceability-compliance'],
     skillsRecommended: [],
     relatedDocs: [
       {
         slug: 'reference-notes',
         title: '参考笔记',
+        titleEn: 'Reference notes',
         sourceFile: 'reference-notes.md'
       }
     ]
@@ -141,12 +171,14 @@ const STANDARD_AGENTS = [
     id: 'TestEngineer',
     title: '测试工程师（TestEngineer）',
     summary: '测试设计与报告、上线门禁依据',
+    summaryEn: 'Test design and reports; release-gate evidence',
     skills: ['stage-gate-flow', 'traceability-compliance'],
     skillsRecommended: ['webapp-testing'],
     relatedDocs: [
       {
         slug: 'ai-test-report',
         title: 'AI 代码测试报告',
+        titleEn: 'AI code test report',
         sourceFile: 'AI代码测试报告.md'
       }
     ]
@@ -156,12 +188,14 @@ const STANDARD_AGENTS = [
     id: 'SecurityEngineer',
     title: '安全工程师（SecurityEngineer）',
     summary: '安全扫描、合规与整改闭环',
+    summaryEn: 'Security scanning, compliance, and remediation loop',
     skills: ['traceability-compliance'],
     skillsRecommended: ['ai-code-boundary'],
     relatedDocs: [
       {
         slug: 'ai-security-report',
         title: 'AI 代码安全报告',
+        titleEn: 'AI code security report',
         sourceFile: 'AI代码安全报告.md'
       }
     ]
@@ -171,12 +205,14 @@ const STANDARD_AGENTS = [
     id: 'OpsEngineer',
     title: '运维工程师（OpsEngineer）',
     summary: '版本映射、发布、灰度与回滚',
+    summaryEn: 'Version mapping, release, canary, and rollback',
     skills: ['traceability-compliance'],
     skillsRecommended: ['stage-gate-flow'],
     relatedDocs: [
       {
         slug: 'version-release',
         title: '版本映射与发布说明',
+        titleEn: 'Version mapping and release notes',
         sourceFile: '版本映射与发布说明.md'
       }
     ]
@@ -186,6 +222,7 @@ const STANDARD_AGENTS = [
     id: 'UIDesigner',
     title: 'UI 设计师（UIDesigner）',
     summary: 'UI 规范、还原度与受控出图约束',
+    summaryEn: 'UI specs, fidelity, and controlled asset generation',
     skills: ['frontend-design', 'doc-coauthoring'],
     skillsRecommended: ['ai-code-boundary'],
     relatedDocs: []
@@ -195,6 +232,8 @@ const STANDARD_AGENTS = [
     id: 'NmosEngineer',
     title: '标准 NMOS 工程师（NmosEngineer）',
     summary: 'NMOS IS-04/IS-05 校验、Registry 注入验证、证据固化',
+    summaryEn:
+      'NMOS IS-04/IS-05 checks, Registry injection verification, evidence freeze',
     skills: ['stage-gate-flow', 'traceability-compliance'],
     skillsRecommended: [],
     relatedDocs: []
@@ -210,6 +249,8 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/custom/common/ai-code-boundary/SKILL.md',
     sitePath: 'skills/custom/common/ai-code-boundary/index.md',
     summary: 'AI 生成边界与分级管控；核心模块需红色记录',
+    summaryEn:
+      'AI generation boundaries and tiered controls; red records for core modules',
     boundAgents: ['ProductManager', 'Architect'],
     recommendedAgents: ['SecurityEngineer', 'UIDesigner']
   },
@@ -220,6 +261,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/custom/common/traceability-compliance/SKILL.md',
     sitePath: 'skills/custom/common/traceability-compliance/index.md',
     summary: '入库/上线追溯与合规门禁',
+    summaryEn: 'Traceability and compliance gates for merge and release',
     boundAgents: [
       'Architect',
       'DevLead',
@@ -236,6 +278,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/custom/common/prompt-versioning/SKILL.md',
     sitePath: 'skills/custom/common/prompt-versioning/index.md',
     summary: 'Prompt 命名、结构、双审核与版本关联',
+    summaryEn: 'Prompt naming, structure, dual review, and version linkage',
     boundAgents: ['DevLead'],
     recommendedAgents: ['Architect']
   },
@@ -246,6 +289,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/custom/common/stage-gate-flow/SKILL.md',
     sitePath: 'skills/custom/common/stage-gate-flow/index.md',
     summary: '瀑布/敏捷阶段门禁',
+    summaryEn: 'Waterfall / agile stage-gate exit checklist',
     boundAgents: ['ProductManager', 'Architect', 'DevLead', 'TestEngineer'],
     recommendedAgents: ['OpsEngineer', 'NmosEngineer']
   },
@@ -256,6 +300,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/doc-coauthoring/SKILL.md',
     sitePath: 'skills/external/doc-coauthoring/index.md',
     summary: '文档协作与规格类产出',
+    summaryEn: 'Document co-authoring and spec-style outputs',
     boundAgents: [],
     recommendedAgents: ['ProductManager', 'UIDesigner', 'Architect']
   },
@@ -266,6 +311,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/mcp-builder/SKILL.md',
     sitePath: 'skills/external/mcp-builder/index.md',
     summary: 'MCP 工具/服务设计与契约',
+    summaryEn: 'MCP tool/service design and contracts',
     boundAgents: [],
     recommendedAgents: []
   },
@@ -276,6 +322,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/frontend-design/SKILL.md',
     sitePath: 'skills/external/frontend-design/index.md',
     summary: '前端界面设计与实现约束',
+    summaryEn: 'Frontend UI design and implementation constraints',
     boundAgents: [],
     recommendedAgents: ['UIDesigner']
   },
@@ -286,6 +333,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/webapp-testing/SKILL.md',
     sitePath: 'skills/external/webapp-testing/index.md',
     summary: 'Web 应用测试流程与检查',
+    summaryEn: 'Web app testing flow and checks',
     boundAgents: [],
     recommendedAgents: ['TestEngineer', 'UIDesigner']
   },
@@ -296,6 +344,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/web-artifacts-builder/SKILL.md',
     sitePath: 'skills/external/web-artifacts-builder/index.md',
     summary: 'Web 复杂产物与多状态构建',
+    summaryEn: 'Complex web artifacts and multi-state builds',
     boundAgents: [],
     recommendedAgents: ['UIDesigner']
   },
@@ -306,6 +355,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/skill-creator/SKILL.md',
     sitePath: 'skills/external/skill-creator/index.md',
     summary: '新建/迭代 Skill 的方法与评估',
+    summaryEn: 'Method and evaluation for creating or iterating skills',
     boundAgents: [],
     recommendedAgents: []
   },
@@ -316,6 +366,7 @@ const STANDARD_SKILLS = [
     sourceRel: 'common/skills/external/Human/SKILL.md',
     sitePath: 'skills/external/Human/index.md',
     summary: '识别并去除 AI 腔，增强文本自然度',
+    summaryEn: 'Detect and remove AI-sounding tone; improve natural writing',
     boundAgents: [],
     recommendedAgents: []
   }
@@ -337,6 +388,25 @@ const RULE_TITLES = {
     'mcp-minimum-contract': 'MCP 最低契约',
     'concurrency-minimum-capacity': '并发与容量基线',
     'ptp-nmos-minimum-ops': 'PTP/NMOS 最低运维'
+  }
+}
+
+const RULE_TITLES_EN = {
+  L0: {
+    '01-language-and-safety': 'Language and safety',
+    '02-core-boundary': 'Core boundary',
+    '03-traceability': 'Traceability'
+  },
+  L1: {
+    '01-stage-gate': 'Six-stage gates',
+    '02-prompt-review': 'Prompt review',
+    '03-batch-and-cr': 'Batch and CR'
+  },
+  L2: {
+    'dialog-minimum-safety': 'Dialog minimum safety',
+    'mcp-minimum-contract': 'MCP minimum contract',
+    'concurrency-minimum-capacity': 'Concurrency and capacity baseline',
+    'ptp-nmos-minimum-ops': 'PTP/NMOS minimum ops'
   }
 }
 
@@ -473,27 +543,90 @@ function syncMarkdown({
   }
 }
 
-function skillLink(id) {
+function skillLink(id, locale = 'zh') {
   const meta = SKILL_META[id]
   if (!meta) return `- \`${id}\``
-  return `- [${meta.label}](${withSlash(`/zh${meta.uri}`)})（\`${id}\`）`
+  const prefix = locale === 'en' ? '' : '/zh'
+  const label = locale === 'en' ? meta.labelEn || meta.label : meta.label
+  const sep = locale === 'en' ? ' — ' : '（'
+  const end = locale === 'en' ? '' : '）'
+  return `- [${label}](${withSlash(`${prefix}${meta.uri}`)})${sep}\`${id}\`${end}`
 }
 
-function agentLink(id) {
-  return `- [${id}](${withSlash(`/zh/agents/standard/${id}`)})`
+function agentLink(id, locale = 'zh') {
+  const prefix = locale === 'en' ? '' : '/zh'
+  return `- [${id}](${withSlash(`${prefix}/agents/standard/${id}`)})`
 }
 
-function buildAgentExtras(agent) {
+function buildAgentExtras(agent, locale = 'zh') {
   const parts = []
+  if (locale === 'en') {
+    parts.push('## Skill tags (matrix)', '')
+    parts.push('> Authoritative mapping: `Doc/phase1/05-agent-skill-matrix.md`.', '')
+    if (agent.skills?.length) {
+      parts.push(
+        '**Required**',
+        '',
+        ...agent.skills.map((id) => skillLink(id, 'en')),
+        ''
+      )
+    }
+    if (agent.skillsRecommended?.length) {
+      parts.push(
+        '**Recommended**',
+        '',
+        ...agent.skillsRecommended.map((id) => skillLink(id, 'en')),
+        ''
+      )
+    }
+    if (agent.relatedDocs?.length) {
+      parts.push('## Related docs', '')
+      for (const d of agent.relatedDocs) {
+        const title = d.titleEn || d.title
+        parts.push(
+          `- [${title}](/agents/standard/${agent.id}/docs/${d.slug}) · [ZH](/zh/agents/standard/${agent.id}/docs/${d.slug})`
+        )
+      }
+      parts.push('')
+    }
+    const ordered = [
+      ...(agent.skills || []),
+      ...(agent.skillsRecommended || [])
+    ]
+    const skillProps = ordered.map((id) => {
+      const meta = SKILL_META[id]
+      return {
+        id,
+        label: meta?.labelEn || meta?.label || id,
+        uri: meta ? meta.uri : `/skills/${id}`
+      }
+    })
+    const rolePath = `docs/agents/standard/${agent.id}/index.md`
+    parts.push(
+      '## Run this role in Cursor',
+      '',
+      `<RunGuide role-id="${agent.id}" role-path="${rolePath}" :skills='${JSON.stringify(skillProps)}' />`,
+      '',
+      'This site is documentation only — **no model inference**. English playbook is this page; MCP SoT remains `docs/zh/...`.',
+      ''
+    )
+    return parts.join('\n')
+  }
+
   parts.push('## 技能标签（矩阵）')
   parts.push('')
   parts.push('> 权威映射见 `Doc/phase1/05-agent-skill-matrix.md`。')
   parts.push('')
   if (agent.skills?.length) {
-    parts.push('**必显**', '', ...agent.skills.map(skillLink), '')
+    parts.push('**必显**', '', ...agent.skills.map((id) => skillLink(id)), '')
   }
   if (agent.skillsRecommended?.length) {
-    parts.push('**推荐**', '', ...agent.skillsRecommended.map(skillLink), '')
+    parts.push(
+      '**推荐**',
+      '',
+      ...agent.skillsRecommended.map((id) => skillLink(id)),
+      ''
+    )
   }
   if (agent.relatedDocs?.length) {
     parts.push('## 相关文档', '')
@@ -526,18 +659,57 @@ function buildAgentExtras(agent) {
   return parts.join('\n')
 }
 
-function buildSkillExtras(skill) {
+function buildSkillExtras(skill, locale = 'zh') {
   const parts = []
+  if (locale === 'en') {
+    parts.push('## Related roles (matrix reverse)', '')
+    if (skill.boundAgents?.length) {
+      parts.push(
+        '**Primary**',
+        '',
+        ...skill.boundAgents.map((id) => agentLink(id, 'en')),
+        ''
+      )
+    }
+    if (skill.recommendedAgents?.length) {
+      parts.push(
+        '**Recommended**',
+        '',
+        ...skill.recommendedAgents.map((id) => agentLink(id, 'en')),
+        ''
+      )
+    }
+    if (!skill.boundAgents?.length && !skill.recommendedAgents?.length) {
+      parts.push('_No strong standard-role binding (see matrix or domain roles)._', '')
+    }
+    const docsPath = `docs/${skill.sitePath.replace(/\\/g, '/')}`
+    parts.push(
+      '## Use this skill in Cursor',
+      '',
+      `1. \`@\` reference: \`${docsPath}\``,
+      `2. Or follow the checklist on this page (skill ${skill.index})`,
+      '',
+      'This site does not run model inference. MCP SoT remains under `docs/zh/...`.',
+      ''
+    )
+    return parts.join('\n')
+  }
+
   parts.push('## 关联角色（矩阵反向）')
   parts.push('')
   if (skill.boundAgents?.length) {
-    parts.push('**主要绑定**', '', ...skill.boundAgents.map(agentLink), '')
+    parts.push(
+      '**主要绑定**',
+      '',
+      ...skill.boundAgents.map((id) => agentLink(id)),
+      ''
+    )
   }
   if (skill.recommendedAgents?.length) {
     parts.push(
       '**推荐关联**',
       '',
-      ...skill.recommendedAgents.map(agentLink),
+      ...skill.recommendedAgents.map((id) => agentLink(id)),
       ''
     )
   }
@@ -581,18 +753,18 @@ ${rowsZh}
   const rowsEn = agents
     .map(
       (a) =>
-        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summary} | [ZH full](${withSlash(`/zh/agents/standard/${a.id}`)}) |`
+        `| ${a.index} | [${a.id}](${withSlash(`/agents/standard/${a.id}`)}) | ${a.summaryEn || a.summary} | **ready** |`
     )
     .join('\n')
   const mdEn = `# Agents
 
-Standard governance roles. Full playbooks (Chinese SoT): \`docs/zh/agents/standard/<Role>/\`.
+Standard governance roles. English playbooks: \`docs/agents/standard/<Role>/\`. Chinese SoT (MCP): \`docs/zh/agents/standard/<Role>/\`.
 
-| # | Role | Summary | Full (ZH) |
+| # | Role | Summary | Status |
 |:----:|------|------------|:----:|
 ${rowsEn}
 
-English pages are stubs until translated. In Cursor: \`@docs/zh/agents/standard/<Role>/index.md\`.
+In Cursor (English site): \`@docs/agents/standard/<Role>/index.md\`. MCP \`source\` still points at \`docs/zh/...\`.
 
 <QuickJump />
 `
@@ -623,19 +795,19 @@ ${rowsZh}
   const rowsEn = skills
     .map((s) => {
       const uri = withSlash(SKILL_META[s.id].uri)
-      const zhUri = withSlash(`/zh${SKILL_META[s.id].uri}`)
-      return `| ${s.index} | [${s.id}](${uri}) | ${s.summary} | [ZH full](${zhUri}) |`
+      const origin = s.origin === 'custom' ? 'custom' : 'external'
+      return `| ${s.index} | ${origin} | [${s.id}](${uri}) | ${s.summaryEn || s.summary} | **ready** |`
     })
     .join('\n')
   const mdEn = `# Skills
 
-Skill catalog (1–11). Full Chinese SoT: \`docs/zh/skills/**\`.
+Skill catalog (1–11). English playbooks: \`docs/skills/**\`. Chinese SoT (MCP): \`docs/zh/skills/**\`.
 
-| # | Skill | Summary | Full (ZH) |
-|:----:|------|------------|:----:|
+| # | Origin | Skill | Summary | Status |
+|:----:|:----:|------|------------|:----:|
 ${rowsEn}
 
-English pages are stubs until translated. Cursor: \`@docs/zh/skills/...\`.
+In Cursor (English site): \`@docs/skills/...\`. MCP \`source\` still points at \`docs/zh/...\`.
 `
   fs.mkdirSync(path.join(DOCS_ROOT, 'skills'), { recursive: true })
   fs.writeFileSync(path.join(DOCS_ROOT, 'skills', 'index.md'), mdEn, 'utf8')
@@ -676,7 +848,7 @@ ${sectionZh('L2', '场景最低限度')}
     const rows = byLevel[level]
       .map(
         (r) =>
-          `| [${r.name}](${withSlash(`/rules/${level}/${r.name}`)}) | ${r.title} | [ZH](${withSlash(`/zh/rules/${level}/${r.name}`)}) |`
+          `| [${r.name}](${withSlash(`/rules/${level}/${r.name}`)}) | ${RULE_TITLES_EN[level]?.[r.name] || r.name} | [ZH](${withSlash(`/zh/rules/${level}/${r.name}`)}) |`
       )
       .join('\n')
     return `### ${level} (${title})
@@ -851,17 +1023,21 @@ function discoverRulesFromDocs() {
 
 function patchAgentRunGuides() {
   for (const agent of STANDARD_AGENTS) {
-    const out = path.join(SOT_ROOT, 'agents', 'standard', agent.id, 'index.md')
-    if (!fs.existsSync(out)) continue
-    let raw = fs.readFileSync(out, 'utf8')
-    const marker = '## 技能标签（矩阵）'
-    const idx = raw.indexOf(marker)
-    if (idx === -1) {
-      raw = raw.trimEnd() + '\n\n' + buildAgentExtras(agent)
-    } else {
-      raw = raw.slice(0, idx) + buildAgentExtras(agent)
+    for (const { root, locale, marker } of [
+      { root: SOT_ROOT, locale: 'zh', marker: '## 技能标签（矩阵）' },
+      { root: DOCS_ROOT, locale: 'en', marker: '## Skill tags (matrix)' }
+    ]) {
+      const out = path.join(root, 'agents', 'standard', agent.id, 'index.md')
+      if (!fs.existsSync(out)) continue
+      let raw = fs.readFileSync(out, 'utf8')
+      const idx = raw.indexOf(marker)
+      if (idx === -1) {
+        raw = raw.trimEnd() + '\n\n' + buildAgentExtras(agent, locale)
+      } else {
+        raw = raw.slice(0, idx) + buildAgentExtras(agent, locale)
+      }
+      fs.writeFileSync(out, raw, 'utf8')
     }
-    fs.writeFileSync(out, raw, 'utf8')
   }
 }
 
@@ -912,7 +1088,7 @@ ${rowsZh}
         ? `[${d.title}](/domains/${d.id}/)`
         : d.title
       const status = !enabled ? 'off' : isActive ? '**active**' : 'stub'
-      return `| \`${d.id}\` | ${link} | ${d.summary} | ${status} |`
+      return `| \`${d.id}\` | ${link} | ${d.summaryEn || d.summary} | ${status} |`
     })
     .join('\n')
 
@@ -1154,33 +1330,83 @@ function generateFromRepoDocs(reason) {
   writeAgentsIndex(STANDARD_AGENTS)
   writeSkillsIndex(STANDARD_SKILLS)
   writeRulesIndex(rules)
-  ensureEnglishStubs(STANDARD_AGENTS, STANDARD_SKILLS, rules, relatedDocs)
+  writeEnglishPlaybooks(STANDARD_AGENTS, STANDARD_SKILLS)
+  ensureEnglishStubs(STANDARD_AGENTS, rules, relatedDocs)
   patchAgentRunGuides()
   patchSkillCursorHints()
   console.log(
-    `[generate] 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules（SoT=${CONTENT_ROOT}）`
+    `[generate] 完成：${STANDARD_AGENTS.length} agents + ${STANDARD_SKILLS.length} skills + ${rules.length} rules（SoT=${CONTENT_ROOT}；EN Role/Skill 全文）`
   )
 }
 
 /** 仅刷新技能页底部「在 Cursor 中使用」提示，不改正文 */
 function patchSkillCursorHints() {
   for (const skill of STANDARD_SKILLS) {
-    const out = path.join(SOT_ROOT, skill.sitePath)
-    if (!fs.existsSync(out)) continue
-    let raw = fs.readFileSync(out, 'utf8')
-    const marker = '## 关联角色（矩阵反向）'
-    const idx = raw.indexOf(marker)
-    if (idx === -1) {
-      raw = raw.trimEnd() + '\n\n' + buildSkillExtras(skill)
-    } else {
-      raw = raw.slice(0, idx) + buildSkillExtras(skill)
+    for (const { root, locale, marker } of [
+      { root: SOT_ROOT, locale: 'zh', marker: '## 关联角色（矩阵反向）' },
+      { root: DOCS_ROOT, locale: 'en', marker: '## Related roles (matrix reverse)' }
+    ]) {
+      const out = path.join(root, skill.sitePath)
+      if (!fs.existsSync(out)) continue
+      let raw = fs.readFileSync(out, 'utf8')
+      const idx = raw.indexOf(marker)
+      if (idx === -1) {
+        raw = raw.trimEnd() + '\n\n' + buildSkillExtras(skill, locale)
+      } else {
+        raw = raw.slice(0, idx) + buildSkillExtras(skill, locale)
+      }
+      fs.writeFileSync(out, raw, 'utf8')
     }
-    fs.writeFileSync(out, raw, 'utf8')
   }
 }
 
-/** 英文 root 短页：避免 404；全文见 /zh/... */
-function ensureEnglishStubs(agents, skills, rules, relatedDocs) {
+/** 写入英文 Role / Skill 全文（非 stub） */
+function writeEnglishPlaybooks(agents, skills) {
+  for (const a of agents) {
+    const body = AGENT_BODIES[a.id]
+    if (!body) {
+      console.warn(`[generate] missing AGENT_BODIES[${a.id}]`)
+      continue
+    }
+    const out = path.join(DOCS_ROOT, 'agents', 'standard', a.id, 'index.md')
+    ensureDir(out)
+    const desc = (a.summaryEn || a.summary || a.id).replace(/"/g, '\\"')
+    const page = `---
+title: "${a.id}"
+description: "${desc}"
+---
+
+${body.trimEnd()}
+
+${buildAgentExtras(a, 'en')}
+`
+    fs.writeFileSync(out, page, 'utf8')
+  }
+
+  for (const s of skills) {
+    const body = SKILL_BODIES[s.id]
+    if (!body) {
+      console.warn(`[generate] missing SKILL_BODIES[${s.id}]`)
+      continue
+    }
+    const out = path.join(DOCS_ROOT, s.sitePath)
+    ensureDir(out)
+    const desc = (s.summaryEn || s.summary || s.id).replace(/"/g, '\\"')
+    const page = `---
+title: "${s.id}"
+description: "${desc}"
+---
+
+${body.trimEnd()}
+
+${buildSkillExtras(s, 'en')}
+`
+    fs.writeFileSync(out, page, 'utf8')
+  }
+}
+
+/** 英文 root stub：仅 rules / relatedDocs / domains（Role/Skill 已有全文） */
+function ensureEnglishStubs(agents, rules, relatedDocs) {
   const writeStub = (relPath, title, zhLink, summary) => {
     const out = path.join(DOCS_ROOT, relPath)
     ensureDir(out)
@@ -1200,34 +1426,26 @@ Edit the source of truth at \`docs/zh/${relPath.replace(/\\/g, '/')}\`.
     fs.writeFileSync(out, body, 'utf8')
   }
 
-  for (const a of agents) {
-    writeStub(
-      `agents/standard/${a.id}/index.md`,
-      a.id,
-      `/zh/agents/standard/${a.id}/`,
-      a.summary
-    )
-  }
-  for (const s of skills) {
-    const rel = s.sitePath
-    const zhPath = `/zh/${rel.replace(/\/index\.md$/, '/')}`
-    writeStub(rel, s.id, zhPath, s.summary)
-  }
   for (const r of rules) {
     writeStub(
       `rules/${r.level}/${r.name}/index.md`,
       r.name,
       `/zh/rules/${r.level}/${r.name}/`,
-      r.title
+      RULE_TITLES_EN[r.level]?.[r.name] || r.name
     )
   }
   for (const d of relatedDocs || []) {
     const fileRel = `${d.siteUri.replace(/^\//, '')}.md`
+    const agentId = d.siteUri.split('/')[3]
+    const agent = agents.find((a) => a.id === agentId)
+    const docMeta = agent?.relatedDocs?.find((x) =>
+      d.siteUri.endsWith(`/docs/${x.slug}`)
+    )
     writeStub(
       fileRel,
-      path.basename(d.siteUri),
+      docMeta?.titleEn || path.basename(d.siteUri),
       `/zh${d.siteUri}`,
-      'Related document stub.'
+      docMeta?.titleEn || 'Related document stub.'
     )
   }
 
@@ -1254,7 +1472,7 @@ function writeManifest({
     contentRoot: String(contentRoot || CONTENT_ROOT).replace(/\\/g, '/'),
     /** @deprecated 兼容旧校验/读端；等于 contentRoot */
     standardsRoot: String(contentRoot || CONTENT_ROOT).replace(/\\/g, '/'),
-    note: 'SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～11 + rules；domains 灰度',
+    note: 'SoT=本仓 docs/zh/**；英文 root 含 Role/Skill 全文；rules/domains 可为 stub；agents + skills 1～11 + rules；domains 灰度',
     domainsEnabled: domainsEnabled(),
     domainsActive: loadSiteConfig().domains?.active || [],
     agents: agents.map((a) => ({
@@ -1293,7 +1511,7 @@ function writeManifest({
 }
 
 function main() {
-  generateFromRepoDocs('本仓 docs/zh SoT + 英文 stub')
+  generateFromRepoDocs('本仓 docs/zh SoT + 英文 Role/Skill 全文')
 }
 
 main()

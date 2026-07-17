@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L2/ptp-nmos-minimum-ops/](/zh/rules/L2/ptp-nmos-minimum-ops/)
 
-PTP/NMOS 最低运维
+PTP/NMOS minimum ops
 
 Edit the source of truth at `docs/zh/rules/L2/ptp-nmos-minimum-ops/index.md`.

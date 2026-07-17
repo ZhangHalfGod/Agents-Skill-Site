@@ -1,12 +1,12 @@
 ---
-title: "reference-notes"
+title: "Reference notes"
 description: English stub — full playbook in Chinese locale
 ---
 
-# reference-notes
+# Reference notes
 
 > **English stub.** Full content (Chinese SoT): [/zh/agents/standard/DevLead/docs/reference-notes](/zh/agents/standard/DevLead/docs/reference-notes)
 
-Related document stub.
+Reference notes
 
 Edit the source of truth at `docs/zh/agents/standard/DevLead/docs/reference-notes.md`.

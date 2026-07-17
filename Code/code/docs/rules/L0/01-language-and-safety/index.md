@@ -7,6 +7,6 @@ description: English stub — full playbook in Chinese locale
 
 > **English stub.** Full content (Chinese SoT): [/zh/rules/L0/01-language-and-safety/](/zh/rules/L0/01-language-and-safety/)
 
-语言与安全
+Language and safety
 
 Edit the source of truth at `docs/zh/rules/L0/01-language-and-safety/index.md`.
