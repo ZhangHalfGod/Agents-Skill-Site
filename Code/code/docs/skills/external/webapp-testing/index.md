@@ -64,4 +64,7 @@ with sync_playwright() as p:
 1. `@` reference: `docs/skills/external/webapp-testing/index.md`
 2. Or follow the checklist on this page (skill 8)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

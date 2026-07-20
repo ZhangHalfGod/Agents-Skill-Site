@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-17T06:44:11.613Z",
+  "generatedAt": "2026-07-20T01:47:30.106Z",
   "contentRoot": "docs/zh",
   "standardsRoot": "docs/zh",
-  "note": "SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～11 + rules；domains 灰度",
+  "note": "SoT=本仓 docs/zh/**；英文 root 含 Role/Skill 全文；rules/domains 可为 stub；agents + skills 1～11 + rules；domains 灰度",
   "domainsEnabled": true,
   "domainsActive": [
     "ptp-nmos"
@@ -369,8 +369,5 @@
       "alwaysApply": true
     }
   ],
-  "domains": {},
-  "contentHash": "11551bc5b589d320",
-  "validatedAt": "2026-07-17T06:44:12.141Z",
-  "validateOk": true
+  "domains": {}
 }

@@ -44,4 +44,7 @@ Avoid "AI slop": excessive centering, purple gradients, uniform rounded corners,
 1. `@` reference: `docs/skills/external/web-artifacts-builder/index.md`
 2. Or follow the checklist on this page (skill 9)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

@@ -118,3 +118,6 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 <RunGuide role-id="SecurityEngineer" role-path="docs/zh/agents/standard/SecurityEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/zh/skills/custom/common/traceability-compliance"},{"id":"ai-code-boundary","label":"AI 生成代码边界","uri":"/zh/skills/custom/common/ai-code-boundary"}]' />
 
 本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。
+
+- **浏览本页**：用上方「复制 Cursor 触发句」（`@` 页内路径）。
+- **走 MCP**：`get_agent` / `get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。

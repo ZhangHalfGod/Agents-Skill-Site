@@ -71,4 +71,7 @@ _No strong standard-role binding (see matrix or domain roles)._
 1. `@` reference: `docs/skills/external/Human/index.md`
 2. Or follow the checklist on this page (skill 11)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

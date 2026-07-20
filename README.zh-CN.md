@@ -167,8 +167,10 @@ L0 不可绕过，L1 明确流程，L2 按需激活。网页和 MCP 都能查到
   → 复制触发句   → 获 source 路径
 ```
 
-- **人用网页**：VitePress 静态站点，快速浏览所有角色、技能、规则
-- **AI 用 MCP**：Cursor/Claude Code 等 IDE 通过 MCP 协议查询索引，无需离开对话
+- **人用网页**：VitePress 静态站点，快速浏览所有角色、技能、规则 → 用页内 **「复制 Cursor 触发句」**（`@` 页内给出的路径）
+- **AI 用 MCP**：Cursor 等通过 MCP `get_*` 查索引 → **`@` 返回的 `source`**（本仓为 `docs/zh/...`，不要混用英文站路径）
+
+详见 [`Doc/guides/mcp-work-then-distill-demo.md`](Doc/guides/mcp-work-then-distill-demo.md)「两种触发方式」。
 
 ### Solution 5：可继承、可迭代——Git 管理你的治理资产
 
@@ -315,7 +317,7 @@ pm2 save
 
 > **新成员加入团队** → 打开网页浏览 8 个角色 → 理解 AI 编码协作分工 → 配置 Cursor MCP → 开始干活
 
-新人不用问"这个该谁做"，不用等师傅教——网页上写得清清楚楚。
+新人少走弯路：分工与说明书在网页上写得清清楚楚，不必反复问「这个该谁做」。
 
 ### 场景二：日常 Cursor 开发
 
@@ -401,7 +403,11 @@ Agents-Skill-Site/                   # 本仓：发现站 + MCP + docs 真源
 
 ### 和 Cursor Rules / .cursorrules 什么关系？
 
-本项目不替代 Cursor Rules。L0 可用 Cursor Rules 做运行时约束；本站提供定义、浏览与检索。**MCP 返回的 `source` 指向本仓 `docs/...`，在已打开本仓库的工作区里 `@` 即可。**
+本项目不替代 Cursor Rules。L0 可用 Cursor Rules 做运行时约束；本站提供定义、浏览与检索。
+
+- **只开网页**：用角色页「复制 Cursor 触发句」→ `@` 页内路径。  
+- **走 MCP**：`get_agent` / `get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。  
+两种方式都要求工作区已打开本仓库；MCP 不远程投递正文。
 
 ### 数据安全怎么保证？
 

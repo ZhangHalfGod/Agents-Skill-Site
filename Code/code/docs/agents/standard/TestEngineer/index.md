@@ -114,4 +114,7 @@ Suggested structure:
 
 <RunGuide role-id="TestEngineer" role-path="docs/agents/standard/TestEngineer/index.md" :skills='[{"id":"stage-gate-flow","label":"Stage-gate flow","uri":"/skills/custom/common/stage-gate-flow"},{"id":"traceability-compliance","label":"Traceability & compliance","uri":"/skills/custom/common/traceability-compliance"},{"id":"webapp-testing","label":"Webapp testing","uri":"/skills/external/webapp-testing"}]' />
 
-This site is documentation only — **no model inference**. English playbook is this page; MCP SoT remains `docs/zh/...`.
+This site is documentation only — **no model inference**.
+
+- **Browse this page**: use **Copy Cursor trigger** above (`@` the English paths on this page).
+- **Via MCP**: `get_agent` / `get_skill` → `@` the returned **`source`** (`docs/zh/...` SoT). Do not mix with English-site paths.

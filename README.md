@@ -165,8 +165,10 @@ Browse playbooks   Cursor tools
   → copy prompts     → bindings + source paths
 ```
 
-- **Web**: VitePress static site for roles, skills, rules  
-- **MCP**: Cursor / Claude Code query the index without leaving the chat  
+- **Web**: VitePress static site → use **Copy Cursor trigger** on the role page (`@` the paths shown there)  
+- **MCP**: Cursor `get_*` → **`@` the returned `source`** (this repo: `docs/zh/...`; do not mix with English-site paths)
+
+See [`Doc/en/guides/mcp-work-then-distill-demo.md`](Doc/en/guides/mcp-work-then-distill-demo.md) (“Two ways to trigger”).
 
 ### Solution 5: Git-backed inheritance
 
@@ -381,7 +383,11 @@ No. Add/change/remove under `docs/agents/**`, update `Doc/phase1/05-agent-skill-
 
 ### Relation to Cursor Rules / `.cursorrules`?
 
-This project does not replace Cursor Rules. Use Rules for runtime L0; this site defines, browses, and retrieves. MCP `source` points at `docs/...` — `@` them in a workspace that has this repo open.
+This project does not replace Cursor Rules. Use Rules for runtime L0; this site defines, browses, and retrieves.
+
+- **Site only**: Copy the role-page trigger → `@` those paths.  
+- **MCP**: `get_agent` / `get_skill` → `@` the returned **`source`** (`docs/zh/...` here).  
+Both need this repo open in the workspace; MCP does not stream playbook bodies.
 
 ### Security?
 

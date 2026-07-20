@@ -4,6 +4,25 @@
 
 > MCP discovers which playbook to use (read-only). Work and distill happen in Git Markdown. `generate` refreshes the index. **MCP does not write body content.**
 
+## Two ways to trigger (`@`)
+
+`@` always attaches a **local workspace file**. The only difference is **where you copy the path from**.
+
+| How you work | Where the prompt comes from | Which path to `@` (this repo) |
+|--------------|-----------------------------|-------------------------------|
+| **Browse the site** (`npm run dev` or deployed pages) | Role page **Run guide** → Copy Cursor trigger | Paths on the page: ZH often `docs/zh/agents/...`; EN often `docs/agents/...` / `docs/skills/...` |
+| **Use MCP** (Cursor MCP configured) | Call `get_agent` / `get_skill` first | **Only** the `source` field in the JSON — here always `docs/zh/...` (SoT) |
+
+```text
+[Site] Open role/skill page → Copy trigger → paste in Cursor → @ page paths
+[MCP]  Call get_* → read source → @ that source in a workspace that has this repo
+```
+
+Do **not** mix: for MCP, do not `@` English-site `docs/agents/...`; use MCP `docs/zh/...`.  
+For site-only browsing, you do **not** need MCP — use the page copy button.
+
+MCP never ships the playbook body over the wire; it only returns paths. The workspace must contain those files.
+
 ## Pipeline
 
 ```text
@@ -26,7 +45,7 @@ MCP list/get → @ source → do work / exit gate
 | Concept | Path |
 |---------|------|
 | Chinese SoT (full playbooks) | `Code/code/docs/zh/**` |
-| English site stubs | `Code/code/docs/**` (root locale) |
+| English Role/Skill pages | `Code/code/docs/agents/**`, `docs/skills/**` (root locale) |
 | Lessons | `Code/code/docs/zh/operations/<project>/lessons/` |
 | generate | `cd Code/code && npm run generate && npm run validate` |
 | MCP `source` example | `docs/zh/skills/custom/common/stage-gate-flow/index.md` |

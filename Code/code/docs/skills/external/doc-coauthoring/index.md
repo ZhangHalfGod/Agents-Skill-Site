@@ -71,4 +71,7 @@ Create scaffold (artifact or `.md` file) with placeholders, then fill section by
 1. `@` reference: `docs/skills/external/doc-coauthoring/index.md`
 2. Or follow the checklist on this page (skill 5)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

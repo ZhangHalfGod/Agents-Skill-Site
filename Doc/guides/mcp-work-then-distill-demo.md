@@ -8,7 +8,28 @@
 
 本页是一条**端到端参考流程**。目录名可换成你项目里的约定；下面用虚构项目举例，文末附本仓对照。
 
-> **本仓 SoT**：完整治理正文在 `Code/code/docs/zh/**`；MCP `source` 形如 `docs/zh/skills/...`。英文发现站为 stub，顶栏可切「简体中文」。
+> **本仓 SoT**：完整治理正文在 `Code/code/docs/zh/**`；MCP `source` 形如 `docs/zh/skills/...`。英文站 Role/Skill 另有全文；顶栏可切「简体中文」。
+
+---
+
+## 两种触发方式（先分清）
+
+`@` **始终**指向本机工作区里的 Markdown 文件。差别只在于：**路径从哪抄**。
+
+| 你怎么用 | 触发句从哪来 | `@` 用哪条路径（本仓） |
+|----------|--------------|------------------------|
+| **浏览站点**（本地 `npm run dev` 或已部署网页） | 角色页 **「运行指引 / Run this role in Cursor」** →「复制 Cursor 触发句」 | 页面给出的路径：中文页多为 `docs/zh/agents/...`；英文页多为 `docs/agents/...`、`docs/skills/...` |
+| **走 MCP**（Cursor 已配远程/本地 MCP） | 先 `get_agent` / `get_skill`（或 `list_*`） | **只用返回 JSON 里的 `source`**，本仓固定为 `docs/zh/...`（治理 SoT） |
+
+```text
+【站点页】打开角色/技能页 → 复制触发句 → 粘贴到 Cursor → @ 页内路径
+【MCP】  对话里调 get_* → 读 source → 在已打开本仓的工作区 @ 该 source
+```
+
+**不要混用**：MCP 场景不要照抄英文站的 `docs/agents/...`（那是英文发现页）；应 `@` MCP 的 `docs/zh/...`。  
+站点页场景不必先调 MCP，直接用页内「复制触发句」即可。
+
+**前提（两种方式相同）**：Cursor 工作区需包含本仓库（或含 `docs/**` 的那一层），否则 `@` 找不到文件。MCP **不会**把正文远程塞进对话，只返回路径。
 
 ---
 
@@ -82,12 +103,16 @@ governance/                     # 你的治理仓或子目录
 
 ## 4. 阶段 B — `@` 正文干活 + 出门
 
-1. 在对话里 `@governance/skills/stage-gate/SKILL.md`（用你拿到的真实 `source`）  
+本 Demo 走 **MCP 路径**（见上文「两种触发方式」）：
+
+1. 在对话里 `@` **阶段 A 拿到的真实 `source`**（示例里写作 `@governance/skills/stage-gate/SKILL.md`；**本仓**应类似 `@docs/zh/skills/custom/common/stage-gate-flow/index.md`）  
 2. 按其中的**可执行清单**勾选当前任务能否出门  
-3. 若涉及上线：再 `@` 清单里指向的部署细则（例：`docs/deploy-check.md`）  
+3. 若涉及上线：再 `@` 清单里指向的部署细则（本仓例：`docs/zh/skills/.../docs/deploy-verify.md`）  
 4. **证据分层**（易错点）：  
    - MCP `health` 绿 ≠ 静态站已用正确 Host 验收  
    - 本机无 SSH 时标「部分证据」，勿默认部署项全绿  
+
+若你是**只开网页、不调 MCP**：改用站点角色页「复制 Cursor 触发句」，不要用本节的虚构 `governance/...` 路径。
 
 业务代码仍在 `acme-billing` 仓改；治理仓只提供「怎么做 / 出门标准」。
 
@@ -234,5 +259,6 @@ flowchart LR
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-20 | 写明「站点页触发句」vs「MCP source @」两种用法 |
 | 2026-07-17 | i18n：SoT → `docs/zh`；补英文镜像与语言互链 |
 | 2026-07-17 | 初稿：跨项目流程 Demo（MCP → 干活 → 蒸馏 → 上传） |

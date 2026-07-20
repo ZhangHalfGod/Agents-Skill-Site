@@ -62,4 +62,7 @@ Core/architecture Prompt without Red Record → refuse generation and ask to com
 1. `@` reference: `docs/skills/custom/common/prompt-versioning/index.md`
 2. Or follow the checklist on this page (skill 3)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

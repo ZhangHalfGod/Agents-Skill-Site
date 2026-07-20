@@ -312,3 +312,6 @@ UI agents 拿到图片后，必须补齐“可工程化”的沉淀：
 <RunGuide role-id="UIDesigner" role-path="docs/zh/agents/standard/UIDesigner/index.md" :skills='[{"id":"frontend-design","label":"前端设计","uri":"/zh/skills/external/frontend-design"},{"id":"doc-coauthoring","label":"文档协作","uri":"/zh/skills/external/doc-coauthoring"},{"id":"ai-code-boundary","label":"AI 生成代码边界","uri":"/zh/skills/custom/common/ai-code-boundary"}]' />
 
 本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。
+
+- **浏览本页**：用上方「复制 Cursor 触发句」（`@` 页内路径）。
+- **走 MCP**：`get_agent` / `get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。

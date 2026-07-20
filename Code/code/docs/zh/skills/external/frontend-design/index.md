@@ -54,3 +54,6 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 2. 或打开本页后按 checklist 执行（技能 7）
 
 本站不执行模型推理。正文真源即本页 Markdown。
+
+- **浏览本页**：`@` 上方列出的路径。
+- **走 MCP**：`get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。

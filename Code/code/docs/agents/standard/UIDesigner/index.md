@@ -148,4 +148,7 @@ For **dark-mode-first** task pages (e.g. M13): avoid “light body + dark header
 
 <RunGuide role-id="UIDesigner" role-path="docs/agents/standard/UIDesigner/index.md" :skills='[{"id":"frontend-design","label":"Frontend design","uri":"/skills/external/frontend-design"},{"id":"doc-coauthoring","label":"Doc co-authoring","uri":"/skills/external/doc-coauthoring"},{"id":"ai-code-boundary","label":"AI code boundary","uri":"/skills/custom/common/ai-code-boundary"}]' />
 
-This site is documentation only — **no model inference**. English playbook is this page; MCP SoT remains `docs/zh/...`.
+This site is documentation only — **no model inference**.
+
+- **Browse this page**: use **Copy Cursor trigger** above (`@` the English paths on this page).
+- **Via MCP**: `get_agent` / `get_skill` → `@` the returned **`source`** (`docs/zh/...` SoT). Do not mix with English-site paths.

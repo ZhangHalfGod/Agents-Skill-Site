@@ -607,7 +607,10 @@ function buildAgentExtras(agent, locale = 'zh') {
       '',
       `<RunGuide role-id="${agent.id}" role-path="${rolePath}" :skills='${JSON.stringify(skillProps)}' />`,
       '',
-      'This site is documentation only — **no model inference**. English playbook is this page; MCP SoT remains `docs/zh/...`.',
+      'This site is documentation only — **no model inference**.',
+      '',
+      '- **Browse this page**: use **Copy Cursor trigger** above (`@` the English paths on this page).',
+      '- **Via MCP**: `get_agent` / `get_skill` → `@` the returned **`source`** (`docs/zh/...` SoT). Do not mix with English-site paths.',
       ''
     )
     return parts.join('\n')
@@ -654,6 +657,9 @@ function buildAgentExtras(agent, locale = 'zh') {
     `<RunGuide role-id="${agent.id}" role-path="${rolePath}" :skills='${JSON.stringify(skillProps)}' />`,
     '',
     '本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。',
+    '',
+    '- **浏览本页**：用上方「复制 Cursor 触发句」（`@` 页内路径）。',
+    '- **走 MCP**：`get_agent` / `get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。',
     ''
   )
   return parts.join('\n')
@@ -689,7 +695,10 @@ function buildSkillExtras(skill, locale = 'zh') {
       `1. \`@\` reference: \`${docsPath}\``,
       `2. Or follow the checklist on this page (skill ${skill.index})`,
       '',
-      'This site does not run model inference. MCP SoT remains under `docs/zh/...`.',
+      'This site does not run model inference.',
+      '',
+      '- **Browse this page**: `@` the English path listed above.',
+      '- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).',
       ''
     )
     return parts.join('\n')
@@ -724,6 +733,9 @@ function buildSkillExtras(skill, locale = 'zh') {
     `2. 或打开本页后按 checklist 执行（技能 ${skill.index}）`,
     '',
     '本站不执行模型推理。正文真源即本页 Markdown。',
+    '',
+    '- **浏览本页**：`@` 上方列出的路径。',
+    '- **走 MCP**：`get_skill` → `@` 返回的 **`source`**（本仓 `docs/zh/...`）。',
     ''
   )
   return parts.join('\n')

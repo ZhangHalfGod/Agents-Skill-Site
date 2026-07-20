@@ -61,4 +61,7 @@ Missing Red Record for core or architecture code = traceability failure — reje
 1. `@` reference: `docs/skills/custom/common/traceability-compliance/index.md`
 2. Or follow the checklist on this page (skill 2)
 
-This site does not run model inference. MCP SoT remains under `docs/zh/...`.
+This site does not run model inference.
+
+- **Browse this page**: `@` the English path listed above.
+- **Via MCP**: `get_skill` → `@` the returned **`source`** (`docs/zh/...`).

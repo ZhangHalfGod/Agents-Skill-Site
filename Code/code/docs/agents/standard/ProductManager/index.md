@@ -115,4 +115,7 @@ The list should include:
 
 <RunGuide role-id="ProductManager" role-path="docs/agents/standard/ProductManager/index.md" :skills='[{"id":"stage-gate-flow","label":"Stage-gate flow","uri":"/skills/custom/common/stage-gate-flow"},{"id":"ai-code-boundary","label":"AI code boundary","uri":"/skills/custom/common/ai-code-boundary"},{"id":"doc-coauthoring","label":"Doc co-authoring","uri":"/skills/external/doc-coauthoring"}]' />
 
-This site is documentation only — **no model inference**. English playbook is this page; MCP SoT remains `docs/zh/...`.
+This site is documentation only — **no model inference**.
+
+- **Browse this page**: use **Copy Cursor trigger** above (`@` the English paths on this page).
+- **Via MCP**: `get_agent` / `get_skill` → `@` the returned **`source`** (`docs/zh/...` SoT). Do not mix with English-site paths.

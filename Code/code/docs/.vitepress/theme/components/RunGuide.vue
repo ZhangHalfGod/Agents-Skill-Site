@@ -169,8 +169,8 @@ function skillHref(uri) {
     <p class="hint">
       {{
         isEn
-          ? 'This site does not run inference; copy and paste into Cursor.'
-          : '本站不执行推理；复制后到 Cursor 粘贴使用。'
+          ? 'Site browse: copy this trigger into Cursor (@ paths below). For MCP, call get_agent/get_skill and @ the returned source (docs/zh/...), not these English paths. Workspace must include this repo.'
+          : '浏览站点：复制下方触发句到 Cursor（@ 页内路径）。走 MCP 时请 get_agent/get_skill 后 @ 返回的 source（本仓 docs/zh/...），不要混用英文站路径。工作区需打开本仓库。'
       }}
     </p>
 
