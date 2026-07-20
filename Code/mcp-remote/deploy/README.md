@@ -5,7 +5,7 @@
 
 | 项 | 值 |
 |----|-----|
-| 进程 | PM2 名 **`agents-skill-mcp-remote`**（勿改 `mechassist-api` / `mcp-faq` / `mcp-gaode`） |
+| 进程 | PM2 名 **`agents-skill-mcp-remote`**（勿占用同机其它业务已用端口） |
 | 绑定 | `127.0.0.1:3921` |
 | Nginx | `location /agents-skill-mcp/` → 上游 `/` |
 | 探活 | `http://<PUBLIC_HOST>/agents-skill-mcp/healthz`（无 Token） |
@@ -69,15 +69,14 @@ pm2 restart agents-skill-mcp-remote
 
 ## 3. 服务器：Nginx location
 
-1. 打开 `/etc/nginx/sites-available/mechassist`  
+1. 打开 `/etc/nginx/sites-available/<your-site>`（与静态站同一 `server`）  
 2. 将 [`nginx-agents-skill-mcp.snippet.conf`](nginx-agents-skill-mcp.snippet.conf) 中的 `location /agents-skill-mcp/` 块粘贴到 `location /agents-skill/` **之后**  
 3. 校验并重载：
 
 ```bash
 nginx -t && nginx -s reload
+# 或：service nginx reload
 ```
-
-不要用 `systemctl reload nginx`（现网可能无该 unit）。
 
 ---
 
@@ -124,7 +123,7 @@ SMOKE_BASE=http://127.0.0.1/agents-skill-mcp MCP_TOKEN='…' npm run smoke
 pm2 stop agents-skill-mcp-remote
 # 可选：pm2 delete agents-skill-mcp-remote && pm2 save
 
-# 删掉 mechassist 里 location /agents-skill-mcp/ 块
+# 从 Nginx 配置中删除 location /agents-skill-mcp/ 块
 nginx -t && nginx -s reload
 ```
 

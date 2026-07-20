@@ -5,7 +5,8 @@
 > **方案 B**：`alias` 直指 `Code/code/docs/.vitepress/dist/`（无 `/dist` 软链）  
 > **SoT（2026-07-16）**：正文在本仓 `docs/**`；`build` 前自动 `generate` 刷 `manifest.json`  
 > **冻结参数**：ADR-001 §5、`01-server-inventory.md`（主机名 / IP 以库存为准，本文用占位符）  
-> **验收**：`http://<PUBLIC_HOST>/agents-skill/` 可开；不占用 3001–3003；不改现有 MechAssist PM2
+> **验收**：`http://<PUBLIC_HOST>/agents-skill/` 可开；不占用同机已用业务端口  
+> **对外入口（推荐）**：[`../../code/deploy/README.md`](../../code/deploy/README.md)
 
 下文用占位符：
 
@@ -13,6 +14,7 @@
 |--------|------|
 | `<PUBLIC_HOST>` | Nginx `server_name`（公网 IP 或域名；**勿**写进角色/技能正文） |
 | `/var/www/agents-skill-site` | 服务器上本仓 clone 根 |
+| `<your-site>` | `/etc/nginx/sites-available/` 下你的站点配置名 |
 
 ---
 
@@ -27,7 +29,7 @@
 | 构建产物 / Nginx alias | `…/Code/code/docs/.vitepress/dist/` |
 | 索引（MCP 常用） | `…/Code/code/docs/public/manifest.json` |
 | 对外 URL | `http://<PUBLIC_HOST>/agents-skill/` |
-| 已占用勿碰 | `127.0.0.1:3001/3002/3003`；PM2：`mechassist-api` / `mcp-faq` / `mcp-gaode` |
+| 已占用勿碰 | 同机其它业务端口 / PM2 进程（部署前用 `ss` / `pm2 list` 核对） |
 
 ---
 
@@ -52,11 +54,11 @@ git push origin main
 
 ## 3. 服务器：首次部署
 
-与 MechAssist 等并列，**勿混进**其它项目目录。
+与同机其它站点并列部署时，**使用独立目录**，勿混进其它项目。
 
 ```bash
 cd /var/www
-git clone git@github.com:ZhangHalfGod/Agents-Skill-Site.git agents-skill-site
+git clone <YOUR_GIT_REMOTE> agents-skill-site
 cd agents-skill-site
 git checkout main
 cd Code/code
@@ -133,25 +135,25 @@ echo "OK → http://<PUBLIC_HOST>/agents-skill/"
 
 | 项 | 路径 |
 |----|------|
-| 实体配置（编辑这个） | `/etc/nginx/sites-available/mechassist` |
-| 启用软链 | `/etc/nginx/sites-enabled/mechassist` |
-| 另有 | `default`（**本站不改**） |
+| 实体配置（编辑这个） | `/etc/nginx/sites-available/<your-site>` |
+| 启用软链 | `/etc/nginx/sites-enabled/<your-site>` |
+| 另有 | `default`（**本站不改**，除非你刻意用它） |
 | 静态站片段 | `Code/code/deploy/nginx-agents-skill.snippet.conf` |
 | 远程 MCP 片段 | `Code/mcp-remote/deploy/nginx-agents-skill-mcp.snippet.conf` |
 
 ### 5.2 结构摘要
 
-同一 `server`（`listen 80`）内大致：
+同一 `server`（`listen 80` / `443`）内大致：
 
 | location | 作用 |
 |----------|------|
-| `/` 等 | MechAssist / 其它业务（勿改） |
+| `/` 等 | 同机其它业务（勿误改） |
 | **`/agents-skill/`** | 本站静态 `alias` → `.vitepress/dist/` |
 | **`/agents-skill-mcp/`** | 远程 MCP 反代（见 mcp-remote 文档） |
 
 ```text
-http://<PUBLIC_HOST>:80
-  ├─ /                  → MechAssist …
+http(s)://<PUBLIC_HOST>
+  ├─ /                  → 其它业务（可选）
   ├─ /agents-skill/     → …/docs/.vitepress/dist/
   └─ /agents-skill-mcp/ → 127.0.0.1:3921
 ```
@@ -161,7 +163,7 @@ http://<PUBLIC_HOST>:80
 ### 5.3 静态站 location（方案 B）
 
 ```nginx
-    # --- agents-skill-site（形态 α / 方案 B；勿改 3001–3003）---
+    # --- agents-skill-site（形态 α / 方案 B）---
     location /agents-skill/ {
         alias /var/www/agents-skill-site/Code/code/docs/.vitepress/dist/;
         index index.html;

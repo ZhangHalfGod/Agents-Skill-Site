@@ -1,15 +1,15 @@
 /**
  * PM2：agents-skill-mcp-remote
- * 与现网 mcp-faq / mcp-gaode / mechassist-api 并列；勿改它们的端口与配置。
+ * Bind 127.0.0.1:3921 only; do not collide with other apps on the host.
  *
- * 服务器：
+ * Server:
  *   cd /var/www/agents-skill-site/Code/mcp-remote
- *   cp deploy/env.production.example .env   # 填 MCP_TOKEN，勿提交
+ *   cp deploy/env.production.example .env   # set MCP_TOKEN; never commit .env
  *   npm ci
  *   pm2 start deploy/ecosystem.config.cjs
  *   pm2 save
  *
- * 日志目录由 PM2 默认管理；勿把密钥写入本文件。
+ * Logs: PM2 defaults. Do not put secrets in this file.
  */
 module.exports = {
   apps: [

@@ -26,6 +26,7 @@
 - [本项目解决的问题](#本项目解决的问题)
 - [双消费端架构总览](#双消费端架构总览)
 - [快速开始](#快速开始)
+- [生产部署（服务器）](#生产部署服务器)
 - [使用场景](#使用场景)
 - [目录结构](#目录结构)
 - [常见问题](#常见问题)
@@ -290,24 +291,35 @@ npm run dev
 }
 ```
 
-### 生产部署
+### 生产部署（服务器）
+
+本仓库有两套可部署物：
+
+| 组件 | 进程 | 文档入口 |
+|------|------|----------|
+| **静态发现站**（`/agents-skill/`） | 默认仅 Nginx `alias`，**一般不用 PM2** | **[Code/code/deploy/README.md](Code/code/deploy/README.md)** · [Nginx 片段](Code/code/deploy/nginx-agents-skill.snippet.conf) |
+| **远程 MCP**（`/agents-skill-mcp/`，可选） | **PM2** + Nginx 反代 | **[Code/mcp-remote/deploy/README.md](Code/mcp-remote/deploy/README.md)** · [Nginx 片段](Code/mcp-remote/deploy/nginx-agents-skill-mcp.snippet.conf) |
+
+更长的排障笔记：[Code/doc/phase1/07-deploy.md](Code/doc/phase1/07-deploy.md)。
 
 ```bash
-# 1. 服务器上拉取代码
+# 1. 服务器上构建静态站
+cd /var/www/agents-skill-site
 git pull origin main
 cd Code/code
 npm ci && npm run build
+# 2. 将 Code/code/deploy/nginx-agents-skill.snippet.conf 中的 location /agents-skill/
+#    粘贴进 /etc/nginx/sites-available/<your-site>，然后：nginx -t && nginx -s reload
 
-# 2. 配置 Nginx（见 deploy/nginx-agents-skill.snippet.conf）
-#    alias 到 docs/.vitepress/dist/ 目录
-
-# 3. 部署 MCP 远程服务（可选）
-cd Code/mcp-remote
-cp deploy/env.production.example .env   # 编辑 .env 填入 MCP_TOKEN
+# 3. （可选）远程 MCP — 需要 PM2
+cd /var/www/agents-skill-site/Code/mcp-remote
+cp deploy/env.production.example .env   # 填 MCP_TOKEN，勿提交 .env
 npm ci
-pm2 start deploy/ecosystem.config.cjs
-pm2 save
+pm2 start deploy/ecosystem.config.cjs && pm2 save
+# 再粘贴 mcp-remote 的 /agents-skill-mcp/ 片段并 reload Nginx
 ```
+
+`<PUBLIC_HOST>` / `<your-site>` 换成你的公网 IP 或域名、以及 Nginx 站点配置名。生产 IP / 私有主机名不要写进角色/技能正文。
 
 ---
 
@@ -418,9 +430,9 @@ Agents-Skill-Site/                   # 本仓：发现站 + MCP + docs 真源
 
 ### 部署需要什么？
 
-- **网站**：任何静态文件服务器（Nginx、GitHub Pages、Vercel 都行）
-- **远程 MCP**：一台 Node 22+ 服务器 + PM2（或 Docker）
-- **最低开销**：只有静态网站时 Nginx alias 到 dist 即可
+- **网站**：任何静态文件服务器（Nginx、GitHub Pages、Vercel 都行）；本仓推荐 Nginx，见 [Code/code/deploy/README.md](Code/code/deploy/README.md)
+- **远程 MCP**：一台 Node 22+ 服务器 + PM2（或 Docker），见 [Code/mcp-remote/deploy/README.md](Code/mcp-remote/deploy/README.md)
+- **最低开销**：只有静态网站时 Nginx `alias` 到 `docs/.vitepress/dist/` 即可（**不必**为网站开 PM2）
 
 ### 怎么加自定义技能？
 

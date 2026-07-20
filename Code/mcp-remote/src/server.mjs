@@ -52,7 +52,9 @@ if (HOST !== '127.0.0.1' && HOST !== 'localhost' && HOST !== '::1') {
 }
 
 if (PORT === 3001 || PORT === 3002 || PORT === 3003) {
-  console.error(`[mcp-remote] port ${PORT} reserved for mechassist; refuse`)
+  console.error(
+    `[mcp-remote] port ${PORT} commonly used by other apps on shared hosts; refuse`
+  )
   process.exit(1)
 }
 

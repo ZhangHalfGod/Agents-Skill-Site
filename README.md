@@ -26,6 +26,7 @@
 - [What this project solves](#what-this-project-solves)
 - [Dual-consumer architecture](#dual-consumer-architecture)
 - [Quick start](#quick-start)
+- [Production deploy (server)](#production-deploy-server)
 - [Use cases](#use-cases)
 - [Repository layout](#repository-layout)
 - [FAQ](#faq)
@@ -286,24 +287,35 @@ Local stdio if remote MCP is not deployed yet:
 }
 ```
 
-### Production deploy
+### Production deploy (server)
+
+This project ships **two deployables**:
+
+| Piece | Process manager | Docs |
+|-------|-----------------|------|
+| **Static site** (`/agents-skill/`) | Nginx `alias` only — **no PM2 by default** | **[Code/code/deploy/README.md](Code/code/deploy/README.md)** · [nginx snippet](Code/code/deploy/nginx-agents-skill.snippet.conf) |
+| **Remote MCP** (`/agents-skill-mcp/`, optional) | **PM2** + Nginx reverse proxy | **[Code/mcp-remote/deploy/README.md](Code/mcp-remote/deploy/README.md)** · [nginx snippet](Code/mcp-remote/deploy/nginx-agents-skill-mcp.snippet.conf) |
+
+Longer notes / troubleshooting: [Code/doc/phase1/07-deploy.md](Code/doc/phase1/07-deploy.md).
 
 ```bash
-# 1. On the server
+# 1. Static site on the server
+cd /var/www/agents-skill-site
 git pull origin main
 cd Code/code
 npm ci && npm run build
+# 2. Paste location /agents-skill/ from Code/code/deploy/nginx-agents-skill.snippet.conf
+#    into /etc/nginx/sites-available/<your-site>, then: nginx -t && nginx -s reload
 
-# 2. Nginx (see deploy/nginx-agents-skill.snippet.conf)
-#    alias → docs/.vitepress/dist/
-
-# 3. Optional remote MCP
-cd Code/mcp-remote
-cp deploy/env.production.example .env   # set MCP_TOKEN
+# 3. Optional remote MCP (PM2)
+cd /var/www/agents-skill-site/Code/mcp-remote
+cp deploy/env.production.example .env   # set MCP_TOKEN; never commit .env
 npm ci
-pm2 start deploy/ecosystem.config.cjs
-pm2 save
+pm2 start deploy/ecosystem.config.cjs && pm2 save
+# Paste location /agents-skill-mcp/ from mcp-remote deploy snippet, then reload Nginx
 ```
+
+Replace `<PUBLIC_HOST>` / `<your-site>` with your host and Nginx site name. Do not put production IPs or private hostnames into role/skill playbooks.
 
 ---
 
@@ -398,9 +410,9 @@ Both need this repo open in the workspace; MCP does not stream playbook bodies.
 
 ### What do I need to deploy?
 
-- **Site**: any static host (Nginx, GitHub Pages, Vercel, …)  
-- **Remote MCP**: Node 22+ + PM2 (or Docker)  
-- **Minimal**: Nginx alias to `dist` for the site alone  
+- **Site**: any static host (Nginx, GitHub Pages, Vercel, …); recommended path: [Code/code/deploy/README.md](Code/code/deploy/README.md)
+- **Remote MCP**: Node 22+ + PM2 (or Docker): [Code/mcp-remote/deploy/README.md](Code/mcp-remote/deploy/README.md)
+- **Minimal**: Nginx `alias` to `docs/.vitepress/dist/` for the site alone (**no** PM2 required for the website)
 
 ### How do I add a custom skill?
 

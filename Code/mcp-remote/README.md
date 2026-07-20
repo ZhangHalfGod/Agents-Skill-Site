@@ -38,8 +38,8 @@ MCP_TOKEN=change-me-local-token npm run smoke
 
 步骤见 **[`deploy/README.md`](deploy/README.md)**（Nginx 片段、PM2、验收、回滚）。
 
-- 公网探活：`http://8.163.18.183/agents-skill-mcp/healthz`
-- 公网 MCP：`http://8.163.18.183/agents-skill-mcp/mcp`
+- 公网探活：`http(s)://<PUBLIC_HOST>/agents-skill-mcp/healthz`
+- 公网 MCP：`http(s)://<PUBLIC_HOST>/agents-skill-mcp/mcp`
 - Cursor 样例：[`cursor-mcp.url.production.json.example`](cursor-mcp.url.production.json.example)
 
 ## Cursor 配置（他人 / 本机）
@@ -51,7 +51,7 @@ MCP_TOKEN=change-me-local-token npm run smoke
 | 公网（推荐） | [`cursor-mcp.url.production.json.example`](cursor-mcp.url.production.json.example) |
 | 本机 R1 | [`cursor-mcp.url.json.example`](cursor-mcp.url.json.example) |
 
-摘要：在 `~/.cursor/mcp.json`（或项目 `.cursor/mcp.json`）写入 `url` + `Authorization: Bearer <MCP_TOKEN>`，URL 为 `http://8.163.18.183/agents-skill-mcp/mcp`。选 URL **或** stdio，不必双开。
+摘要：在 `~/.cursor/mcp.json`（或项目 `.cursor/mcp.json`）写入 `url` + `Authorization: Bearer <MCP_TOKEN>`，URL 为 `http(s)://<PUBLIC_HOST>/agents-skill-mcp/mcp`。选 URL **或** stdio，不必双开。
 
 ## 环境变量
 
@@ -82,5 +82,5 @@ mcp-remote/
 
 - 只读；密钥不进 Git
 - 不新开安全组端口；对外走 Nginx
-- 不占用 mechassist `3001–3003`
+- 不占用同机其它业务已用端口
 - 关闭本服务不影响 `/agents-skill/` 网站
