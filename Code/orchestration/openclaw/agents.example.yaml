@@ -1,0 +1,63 @@
+# agents.example.yaml — 命名 agent + 模型分层样例（四期 4B）
+# 对应契约：Doc/phase4/03-openclaw-route-table.md §2
+# ⚠ 键名结构为「待验证」：OpenClaw 部署侧文档目前只验证了 --agent main。
+#   试点时逐条对照真实配置（~/.openclaw/ 或 openclaw 面板），实测后回填本文件并去掉本警告。
+# 已验证的事实（可直接依赖）：
+#   - openclaw agent --agent <id> --message "..." 唤起会话
+#   - DashScope provider 注册与 `openclaw models set`（switch-dashscope-model skill）
+#   - deepseek provider 已装；deepseek/deepseek-v4-flash 已 configured 且为 bm 当前默认（2026-07-29 openclaw models list）
+#   - workspace skill：SKILL.md + skills.entries.<name>.enabled=true
+#
+# 模型绑定（2026-07-29 用户决策）：试点期间全部角色统一绑 deepseek/deepseek-v4-flash；
+# model_tier 仅记录「意图分层」，高/中/低分档绑定由用户后续自行调整。
+
+agents:
+  main:                              # 编排者：收消息、校验信封、按路由表唤起下一跳
+    persona: prompts/orchestrator-main.md
+    model_tier: mid                  # 意图分层；当前实际统一绑 flash
+    model: "deepseek/deepseek-v4-flash"
+    skills:
+      - route-dispatch               # ✅ 已有（V4）
+      - switch-dashscope-model       # ✅ 已有
+
+  pm:                                # H1 ProductManager
+    persona_source: "docs/zh/agents/standard/ProductManager/index.md"   # 经 get_agent 取 source 再 @
+    model_tier: top
+    model: "deepseek/deepseek-v4-flash"
+
+  arch:                              # H2 Architect
+    persona_source: "docs/zh/agents/standard/Architect/index.md"
+    model_tier: top
+    model: "deepseek/deepseek-v4-flash"
+
+  ui:                                # H2b UIDesigner（并行可选）
+    persona_source: "docs/zh/agents/standard/UIDesigner/index.md"
+    model_tier: mid
+    model: "deepseek/deepseek-v4-flash"
+
+  dev:                               # H3 DevLead；代码产出走机制 B（Cursor CLI headless）
+    persona_source: "docs/zh/agents/standard/DevLead/index.md"
+    model_tier: mid
+    model: "deepseek/deepseek-v4-flash"
+    skills:
+      - code-via-cursor-cli          # ✅ 已有（V5）
+
+  test:                              # H4 TestEngineer
+    persona_source: "docs/zh/agents/standard/TestEngineer/index.md"
+    model_tier: mid
+    model: "deepseek/deepseek-v4-flash"
+
+  sec:                               # H5 SecurityEngineer
+    persona_source: "docs/zh/agents/standard/SecurityEngineer/index.md"
+    model_tier: mid
+    model: "deepseek/deepseek-v4-flash"
+
+  ops:                               # H6 OpsEngineer；M3 人工放行后才执行部署动作
+    persona_source: "docs/zh/agents/standard/OpsEngineer/index.md"
+    model_tier: mid
+    model: "deepseek/deepseek-v4-flash"
+
+# 模型分层原则（亮点文档 §1.2）：top=核心决策（pm/arch）；mid=执行类；econ=文档类（DeepSeek）。
+# 试点期统一 deepseek-v4-flash；用户后续按上分档自行绑定（bm 已注册备选：
+# qwen/qwen3.7-max 系、qwen-oauth/*、deepseek/deepseek-v4-pro 等，见 openclaw models list）。
+# 四期不做自动调配（优先级③再做数据反馈闭环）。

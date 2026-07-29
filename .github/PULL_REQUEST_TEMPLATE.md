@@ -12,8 +12,9 @@
 ## 治理沉淀
 
 - [ ] 无（一次性改动，无可复用教训）
-- [ ] 已写 Lesson：`Code/code/docs/operations/<project>/lessons/<slug>.md`
+- [ ] 已写 Lesson：`Code/code/docs/zh/operations/<project>/lessons/<slug>.md`（含 `scope` 初判）
 - [ ] 本 PR 已回灌 skill / agent / rule（路径：）
+- [ ] 已跑 `npm run lessons:scan`：无未审跨项目重复项（或已在 Lesson 标注 `scope` 待终审）
 - [ ] 本阶段明确无新教训（出门勾选）
 
 ## 自检

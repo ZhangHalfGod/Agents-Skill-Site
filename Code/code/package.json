@@ -18,6 +18,7 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --port 3010 --host 127.0.0.1",
     "accept": "npm run validate && npm run check:links",
+    "lessons:scan": "node scripts/lesson-scan.mjs",
     "mcp:server": "node mcp/server.mjs",
     "mcp:health": "node mcp/catalog-api.mjs health",
     "mcp:health:remote": "MANIFEST_URL=http://YOUR_DEPLOYED_HOST/agents-skill/manifest.json node mcp/catalog-api.mjs health"

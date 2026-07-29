@@ -37,6 +37,7 @@ Doc/
   phase1/                 # 一期：建站 MVP（阶段 0～7）
   phase2/                 # 二期：Cursor + MCP
   phase3/                 # 三期：治理资产迭代闭环
+  phase4/                 # 四期：跨项目记忆复用 + OpenClaw 编排总线契约
 Code/doc/
   00-dev-log.md           # 跨期开发日志
   phase1/                 # 一期实现笔记（部署/验收/ADR）
@@ -49,6 +50,7 @@ Code/doc/
 | **[phase1/](phase1/)** | 需求、架构、URI、进度、矩阵 | [phase1/README.md](phase1/README.md) |
 | **[phase2/](phase2/)** | Cursor + MCP 消费本站索引 | [phase2/README.md](phase2/README.md) |
 | **[phase3/](phase3/)** | 迭代闭环：Lesson → Skill/Agent/Rules | [phase3/README.md](phase3/README.md)（新对话先读 [00-context](phase3/00-context.md)） |
+| **[phase4/](phase4/)** | 跨项目记忆复用 + OpenClaw 编排总线契约 | [phase4/README.md](phase4/README.md)（新对话先读 [00-context](phase4/00-context.md)） |
 | **[git/](git/)** | Git 操作：Fork、Upstream、分支合并 | [git/fork-and-upstream.md](git/fork-and-upstream.md) |
 | **实现跟踪** | [../Code/doc/](../Code/doc/README.md) | 同样按 phase1 / phase2 / phase3 分放 |
 
@@ -67,6 +69,7 @@ Code/doc/
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07-29 | 新增 phase4/（跨项目记忆复用 4A 已落地；OpenClaw 编排契约 4B） |
 | 2026-07-17 | VitePress i18n（root=en /zh）+ `Doc/en` 精选；SoT=`docs/zh` |
 | 2026-07-17 | 新增 `guides/mcp-work-then-distill-demo.md`（MCP→蒸馏→上传流程 Demo） |
 | 2026-07-16 | **B 方案落地**：本仓 `docs/**` 就地 SoT；废止外仓 sync 日常流程 |

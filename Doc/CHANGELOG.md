@@ -1,5 +1,13 @@
 # CHANGELOG — All_URI
 
+## 2026-07-29 — phase4（4A 落地 + 4B 契约与最小试点）
+
+- **4A 跨项目记忆复用**：Lesson Card v2（`scope` / `seen_in_projects` / `promoted_to`）；`scripts/lesson-scan.mjs`（看板 + 聚类 + 升格建议；`--strict` 可阻断）；operations README 与 PR 模板挂钩；存量 3 条回填  
+- **4B OpenClaw 编排总线契约**：`Doc/phase4/`（00～04）；`Code/orchestration/` 样例（agents / mcp.servers / 信封 / Prompt 模板）；运行时外置 OpenClaw 部署侧  
+- **最小两跳试点**：bm Gateway（`deepseek/deepseek-v4-flash`）PM → Architect 一次跑通；证据 `Code/doc/phase4/pilot/`；试点 Lesson `openclaw-orchestration-pilot`（raw，`scope=common` 实战，人终审留项目内）  
+- 试点期模型绑定：全部角色统一 `deepseek/deepseek-v4-flash`（用户后续自行分档）  
+- S0 v0.5 · 决策 `2026-07-29-01`；分支 `feature/phase4-memory-orchestration`；遗留：机制 A（命名 agent / per-agent 模型）验证
+
 ## 2026-07-17 — phase3 B～D（迭代闭环）
 
 - **阶段 B**：Lesson 出门检查 + 触发句；`.github/PULL_REQUEST_TEMPLATE.md` 治理沉淀勾选  

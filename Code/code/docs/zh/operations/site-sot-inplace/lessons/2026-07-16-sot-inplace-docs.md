@@ -7,6 +7,9 @@ audience_guess: agent
 target_id: ""
 priority: P1
 status: merged
+scope: project
+seen_in_projects: [site-sot-inplace]
+promoted_to: Doc/SYSTEM-DIRECTION.md §8 2026-07-16-01
 related_agents: []
 related_skills: []
 ---
