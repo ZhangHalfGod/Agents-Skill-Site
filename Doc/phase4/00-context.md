@@ -72,3 +72,27 @@
 - [x] B4 S0 §8 + CHANGELOG + 亮点文档状态更新；`npm run generate && npm run validate` 绿（2026-07-29 hash=11551bc5b589d320）
 
 （B3/B4 已完成；机制 A 与 q004/q005 已于 2026-07-29 下午实测定案，见 [`03-openclaw-route-table.md`](03-openclaw-route-table.md) §6。剩余：H3 起全链路推广、信封 schema 机器校验、mcp 挂接字段级验证。）
+
+## 8. 端到端全景（4A + 4B 一条链）
+
+> 2026-07-29 逐环核对后的修正版；每环标注验证状态。
+
+```text
+① 飞书 → OpenClaw Gateway（长期在线）：项目需求进来
+② 文档跳（OpenClaw 内，机制 A ✅）：PM → Architect 等命名 agent 在 session 里产出
+   范围清单 / 架构约束 + 交接信封（角色可经 agents-skill-remote MCP 查绑定，见 04）
+③ 代码跳（机制 B 模式 ✅）：按需拉起无头 Cursor CLI（invoke-cursor-agent.ps1），
+   走 demo 流程：health → get_agent → get_skill → @ source 清单干活 → 阶段出门
+④ 踩坑/出门：触发句记 Lesson → 写回本仓 operations/<项目>/lessons/（raw，集中真源）
+⑤ 周一 09:00：weekly-lesson-digest 推飞书 ✅ → 人工逐条终审（merged/distilled/rejected）
+⑥ merged → 公共 skill 注册 ✅（清单见 05 §⑤）→ 下个项目的 agent 绑定里就有它
+```
+
+两个易错点（已纠正）：
+
+- **OpenClaw 不会「识别到 Cursor 连上」**：两个运行时互相不感知；Cursor 是被按需派遣的无头进程，跑完即走。MCP 配置写在项目仓 / 用户设置里，任何 Cursor 会话（手动或无头拉起）都自带 `agents-skill-remote`。
+- **Lesson 不写业务仓**：统一回本仓 `Code/code/docs/zh/operations/<project-id>/lessons/`——集中才能跨项目聚类、进周推；业务仓只收代码产出。
+
+验证状态诚实版：每一环均单独验证过（机制 A ✅ / Cursor CLI 派遣模式 ✅ / 记卡→周推→终审→升格 ✅ 2026-07-29 首跑）；「飞书进、代码出」**全自动端到端尚未一次性连跑**（目前由人或 orchestrator prompt 按契约驱动），为下一验证点。
+
+流程参考：单环细节 [`../guides/mcp-work-then-distill-demo.md`](../guides/mcp-work-then-distill-demo.md)；记忆闭环 Runbook [`05`](05-lesson-memory-loop.md)；路由与机制 [`03`](03-openclaw-route-table.md)。

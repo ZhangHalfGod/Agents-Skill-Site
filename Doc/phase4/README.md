@@ -14,6 +14,7 @@
 | 3 | [02-orchestration-contracts.md](02-orchestration-contracts.md) | 会话交接契约（6 角色交付物 schema） |
 | 4 | [03-openclaw-route-table.md](03-openclaw-route-table.md) | 角色路由表 / 模型分层 / 回退 |
 | 5 | [04-tool-registration.md](04-tool-registration.md) | MCP 服务 → OpenClaw tool 注册映射 |
+| 6 | **[05-lesson-memory-loop.md](05-lesson-memory-loop.md)** | **跨项目记忆复用闭环全流程 Runbook（已实战验证）** |
 
 ## 本目录文件
 
@@ -24,6 +25,7 @@
 | [02-orchestration-contracts.md](02-orchestration-contracts.md) | ✅ |
 | [03-openclaw-route-table.md](03-openclaw-route-table.md) | ✅ |
 | [04-tool-registration.md](04-tool-registration.md) | ✅ |
+| [05-lesson-memory-loop.md](05-lesson-memory-loop.md) | ✅ |
 
 ## 配套落点
 
@@ -37,7 +39,7 @@
 
 ```text
 三期：单项目 Lesson → 蒸馏回灌（已建成）
-四期 4A：跨项目 Lesson 聚类 → 升格建议 → 人工终审合入 common
+四期 4A：跨项目 Lesson 聚类 → 升格建议 → 人工终审合入 common（全流程见 05）
 四期 4B：OpenClaw session routing = Agent 通信协议；契约进本仓，运行时在部署侧
 ```
 

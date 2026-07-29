@@ -21,6 +21,7 @@
 ## Table of contents
 
 - [Flow demo: MCP → work → distill → ship](#flow-demo-mcp--work--distill--ship)
+- [Cross-project memory loop (phase 4)](#cross-project-memory-loop-phase-4-scan--weekly-digest--human-verdict--promote)
 - [Background: the governance gap](#background-the-governance-gap)
 - [Pain points](#pain-points)
 - [What this project solves](#what-this-project-solves)
@@ -46,6 +47,24 @@ MCP read-only lookup → @ source body → do work / exit gate
 ```
 
 Key point: MCP **does not write** body content. Distill and ship go through Git and build — no write tools on MCP.
+
+---
+
+## Cross-project memory loop (phase 4): scan → weekly digest → human verdict → promote
+
+Project lessons no longer die inside their own project folder — common-scoped ones surface every week and, after a human verdict, get promoted into the shared skill library:
+
+**[Doc/phase4/05-lesson-memory-loop.md](Doc/phase4/05-lesson-memory-loop.md)** — full runbook (battle-tested 2026-07-29, skills 11 → 13)
+
+```text
+Lesson card (raw, per project) → lessons:scan clusters + promotion suggestions
+  → OpenClaw cron pushes a weekly digest to Feishu (Mon 09:00)
+  → human verdict per card (merged / distilled / rejected)
+  → merged → new/updated common skill + registry + agent bindings
+  → generate + validate → commit/push → site & MCP reflect it automatically
+```
+
+Split of labor: machines discover and remind (scan/digest), humans judge, machines carry and verify. The agent's per-item "verdict suggestion" in the digest is a draft only — never the decision.
 
 ---
 
@@ -353,7 +372,7 @@ Agents-Skill-Site/                   # discovery site + MCP + docs SoT
 │   ├── SYSTEM-DIRECTION.md          # S0 (must-read)
 │   ├── CHANGELOG.md
 │   ├── guides/                      # cross-project flow demos
-│   ├── phase1/ · phase2/ · phase3/
+│   ├── phase1/ · phase2/ · phase3/ · phase4/
 │
 ├── Code/
 │   ├── doc/                         # implementation notes / ADR / deploy logs
@@ -419,6 +438,8 @@ Both need this repo open in the workspace; MCP does not stream playbook bodies.
 1. Write `docs/skills/custom/common/<id>/index.md`  
 2. Update matrix + generate registry  
 3. `npm run generate`  
+
+> Full 8-step registration checklist (EN body, dual indexes, agent bindings, validate) in [Doc/phase4/05-lesson-memory-loop.md](Doc/phase4/05-lesson-memory-loop.md) §5.
 
 ### How do I capture a Lesson?
 
