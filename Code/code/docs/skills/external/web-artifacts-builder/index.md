@@ -42,7 +42,7 @@ Avoid "AI slop": excessive centering, purple gradients, uniform rounded corners,
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/web-artifacts-builder/index.md`
-2. Or follow the checklist on this page (skill 9)
+2. Or follow the checklist on this page (skill 11)
 
 This site does not run model inference.
 

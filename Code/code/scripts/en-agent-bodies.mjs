@@ -497,6 +497,7 @@ You are an ops/SRE engineer responsible for release control, version traceabilit
 ## Bound skills
 
 - [traceability-compliance](/skills/custom/common/traceability-compliance/) — End-to-end traceability and compliance
+- [openclaw-ops](/skills/custom/common/openclaw-ops/) — OpenClaw deployment ops and cron error diagnosis
 
 ## Workflow
 

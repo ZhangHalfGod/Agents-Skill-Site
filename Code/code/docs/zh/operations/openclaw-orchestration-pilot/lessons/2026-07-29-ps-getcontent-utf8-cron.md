@@ -6,10 +6,10 @@ audience: rule
 audience_guess: rule
 target_id: ""
 priority: P2
-status: raw
+status: merged
 scope: common
 seen_in_projects: [openclaw-orchestration-pilot]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/powershell-utf8/index.md
 related_agents: [OpsEngineer]
 related_skills: []
 ---

@@ -54,7 +54,7 @@ _No strong standard-role binding (see matrix or domain roles)._
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/mcp-builder/index.md`
-2. Or follow the checklist on this page (skill 6)
+2. Or follow the checklist on this page (skill 8)
 
 This site does not run model inference.
 

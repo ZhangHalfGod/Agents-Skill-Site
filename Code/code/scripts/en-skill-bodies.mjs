@@ -3,6 +3,58 @@
  * SoT for full Chinese text: docs/zh/skills/**
  */
 export const SKILL_BODIES = {
+  'openclaw-ops': `# OpenClaw Ops Troubleshooting
+
+Ops runbook for the bm OpenClaw deployment (Gateway + named agents + cron + Feishu channel).
+
+## When to use
+
+- Cron job in error state / delivery failure
+- CLI reports Gateway 1006 / connection failure
+- Agent unresponsive, model errors, session anomalies
+
+## Checklist
+
+- [ ] Start with \`openclaw health\` + \`openclaw doctor\` — never guess
+- [ ] Cron errors: follow the three-step diagnosis (read \`lastError\` before acting)
+- [ ] Gateway down (nothing listening on 18789): \`openclaw gateway run --force\`; for recurring drops consider \`openclaw gateway install\` as a service
+- [ ] After config changes, re-run \`openclaw doctor\` and check for new warnings
+
+## Known gotchas (bm-verified)
+
+- Occasional CLI \`1006 abnormal closure\`: \`openclaw agent\` falls back to embedded automatically; for commands without fallback, retry once before investigating the Gateway
+- \`cron get/run/edit\` require the job UUID (first column of \`cron list\`), not the name
+- Within one session, an interrupted agent resumes on resend instead of starting over (pilot-verified 2026-07-29)
+- PowerShell 5.1 must pass \`-Encoding UTF8\` when reading repo text — see powershell-utf8
+
+Source Lesson: \`docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-cron-error-model-snapshot-diag.md\` (merged)
+`,
+
+  'powershell-utf8': `# PowerShell UTF-8 Conventions
+
+Rules for reading/writing this repo's UTF-8 (no BOM) text from **Windows PowerShell 5.1**: always state encodings explicitly; never rely on defaults.
+
+## When to use
+
+- Reading repo \`.md\`/config into a variable, then feeding it to CLI / HTTP / another process
+- Writing repo files via \`Set-Content\` / \`Out-File\`
+- Any "looks fine in the terminal, garbled on disk/wire" suspicion
+
+## Checklist
+
+- [ ] Read: \`Get-Content <path> -Raw -Encoding UTF8\` (5.1 defaults to system ANSI = GBK; UTF-8 will garble)
+- [ ] Prefer editor/agent file tools over PS redirection for writing (\`>\` emits UTF-16LE; \`Set-Content -Encoding utf8\` adds a BOM on 5.1)
+- [ ] If PS must write: \`[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding $false))\`
+- [ ] When debugging, verify actual file bytes first — the PS console display often lies about UTF-8
+
+## Blocker hints
+
+- Mojibake like \`銆愭瘡鍛ㄤ换鍔°€\` = UTF-8 bytes decoded as GBK → check the reading side for \`-Encoding UTF8\`
+- Chinese turning into \`?\` after passing through a command line → same cause, check the file-reading step first
+
+Source Lesson: \`docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-ps-getcontent-utf8-cron.md\` (merged)
+`,
+
   'ai-code-boundary': `# AI Code Generation Boundary
 
 Tiered control for AI-generated code: ordinary modules may be generated through the normal flow; core layer, gateway, security, and architecture code may be AI-generated but require an extra **Core Module AI Generation Red Record** and strengthened review.

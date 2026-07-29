@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P3
-status: raw
+status: merged
 scope: common
 seen_in_projects: [openclaw-orchestration-pilot]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/docs/cron-troubleshooting.md
 related_agents: [OpsEngineer]
 related_skills: []
 ---

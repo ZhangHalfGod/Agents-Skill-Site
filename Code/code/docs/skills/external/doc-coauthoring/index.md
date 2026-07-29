@@ -69,7 +69,7 @@ Create scaffold (artifact or `.md` file) with placeholders, then fill section by
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/doc-coauthoring/index.md`
-2. Or follow the checklist on this page (skill 5)
+2. Or follow the checklist on this page (skill 7)
 
 This site does not run model inference.
 

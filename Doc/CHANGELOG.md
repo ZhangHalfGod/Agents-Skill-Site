@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-29 — phase4 补记：digest v3 定稿 + 首批 Lesson 终审闭环（skills 11→13）
+
+- **digest v3 定稿**：`lesson-scan.mjs` 骨架补全（`extractTitle` 取卡内 H1 + 卡号/优先级/scope 行）；消息模板 v3 = 骨架原样转发 + agent 每条追加一句判决建议（试探性、不替人拍板）；第三次飞书实推版式确认
+- **首批 3 张 raw 卡终审完成**（用户逐条拍板）：cron-error-diag → **merged**（新建 `common/openclaw-ops/`，cron error 三步排查法）；ps-utf8-cron → **merged**（新建 `common/powershell-utf8/`）；persona-injection → **rejected**（机制 A 已验证，注入路径作历史注脚；「同 session 中断续跑」半条抢救进 `Doc/phase4/03` §6.1）
+- **新技能注册面**：SKILL_META / STANDARD_SKILLS / EXPECTED_SKILLS / en-skill-bodies / en-agent-bodies / 双语 skills 索引 / OpsEngineer 绑定（必显 +openclaw-ops、推荐 +powershell-utf8）；validate 数量断言改为跟随 EXPECTED_SKILLS 长度；generate/validate 绿（8 agents + **13 skills** + 10 rules）
+- **记忆闭环首次完整跑通**：raw → 人工终审 → merged 入公共库；`npm run lessons:scan` 建议清单归零（raw 0 · merged 5 · rejected 1）
+
 ## 2026-07-29 — phase4（4A 落地 + 4B 契约与最小试点）
 
 - **4A 跨项目记忆复用**：Lesson Card v2（`scope` / `seen_in_projects` / `promoted_to`）；`scripts/lesson-scan.mjs`（看板 + 聚类 + 升格建议；`--strict` 可阻断）；operations README 与 PR 模板挂钩；存量 3 条回填  

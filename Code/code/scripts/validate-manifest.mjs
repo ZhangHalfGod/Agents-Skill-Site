@@ -33,6 +33,8 @@ const EXPECTED_SKILLS = [
   { id: 'traceability-compliance', siteUri: '/skills/custom/common/traceability-compliance' },
   { id: 'prompt-versioning', siteUri: '/skills/custom/common/prompt-versioning' },
   { id: 'stage-gate-flow', siteUri: '/skills/custom/common/stage-gate-flow' },
+  { id: 'openclaw-ops', siteUri: '/skills/custom/common/openclaw-ops' },
+  { id: 'powershell-utf8', siteUri: '/skills/custom/common/powershell-utf8' },
   { id: 'doc-coauthoring', siteUri: '/skills/external/doc-coauthoring' },
   { id: 'mcp-builder', siteUri: '/skills/external/mcp-builder' },
   { id: 'frontend-design', siteUri: '/skills/external/frontend-design' },
@@ -93,7 +95,7 @@ function writeHealthPage(health) {
     `| Validated at | \`${health.validatedAt}\` |`,
     `| Content hash | \`${health.contentHash}\` |`,
     `| Agents | ${health.counts.agents} (expect 8) |`,
-    `| Skills | ${health.counts.skills} (expect 11) |`,
+    `| Skills | ${health.counts.skills} (expect ${EXPECTED_SKILLS.length}) |`,
     `| Rules | ${health.counts.rules} |`,
     `| Errors | ${health.errorCount} |`,
     '',
@@ -130,7 +132,7 @@ function writeHealthPage(health) {
     `| 扫描/校验时间 | \`${health.validatedAt}\` |`,
     `| 内容哈希 | \`${health.contentHash}\` |`,
     `| Agents | ${health.counts.agents}（期望 8） |`,
-    `| Skills | ${health.counts.skills}（期望 11） |`,
+    `| Skills | ${health.counts.skills}（期望 ${EXPECTED_SKILLS.length}） |`,
     `| Rules | ${health.counts.rules} |`,
     `| 错误数 | ${health.errorCount} |`,
     '',
@@ -167,7 +169,8 @@ function main() {
   const relatedDocs = manifest.relatedDocs || []
 
   if (agents.length !== 8) fail(errors, `agents 数量 ${agents.length} ≠ 8`)
-  if (skills.length !== 11) fail(errors, `skills 数量 ${skills.length} ≠ 11`)
+  if (skills.length !== EXPECTED_SKILLS.length)
+    fail(errors, `skills 数量 ${skills.length} ≠ ${EXPECTED_SKILLS.length}`)
   if (rules.length < 10) fail(errors, `rules 数量 ${rules.length} < 10（期望至少 L0×3+L1×3+L2×4）`)
 
   const agentIds = agents.map((a) => a.id)
@@ -261,7 +264,7 @@ function main() {
   manifest.contentHash = hash
   manifest.validatedAt = validatedAt
   manifest.validateOk = ok
-  manifest.note = 'SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～11 + rules；domains 灰度'
+  manifest.note = 'SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～13 + rules；domains 灰度'
   fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n', 'utf8')
 
   writeHealthPage(health)

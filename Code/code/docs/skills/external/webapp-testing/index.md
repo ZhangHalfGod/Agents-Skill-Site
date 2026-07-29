@@ -62,7 +62,7 @@ with sync_playwright() as p:
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/webapp-testing/index.md`
-2. Or follow the checklist on this page (skill 8)
+2. Or follow the checklist on this page (skill 10)
 
 This site does not run model inference.
 

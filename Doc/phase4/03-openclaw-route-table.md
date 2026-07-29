@@ -83,6 +83,8 @@ v1 无机器 schema 校验时，main 的角色 Prompt 必须包含：
 
 bm 已按本文件 §2 建齐 7 个角色 agent（统一 flash），SOUL.md 已写入各 workspace（内容 = 本仓 `Code/orchestration/prompts/role-session.md` 的角色锚定精简版）。
 
+**已知行为（续）**：同 session 内 agent 中断后续跑有效——重发消息会继续而非重来（2026-07-29 试点 H1 中断 45s 后实证，agent 回「文件已就位（上次轮次已产出）」）。
+
 ### 6.2 q004 定案：Cron 注册入口
 
 `openclaw cron add`（CLI 直管 Gateway）。bm 现有 7 条 `brief-*` 实战任务可参考：**agent 消息任务**（`--message` + `--session isolated` + `--channel feishu --to <群>` announce 投递）。任务级可指定 `--agent` / `--model` / `--fallbacks` / `--thinking`。

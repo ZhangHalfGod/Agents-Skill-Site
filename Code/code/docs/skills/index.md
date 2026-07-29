@@ -8,12 +8,14 @@ Skill catalog (1–11). English playbooks: `docs/skills/**`. Chinese SoT (MCP): 
 | 2 | custom | [traceability-compliance](/skills/custom/common/traceability-compliance/) | Traceability and compliance gates for merge and release | **ready** |
 | 3 | custom | [prompt-versioning](/skills/custom/common/prompt-versioning/) | Prompt naming, structure, dual review, and version linkage | **ready** |
 | 4 | custom | [stage-gate-flow](/skills/custom/common/stage-gate-flow/) | Waterfall / agile stage-gate exit checklist | **ready** |
-| 5 | external | [doc-coauthoring](/skills/external/doc-coauthoring/) | Document co-authoring and spec-style outputs | **ready** |
-| 6 | external | [mcp-builder](/skills/external/mcp-builder/) | MCP tool/service design and contracts | **ready** |
-| 7 | external | [frontend-design](/skills/external/frontend-design/) | Frontend UI design and implementation constraints | **ready** |
-| 8 | external | [webapp-testing](/skills/external/webapp-testing/) | Web app testing flow and checks | **ready** |
-| 9 | external | [web-artifacts-builder](/skills/external/web-artifacts-builder/) | Complex web artifacts and multi-state builds | **ready** |
-| 10 | external | [skill-creator](/skills/external/skill-creator/) | Method and evaluation for creating or iterating skills | **ready** |
-| 11 | external | [Human](/skills/external/Human/) | Detect and remove AI-sounding tone; improve natural writing | **ready** |
+| 5 | custom | [openclaw-ops](/skills/custom/common/openclaw-ops/) | OpenClaw deployment ops and three-step cron error diagnosis | **ready** |
+| 6 | custom | [powershell-utf8](/skills/custom/common/powershell-utf8/) | Explicit encoding rules for repo UTF-8 text on Windows PowerShell 5.1 | **ready** |
+| 7 | external | [doc-coauthoring](/skills/external/doc-coauthoring/) | Document co-authoring and spec-style outputs | **ready** |
+| 8 | external | [mcp-builder](/skills/external/mcp-builder/) | MCP tool/service design and contracts | **ready** |
+| 9 | external | [frontend-design](/skills/external/frontend-design/) | Frontend UI design and implementation constraints | **ready** |
+| 10 | external | [webapp-testing](/skills/external/webapp-testing/) | Web app testing flow and checks | **ready** |
+| 11 | external | [web-artifacts-builder](/skills/external/web-artifacts-builder/) | Complex web artifacts and multi-state builds | **ready** |
+| 12 | external | [skill-creator](/skills/external/skill-creator/) | Method and evaluation for creating or iterating skills | **ready** |
+| 13 | external | [Human](/skills/external/Human/) | Detect and remove AI-sounding tone; improve natural writing | **ready** |
 
 In Cursor (English site): `@docs/skills/...`. MCP `source` still points at `docs/zh/...`.

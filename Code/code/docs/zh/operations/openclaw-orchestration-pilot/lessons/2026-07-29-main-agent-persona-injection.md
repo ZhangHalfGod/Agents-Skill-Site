@@ -6,7 +6,7 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P2
-status: raw
+status: rejected
 scope: common
 seen_in_projects: [openclaw-orchestration-pilot]
 promoted_to: ""
@@ -15,6 +15,8 @@ related_skills: [stage-gate-flow]
 ---
 
 # Lesson：单 main + 消息内 persona 注入跑通两跳（机制 A 未验证时的保底路径）
+
+> **终审结论（2026-07-29）：rejected。** 机制 A 当日下午即验证通过并建齐角色花名册，本卡「期望」的主路线已被取代，注入路径仅作历史注脚。唯一与路径无关的发现「同 session 中断续跑有效」已抢救至 `Doc/phase4/03-openclaw-route-table.md` §6.1 已知行为。
 
 ## 现象
 

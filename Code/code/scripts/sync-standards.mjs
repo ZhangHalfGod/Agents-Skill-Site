@@ -73,6 +73,16 @@ const SKILL_META = {
     labelEn: 'Stage-gate flow',
     uri: '/skills/custom/common/stage-gate-flow'
   },
+  'openclaw-ops': {
+    label: 'OpenClaw 运维排查',
+    labelEn: 'OpenClaw ops troubleshooting',
+    uri: '/skills/custom/common/openclaw-ops'
+  },
+  'powershell-utf8': {
+    label: 'PowerShell UTF-8 读写约定',
+    labelEn: 'PowerShell UTF-8 conventions',
+    uri: '/skills/custom/common/powershell-utf8'
+  },
   'doc-coauthoring': {
     label: '文档协作',
     labelEn: 'Doc co-authoring',
@@ -206,8 +216,8 @@ const STANDARD_AGENTS = [
     title: '运维工程师（OpsEngineer）',
     summary: '版本映射、发布、灰度与回滚',
     summaryEn: 'Version mapping, release, canary, and rollback',
-    skills: ['traceability-compliance'],
-    skillsRecommended: ['stage-gate-flow'],
+    skills: ['traceability-compliance', 'openclaw-ops'],
+    skillsRecommended: ['stage-gate-flow', 'powershell-utf8'],
     relatedDocs: [
       {
         slug: 'version-release',
@@ -295,6 +305,28 @@ const STANDARD_SKILLS = [
   },
   {
     index: 5,
+    id: 'openclaw-ops',
+    origin: 'custom',
+    sourceRel: 'common/skills/custom/common/openclaw-ops/SKILL.md',
+    sitePath: 'skills/custom/common/openclaw-ops/index.md',
+    summary: 'OpenClaw 部署运维与 cron error 三步排查法',
+    summaryEn: 'OpenClaw deployment ops and three-step cron error diagnosis',
+    boundAgents: ['OpsEngineer'],
+    recommendedAgents: []
+  },
+  {
+    index: 6,
+    id: 'powershell-utf8',
+    origin: 'custom',
+    sourceRel: 'common/skills/custom/common/powershell-utf8/SKILL.md',
+    sitePath: 'skills/custom/common/powershell-utf8/index.md',
+    summary: 'Windows PowerShell 5.1 读写本仓 UTF-8 文本的显式编码约定',
+    summaryEn: 'Explicit encoding rules for repo UTF-8 text on Windows PowerShell 5.1',
+    boundAgents: [],
+    recommendedAgents: ['OpsEngineer', 'DevLead']
+  },
+  {
+    index: 7,
     id: 'doc-coauthoring',
     origin: 'external',
     sourceRel: 'common/skills/external/doc-coauthoring/SKILL.md',
@@ -305,7 +337,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: ['ProductManager', 'UIDesigner', 'Architect']
   },
   {
-    index: 6,
+    index: 8,
     id: 'mcp-builder',
     origin: 'external',
     sourceRel: 'common/skills/external/mcp-builder/SKILL.md',
@@ -316,7 +348,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: []
   },
   {
-    index: 7,
+    index: 9,
     id: 'frontend-design',
     origin: 'external',
     sourceRel: 'common/skills/external/frontend-design/SKILL.md',
@@ -327,7 +359,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: ['UIDesigner']
   },
   {
-    index: 8,
+    index: 10,
     id: 'webapp-testing',
     origin: 'external',
     sourceRel: 'common/skills/external/webapp-testing/SKILL.md',
@@ -338,7 +370,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: ['TestEngineer', 'UIDesigner']
   },
   {
-    index: 9,
+    index: 11,
     id: 'web-artifacts-builder',
     origin: 'external',
     sourceRel: 'common/skills/external/web-artifacts-builder/SKILL.md',
@@ -349,7 +381,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: ['UIDesigner']
   },
   {
-    index: 10,
+    index: 12,
     id: 'skill-creator',
     origin: 'external',
     sourceRel: 'common/skills/external/skill-creator/SKILL.md',
@@ -360,7 +392,7 @@ const STANDARD_SKILLS = [
     recommendedAgents: []
   },
   {
-    index: 11,
+    index: 13,
     id: 'Human',
     origin: 'external',
     sourceRel: 'common/skills/external/Human/SKILL.md',
