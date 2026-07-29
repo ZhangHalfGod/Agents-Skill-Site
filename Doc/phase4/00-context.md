@@ -71,4 +71,4 @@
 - [x] B3 OpenClaw 最小两跳试点（PM→Architect）跑通，证据落 `Code/doc/phase4/`；试点 Lesson 走 4A 流程（2026-07-29 bm 实测）
 - [x] B4 S0 §8 + CHANGELOG + 亮点文档状态更新；`npm run generate && npm run validate` 绿（2026-07-29 hash=11551bc5b589d320）
 
-（B3/B4 已完成。遗留：机制 A 命名 agent 验证、H3 起全链路推广——见 `Code/doc/phase4/2026-07-29-phase4a-and-pilot.md` §5。）
+（B3/B4 已完成；机制 A 与 q004/q005 已于 2026-07-29 下午实测定案，见 [`03-openclaw-route-table.md`](03-openclaw-route-table.md) §6。剩余：H3 起全链路推广、信封 schema 机器校验、mcp 挂接字段级验证。）

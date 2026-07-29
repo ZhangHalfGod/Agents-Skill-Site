@@ -50,7 +50,7 @@ mcp:
       capabilities_url: "http://<部署侧>/capabilities"
 ```
 
-**待验证**（试点时逐条确认）：OpenClaw 配置文件中 `mcp.servers` 的确切键名结构、bearer 注入方式、HTTP 自建服务（capabilities/tools.call 形态）与标准 MCP 的适配层是否需要薄封装。
+**已部分验证（2026-07-29）**：OpenClaw 有官方 `openclaw mcp *` 子命令（"Manage OpenClaw mcp.servers config and channel bridge"）——挂接走 CLI 而非手改配置文件。仍待逐项确认：`openclaw mcp add` 的字段（transport/auth）、bearer 注入方式、HTTP 自建服务（capabilities/tools.call 形态）与标准 MCP 的适配层是否需要薄封装。
 
 ## 4. 安全基线（与部署侧既有基线一致）
 

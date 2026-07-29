@@ -7,6 +7,7 @@
  * 用法：
  *   node scripts/lesson-scan.mjs           # markdown 报告到 stdout
  *   node scripts/lesson-scan.mjs --strict  # 校验 frontmatter 合法性，违规 exit 1
+ *   node scripts/lesson-scan.mjs --format digest  # 确定性纯文本摘要（飞书推送用，agent 原样转发）
  * 纪律：只读、不改任何正文；升格合入永远走人工蒸馏终审。
  */
 import fs from 'node:fs'
@@ -162,6 +163,49 @@ function suggestTarget(l) {
   return `docs/zh/skills/custom/common/${base}/`
 }
 
+/** 升格建议：scope=common，或 target 跨项目重复；供报告与 digest 共用，避免两处逻辑漂移 */
+function collectSuggestions(lessons) {
+  const groups = cluster(lessons)
+  const crossKeys = new Set(
+    [...groups.entries()].filter(([, list]) => projectsOf(list).length >= 2).map(([k]) => k)
+  )
+  const suggestions = []
+  for (const l of lessons) {
+    if (l.parseError || !['raw', 'distilled'].includes(l.status)) continue
+    const key = l.target_id || l.related_skills[0] || ''
+    if (l.scope === 'common') {
+      suggestions.push({ l, reason: 'scope=common' })
+    } else if (key && crossKeys.has(key)) {
+      suggestions.push({ l, reason: `跨项目重复（${key} 出现于 ${projectsOf(groups.get(key)).length} 个项目）` })
+    }
+  }
+  return suggestions
+}
+
+function statusTotals(lessons) {
+  const t = { raw: 0, distilled: 0, merged: 0, rejected: 0 }
+  for (const l of lessons) if (t[l.status] !== undefined) t[l.status]++
+  return t
+}
+
+/** 确定性摘要：weekly-lesson-digest cron 用，agent 只原样转发，零 LLM 改写 */
+function renderDigest(lessons) {
+  const d = new Date()
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  const suggestions = collectSuggestions(lessons)
+  if (!suggestions.length) {
+    const t = statusTotals(lessons)
+    return `📋 本周无待终审升格建议（raw ${t.raw} · distilled ${t.distilled} · merged ${t.merged}）`
+  }
+  const lines = [`【每周升格建议】${today}`, '']
+  suggestions.forEach(({ l }, i) => {
+    const key = l.target_id || l.related_skills[0] || '待定'
+    lines.push(`${i + 1}. \`${key}\` ← \`${l.id}\`（${l.status}，项目 ${l.project}，建议升格至 \`${suggestTarget(l)}\`）`)
+  })
+  lines.push('', '终审入口 → 打开对应 Lesson 卡终审 scope/status；完整扫描：`npm run lessons:scan`（Code\\code 目录）')
+  return lines.join('\n')
+}
+
 function renderReport(lessons) {
   const lines = []
   const now = new Date().toISOString().slice(0, 10)
@@ -212,19 +256,7 @@ function renderReport(lessons) {
 
   // 3. 升格建议清单
   lines.push('## 升格建议清单（供人工终审，勿自动合入）', '')
-  const crossKeys = new Set(
-    [...groups.entries()].filter(([, list]) => projectsOf(list).length >= 2).map(([k]) => k)
-  )
-  const suggestions = []
-  for (const l of lessons) {
-    if (l.parseError || !['raw', 'distilled'].includes(l.status)) continue
-    const key = l.target_id || l.related_skills[0] || ''
-    if (l.scope === 'common') {
-      suggestions.push({ l, reason: 'scope=common' })
-    } else if (key && crossKeys.has(key)) {
-      suggestions.push({ l, reason: `跨项目重复（${key} 出现于 ${projectsOf(groups.get(key)).length} 个项目）` })
-    }
-  }
+  const suggestions = collectSuggestions(lessons)
   if (suggestions.length) {
     lines.push('| Lesson | 项目 | 状态 | 建议原因 | 建议合入目标 |')
     lines.push('|--------|------|------|----------|--------------|')
@@ -252,6 +284,12 @@ function renderReport(lessons) {
 function main() {
   const lessons = collectLessons()
   const errors = validateLessons(lessons)
+
+  const fmtIdx = process.argv.indexOf('--format')
+  if (fmtIdx >= 0 && process.argv[fmtIdx + 1] === 'digest') {
+    process.stdout.write(renderDigest(lessons) + '\n')
+    return
+  }
 
   if (STRICT) {
     if (errors.length) {

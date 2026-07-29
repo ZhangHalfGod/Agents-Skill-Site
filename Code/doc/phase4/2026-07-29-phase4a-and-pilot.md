@@ -39,9 +39,11 @@
 
 ## 5. 遗留（下一轮）
 
-| 项 | 归属 |
-|----|------|
-| 机制 A 验证：命名 agent 注册、per-agent 模型绑定（`agents.example.yaml` 待验证键名） | OpenClaw 部署侧 |
-| q004/q005（Gateway Cron 注册入口、是否加 `lessons:digest` npm 别名） | 若推进 H3（DevLead 实现 lesson-digest.mjs）先摸底 |
-| H2 的 lesson_hint（Gateway cron cwd 必须 `cd /d` 到 Code/code） | 实现时吸收，防 cron 找不到 package.json |
-| 每周 lessons:scan 摘要推飞书（pilot 需求本身的实现） | 立项走完整流水线或人工直做 |
+| 项 | 归属 | 状态 |
+|----|------|:----:|
+| ~~机制 A 验证：命名 agent 注册、per-agent 模型绑定~~ | OpenClaw 部署侧 | ✅ 2026-07-29 下午实测通过（`Doc/phase4/03` §6；7 角色 agent 已建齐） |
+| ~~q004/q005（Gateway Cron 注册入口、是否加 `lessons:digest` npm 别名）~~ | 同上 | ✅ 定案：`cron add`；`--command-argv`+`--command-cwd`；别名非必需 |
+| ~~H2 的 lesson_hint（cron cwd 坑）~~ | 同上 | ✅ `--command-cwd` 原生解决 |
+| 每周 lessons:scan 摘要推飞书（pilot 需求本身的实现） | ~~H3 立项~~ | ✅ 2026-07-29 以形态 A（cron agent 消息任务）落地 bm：周一 09:00，干跑验证；消息/运维见 `Code/orchestration/cron/`，形态选型见 `Doc/phase4/03` §6.4；2026-08-03 首跑待实推终验 |
+| 信封 schema 机器校验（v1 为编排 Prompt 软校验） | 四期后续 | 待启动 |
+| mcp 挂接字段级验证（`openclaw mcp add` 形态/auth） | OpenClaw 部署侧 | 待启动 |

@@ -1,15 +1,24 @@
-# agents.example.yaml — 命名 agent + 模型分层样例（四期 4B）
+# agents.example.yaml — 命名 agent + 模型分层（四期 4B，2026-07-29 本机实测通过）
 # 对应契约：Doc/phase4/03-openclaw-route-table.md §2
-# ⚠ 键名结构为「待验证」：OpenClaw 部署侧文档目前只验证了 --agent main。
-#   试点时逐条对照真实配置（~/.openclaw/ 或 openclaw 面板），实测后回填本文件并去掉本警告。
-# 已验证的事实（可直接依赖）：
-#   - openclaw agent --agent <id> --message "..." 唤起会话
-#   - DashScope provider 注册与 `openclaw models set`（switch-dashscope-model skill）
-#   - deepseek provider 已装；deepseek/deepseek-v4-flash 已 configured 且为 bm 当前默认（2026-07-29 openclaw models list）
-#   - workspace skill：SKILL.md + skills.entries.<name>.enabled=true
 #
-# 模型绑定（2026-07-29 用户决策）：试点期间全部角色统一绑 deepseek/deepseek-v4-flash；
-# model_tier 仅记录「意图分层」，高/中/低分档绑定由用户后续自行调整。
+# ✅ 已验证（bm，OpenClaw 2026.7.1-2）：
+#   1. 命名 agent 注册：
+#        openclaw agents add <id> --model <provider/model> --workspace <dir> --non-interactive
+#      （自动写 openclaw.json + .bak；建 workspace（含 AGENTS.md/SOUL.md/USER.md/TOOLS.md）与 sessions 目录）
+#   2. per-agent 模型绑定：注册时 --model；运行时也可 `openclaw agent --agent <id> --model <m>` 单次覆盖；
+#      cron 任务级另有 `cron add --model/--fallbacks`
+#   3. auth 隔离：每 agent 独立 auth store（agents/<id>/agent/openclaw-agent.sqlite），
+#      不继承 gateway 进程 env；须逐 agent 注入：
+#        <key> | openclaw models auth --agent <id> paste-api-key --provider <provider>
+#   4. persona 注入：workspace 的 SOUL.md / AGENTS.md（本仓 prompts/role-session.md 的精简锚定版）
+#   5. 唤起：openclaw agent --agent <id> --message "..."（--session-key agent:<id>:<key> 可显式控会话）
+#   6. 删除：openclaw agents delete <id>（连 workspace/state 一起清）
+#
+# bm 当前花名册（2026-07-29 已建，全部 deepseek/deepseek-v4-flash）：
+#   main（default）+ pm / arch / ui / dev / test / sec / ops —— 与本文件 agents: 段一一对应。
+#
+# ⚠ 已知行为：CLI 唤起偶发 Gateway 1006 abnormal closure，自动回退 embedded agent 完成本轮；
+#    编排者应把「失败重试一次」作为默认策略。
 
 agents:
   main:                              # 编排者：收消息、校验信封、按路由表唤起下一跳
@@ -21,7 +30,7 @@ agents:
       - switch-dashscope-model       # ✅ 已有
 
   pm:                                # H1 ProductManager
-    persona_source: "docs/zh/agents/standard/ProductManager/index.md"   # 经 get_agent 取 source 再 @
+    persona_source: "docs/zh/agents/standard/ProductManager/index.md"   # SOUL.md 锚定此路径
     model_tier: top
     model: "deepseek/deepseek-v4-flash"
 
@@ -58,6 +67,8 @@ agents:
     model: "deepseek/deepseek-v4-flash"
 
 # 模型分层原则（亮点文档 §1.2）：top=核心决策（pm/arch）；mid=执行类；econ=文档类（DeepSeek）。
-# 试点期统一 deepseek-v4-flash；用户后续按上分档自行绑定（bm 已注册备选：
-# qwen/qwen3.7-max 系、qwen-oauth/*、deepseek/deepseek-v4-pro 等，见 openclaw models list）。
+# 试点期统一 deepseek-v4-flash；后续分档由用户绑定——改法：
+#   openclaw agents delete <id> 重建带新 --model，或待官方 per-agent 改型命令；
+#   临时单跳覆盖用 openclaw agent --agent <id> --model <m>。
+# bm 已注册备选模型：qwen/qwen3.7-max 系、qwen-oauth/*、deepseek/deepseek-v4-pro 等（openclaw models list）。
 # 四期不做自动调配（优先级③再做数据反馈闭环）。
