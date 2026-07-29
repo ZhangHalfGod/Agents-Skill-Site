@@ -36,6 +36,6 @@ openclaw cron add weekly-lesson-digest --cron "0 9 * * 1" --tz Asia/Shanghai `
 
 ### 注意
 
-- **确定性契约**：摘要内容由 `lesson-scan.mjs --format digest` 脚本侧生成，agent 只原样转发（消息文本第 2 条约束）。第一版让 agent 自己提取时漏了 1/3 条目——LLM 摘要不可信，完整性必须由脚本保证。改摘要格式 = 改脚本的 `renderDigest`
+- **确定性契约（v3 细化）**：摘要【骨架】由 `lesson-scan.mjs --format digest` 确定性生成，agent 必须逐行原样保留（完整性归脚本）；允许 agent 读卡后每条**追加一行「判决建议」**（建议性，标注「终审在人」），追加失败只降级为纯骨架、不会丢条目。第一版让 agent 自己提取时漏了 1/3 条目——LLM 摘要不可信。改骨架格式 = 改脚本 `renderDigest`；改判决自由度 = 改消息文本第 3 条
 - agent 消息任务经 Gateway 执行；bm 观测到偶发 1006 断连（详见 `Doc/phase4/03` §6.1），agent 有 embedded 回退，cron 调度侧失败会在 `cron runs` 留 error，可手动 `cron run` 补发
 - 升级形态 B（webhook 富卡片）时：凭据走 `LESSON_DIGEST_FEISHU_WEBHOOK` env（只写 `~/.openclaw/.env`，不进仓），脚本设计见试点《架构约束与接口》

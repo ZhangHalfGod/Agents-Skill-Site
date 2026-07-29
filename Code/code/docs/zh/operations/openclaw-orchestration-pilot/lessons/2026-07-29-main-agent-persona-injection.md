@@ -14,6 +14,8 @@ related_agents: [ProductManager, Architect]
 related_skills: [stage-gate-flow]
 ---
 
+# Lesson：单 main + 消息内 persona 注入跑通两跳（机制 A 未验证时的保底路径）
+
 ## 现象
 
 编排总线最小两跳试点（PM → Architect）：命名 agent（pm/arch）与 per-agent 模型绑定在 OpenClaw 部署侧尚未验证（机制 A），但改用 `openclaw agent --agent main` 单 session、在消息内注入「角色 persona 文件路径 + 交接契约 + 已定决策 + 悬置问题」，两跳信封交接一次跑通：交付物必备章节齐全，H1 的 q001~q003 在 H2 全部收口为 d005~d007，信封字段完整。

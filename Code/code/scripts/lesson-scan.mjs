@@ -65,6 +65,13 @@ function stripQuotes(s) {
   return s
 }
 
+/** 卡标题：frontmatter 之后首个一级标题，去 “Lesson：” 前缀 */
+function extractTitle(text) {
+  const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')
+  const m = body.match(/^#\s+(.+)$/m)
+  return m ? m[1].trim().replace(/^Lesson[：:]\s*/, '') : ''
+}
+
 /** slug 关键词：去日期、去停词、长度 >= 3 */
 function slugKeywords(id) {
   return String(id || '')
@@ -83,7 +90,8 @@ function collectLessons() {
     for (const file of fs.readdirSync(lessonsDir)) {
       if (!file.endsWith('.md') || file.startsWith('_')) continue
       const full = path.join(lessonsDir, file)
-      const fm = parseFrontmatter(fs.readFileSync(full, 'utf8'))
+      const text = fs.readFileSync(full, 'utf8')
+      const fm = parseFrontmatter(text)
       if (!fm) {
         lessons.push({ project: proj, file: path.relative(CODE_ROOT, full), parseError: true })
         continue
@@ -92,6 +100,7 @@ function collectLessons() {
         project: proj,
         file: path.relative(CODE_ROOT, full).replace(/\\/g, '/'),
         id: fm.id || file.replace(/\.md$/, ''),
+        title: extractTitle(text),
         date: fm.date || '',
         status: fm.status || '',
         scope: fm.scope || '',
@@ -188,7 +197,7 @@ function statusTotals(lessons) {
   return t
 }
 
-/** 确定性摘要：weekly-lesson-digest cron 用，agent 只原样转发，零 LLM 改写 */
+/** 确定性摘要骨架：weekly-lesson-digest cron 用。agent 须逐行原样保留，只允许按条追加「判决建议」行 */
 function renderDigest(lessons) {
   const d = new Date()
   const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -198,9 +207,10 @@ function renderDigest(lessons) {
     return `📋 本周无待终审升格建议（raw ${t.raw} · distilled ${t.distilled} · merged ${t.merged}）`
   }
   const lines = [`【每周升格建议】${today}`, '']
-  suggestions.forEach(({ l }, i) => {
-    const key = l.target_id || l.related_skills[0] || '待定'
-    lines.push(`${i + 1}. \`${key}\` ← \`${l.id}\`（${l.status}，项目 ${l.project}，建议升格至 \`${suggestTarget(l)}\`）`)
+  suggestions.forEach(({ l, reason }, i) => {
+    lines.push(`${i + 1}. 《${l.title || l.id}》`)
+    lines.push(`   卡 \`${l.id}\`（${l.priority || 'P?'} · ${l.status} · scope=${l.scope || '?'} · ${l.project}）`)
+    lines.push(`   建议升格至 \`${suggestTarget(l)}\`（原因：${reason}）`)
   })
   lines.push('', '终审入口 → 打开对应 Lesson 卡终审 scope/status；完整扫描：`npm run lessons:scan`（Code\\code 目录）')
   return lines.join('\n')
