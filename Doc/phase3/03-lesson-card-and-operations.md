@@ -47,11 +47,14 @@ Code/code/docs/operations/
 id: 2026-07-14-short-slug
 project: <project-id>
 date: 2026-07-14
-severity: skill | agent | rule | unknown
-severity_guess: skill
+audience: skill | agent | rule | unknown
+audience_guess: skill
 target_id: ""          # 已知则填 skill/agent/rule id
-severity: P2             # P0|P1|P2|P3
+priority: P2           # P0|P1|P2|P3
 status: raw            # raw | distilled | merged | rejected
+scope: project         # project | domain | common（四期新增；common = 适用于所有类似项目）
+seen_in_projects: []   # 同一教训出现的项目；npm run lessons:scan 聚类时辅助回填
+promoted_to: ""        # status=merged 时必填：合入的可复用正文路径
 related_agents: []     # 可选
 related_skills: []     # 可选
 ---
@@ -110,7 +113,10 @@ raw ──蒸馏──► distilled ──合入 docs/skills|agents|rules──�
 ## 5. 升格决策树
 
 ```text
-可复用 SOP / checklist？ ──是──► Skill（默认）
+scope=common，或同一 target_id 在 ≥2 个项目出现？ ──是──► 升格到 skills/custom/common/**，
+        │                                              并在来源各项目 meta.md 记引用（四期：跨项目复用）
+        │
+        否（仅本项目）：可复用 SOP / checklist？ ──是──► Skill（默认）
         │
         否：角色职责或绑定错了？ ──是──► Agent + 矩阵
         │
@@ -120,6 +126,8 @@ raw ──蒸馏──► distilled ──合入 docs/skills|agents|rules──�
 ```
 
 占比提醒：优先 Skill；Agent 次之；Rules 最少。
+
+跨项目判定辅助：跑 `npm run lessons:scan`（四期新增）看聚类报告与升格建议清单；**扫描只给建议，合入仍走人工蒸馏终审**。
 
 ---
 

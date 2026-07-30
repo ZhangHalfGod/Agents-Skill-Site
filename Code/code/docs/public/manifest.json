@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-20T01:47:30.106Z",
+  "generatedAt": "2026-07-29T08:54:57.782Z",
   "contentRoot": "docs/zh",
   "standardsRoot": "docs/zh",
-  "note": "SoT=本仓 docs/zh/**；英文 root 含 Role/Skill 全文；rules/domains 可为 stub；agents + skills 1～11 + rules；domains 灰度",
+  "note": "SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～13 + rules；domains 灰度",
   "domainsEnabled": true,
   "domainsActive": [
     "ptp-nmos"
@@ -88,10 +88,12 @@
       "siteUri": "/agents/standard/OpsEngineer",
       "source": "docs/zh/agents/standard/OpsEngineer/index.md",
       "skills": [
-        "traceability-compliance"
+        "traceability-compliance",
+        "openclaw-ops"
       ],
       "skillsRecommended": [
-        "stage-gate-flow"
+        "stage-gate-flow",
+        "powershell-utf8"
       ]
     },
     {
@@ -214,6 +216,29 @@
     },
     {
       "index": 5,
+      "id": "openclaw-ops",
+      "origin": "custom",
+      "siteUri": "/skills/custom/common/openclaw-ops",
+      "source": "docs/zh/skills/custom/common/openclaw-ops/index.md",
+      "boundAgents": [
+        "OpsEngineer"
+      ],
+      "recommendedAgents": []
+    },
+    {
+      "index": 6,
+      "id": "powershell-utf8",
+      "origin": "custom",
+      "siteUri": "/skills/custom/common/powershell-utf8",
+      "source": "docs/zh/skills/custom/common/powershell-utf8/index.md",
+      "boundAgents": [],
+      "recommendedAgents": [
+        "OpsEngineer",
+        "DevLead"
+      ]
+    },
+    {
+      "index": 7,
       "id": "doc-coauthoring",
       "origin": "external",
       "siteUri": "/skills/external/doc-coauthoring",
@@ -226,7 +251,7 @@
       ]
     },
     {
-      "index": 6,
+      "index": 8,
       "id": "mcp-builder",
       "origin": "external",
       "siteUri": "/skills/external/mcp-builder",
@@ -235,7 +260,7 @@
       "recommendedAgents": []
     },
     {
-      "index": 7,
+      "index": 9,
       "id": "frontend-design",
       "origin": "external",
       "siteUri": "/skills/external/frontend-design",
@@ -246,7 +271,7 @@
       ]
     },
     {
-      "index": 8,
+      "index": 10,
       "id": "webapp-testing",
       "origin": "external",
       "siteUri": "/skills/external/webapp-testing",
@@ -258,7 +283,7 @@
       ]
     },
     {
-      "index": 9,
+      "index": 11,
       "id": "web-artifacts-builder",
       "origin": "external",
       "siteUri": "/skills/external/web-artifacts-builder",
@@ -269,7 +294,7 @@
       ]
     },
     {
-      "index": 10,
+      "index": 12,
       "id": "skill-creator",
       "origin": "external",
       "siteUri": "/skills/external/skill-creator",
@@ -278,7 +303,7 @@
       "recommendedAgents": []
     },
     {
-      "index": 11,
+      "index": 13,
       "id": "Human",
       "origin": "external",
       "siteUri": "/skills/external/Human",
@@ -369,5 +394,8 @@
       "alwaysApply": true
     }
   ],
-  "domains": {}
+  "domains": {},
+  "contentHash": "6029dcd3053d9df9",
+  "validatedAt": "2026-07-29T08:56:53.819Z",
+  "validateOk": true
 }

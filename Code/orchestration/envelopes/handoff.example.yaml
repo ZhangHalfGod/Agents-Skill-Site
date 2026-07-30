@@ -1,0 +1,26 @@
+# handoff.example.yaml — 交接信封实例（H1：ProductManager → Architect）
+# 契约定义：Doc/phase4/02-orchestration-contracts.md §2
+# 校验要点：from/to/project/stage/deliverable.kind/deliverable.path 必填；
+#          deliverable.path 必须真实存在；kind 必须是契约枚举之一。
+
+handoff:
+  from: ProductManager
+  to: Architect
+  project: openclaw-feishu-v5            # 对应 operations/<project-id> 与业务仓迭代目录
+  stage: requirements
+  deliverable:
+    kind: scope-list                     # scope-list|arch-constraints|ui-spec|code-prompt-pack|test-report|security-report|deploy-map
+    path: doc/iterations/openclaw-feishu-v5/AI代码生成范围清单_OpenClaw-Feishu-V5.md
+    summary: |
+      范围：V5 编码能力（飞书指令 → Cursor CLI headless 在本机业务仓改代码）。
+      显式不做：云端 Cloud Agents API、My Machines Worker 24×7、微信渠道。
+      验收口径：飞书发「帮我在 <repo> 实现 X」→ 一次成功跑 + 回执当前进度/下一步。
+  decisions:
+    - "编码入口默认 Cursor CLI（P1），不接 Cloud API（对齐既有决策）"
+    - "OpenClaw 不注入 Cursor GUI 聊天窗口"
+  open_questions:
+    - "CURSOR_API_KEY headless 认证是否必须在 V5 内解决（留给 Architect 评估约束）"
+  gate:
+    checklist: stage-gate-flow
+    evidence: "doc/iterations/openclaw-feishu-v5/ 范围清单已评审；M1 人工确认进流水线"
+  lesson_hint: ""

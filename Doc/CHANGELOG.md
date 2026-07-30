@@ -1,5 +1,30 @@
 # CHANGELOG — All_URI
 
+## 2026-07-29 — phase4 补记：digest v3 定稿 + 首批 Lesson 终审闭环（skills 11→13）
+
+- **digest v3 定稿**：`lesson-scan.mjs` 骨架补全（`extractTitle` 取卡内 H1 + 卡号/优先级/scope 行）；消息模板 v3 = 骨架原样转发 + agent 每条追加一句判决建议（试探性、不替人拍板）；第三次飞书实推版式确认
+- **首批 3 张 raw 卡终审完成**（用户逐条拍板）：cron-error-diag → **merged**（新建 `common/openclaw-ops/`，cron error 三步排查法）；ps-utf8-cron → **merged**（新建 `common/powershell-utf8/`）；persona-injection → **rejected**（机制 A 已验证，注入路径作历史注脚；「同 session 中断续跑」半条抢救进 `Doc/phase4/03` §6.1）
+- **新技能注册面**：SKILL_META / STANDARD_SKILLS / EXPECTED_SKILLS / en-skill-bodies / en-agent-bodies / 双语 skills 索引 / OpsEngineer 绑定（必显 +openclaw-ops、推荐 +powershell-utf8）；validate 数量断言改为跟随 EXPECTED_SKILLS 长度；generate/validate 绿（8 agents + **13 skills** + 10 rules）
+- **记忆闭环首次完整跑通**：raw → 人工终审 → merged 入公共库；`npm run lessons:scan` 建议清单归零（raw 0 · merged 5 · rejected 1）
+
+## 2026-07-29 — phase4（4A 落地 + 4B 契约与最小试点）
+
+- **4A 跨项目记忆复用**：Lesson Card v2（`scope` / `seen_in_projects` / `promoted_to`）；`scripts/lesson-scan.mjs`（看板 + 聚类 + 升格建议；`--strict` 可阻断）；operations README 与 PR 模板挂钩；存量 3 条回填  
+- **4B OpenClaw 编排总线契约**：`Doc/phase4/`（00～04）；`Code/orchestration/` 样例（agents / mcp.servers / 信封 / Prompt 模板）；运行时外置 OpenClaw 部署侧  
+- **最小两跳试点**：bm Gateway（`deepseek/deepseek-v4-flash`）PM → Architect 一次跑通；证据 `Code/doc/phase4/pilot/`；试点 Lesson `openclaw-orchestration-pilot`（raw，`scope=common` 实战，人终审留项目内）  
+- 试点期模型绑定：全部角色统一 `deepseek/deepseek-v4-flash`（用户后续自行分档）  
+- S0 v0.5 · 决策 `2026-07-29-01`；分支 `feature/phase4-memory-orchestration`；遗留：机制 A（命名 agent / per-agent 模型）验证
+
+## 2026-07-29 — phase4 补记：机制 A 验证通过 + 角色花名册落地
+
+- **机制 A 实测通过**（bm，OpenClaw 2026.7.1-2）：`openclaw agents add` 命名 agent、per-agent `--model`、auth 逐 agent 隔离（`models auth --agent <id> paste-api-key`）、workspace `SOUL.md` persona（arch 冒烟自答角色与交付物 kind）  
+- **花名册落地**：pm / arch / ui / dev / test / sec / ops 七个角色 agent 已建，统一 `deepseek/deepseek-v4-flash`（用户后续自行分档）  
+- **q004/q005 定案**：cron 走 `openclaw cron add`；命令任务原生 `--command-argv` + `--command-cwd`（H2 的 cwd 坑由 flag 解决）；agent 消息任务 + `announce->feishu` 复用既有 brief 投递通道  
+- weekly-lesson-digest 出现更简落地路径（cron agent 消息任务，免 webhook/新凭据），见 `Doc/phase4/03` §6.4  
+- 文档回填：`03` §1/§3/§6、`04` mcp CLI、`agents.example.yaml` 去「待验证」、pilot meta
+- **weekly-lesson-digest 已落地 bm**（同日傍晚）：形态 A cron agent 消息任务，周一 09:00 announce→feishu 简报群，2026-08-03 首跑；定义与运维进 `Code/orchestration/cron/`；期间 Gateway 掉线一次已 `gateway run --force` 恢复（brief 任务今晨 error 实为用户 qwen 免费额度耗尽，已切全局默认 deepseek 修复）；新 Lesson `2026-07-29-ps-getcontent-utf8-cron`（PS 5.1 编码坑）
+- **digest 两次实推验证通过**（用户飞书群截图确认）：首推发现 agent 自行摘要漏条目 → `lesson-scan.mjs` 新增 `--format digest` 确定性文本出口，agent 改为原样转发（二推 3/3 条目，30s）；残留试验 session（ai-brief-1450/1500）手动清理（store 12→10，transcript 归档）；`cron get/run` 只认 UUID；新 Lesson `2026-07-29-cron-error-model-snapshot-diag`
+
 ## 2026-07-17 — phase3 B～D（迭代闭环）
 
 - **阶段 B**：Lesson 出门检查 + 触发句；`.github/PULL_REQUEST_TEMPLATE.md` 治理沉淀勾选  

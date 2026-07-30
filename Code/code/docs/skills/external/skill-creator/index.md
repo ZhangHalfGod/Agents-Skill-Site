@@ -66,7 +66,7 @@ _No strong standard-role binding (see matrix or domain roles)._
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/skill-creator/index.md`
-2. Or follow the checklist on this page (skill 10)
+2. Or follow the checklist on this page (skill 12)
 
 This site does not run model inference.
 

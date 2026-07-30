@@ -7,6 +7,9 @@ audience_guess: skill
 target_id: stage-gate-flow
 priority: P2
 status: merged
+scope: common
+seen_in_projects: [stage-gate-exit-evidence]
+promoted_to: docs/zh/skills/custom/common/stage-gate-flow/docs/deploy-verify.md
 related_agents: [OpsEngineer, TestEngineer]
 related_skills: [stage-gate-flow]
 ---

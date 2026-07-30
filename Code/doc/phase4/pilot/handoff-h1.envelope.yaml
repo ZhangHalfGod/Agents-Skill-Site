@@ -1,0 +1,61 @@
+# H1 交接信封（PM → Architect）—— 2026-07-29 15:03 openclaw agent --agent main 真实输出存档
+from: ProductManager
+to: Architect
+project: weekly-lesson-digest
+stage: requirements
+deliverable:
+  kind: scope-list
+  path: doc/phase4/pilot/AI代码生成范围清单_weekly-lesson-digest.md
+  summary: >
+    Home 机 OpenClaw-Bot 新增定时任务（每周一 09:00），
+    在 D:\trae_git\Agents-Skill-Site\Code\code 执行 npm run lessons:scan，
+    提取 stdout 中「升格建议清单」节推送到飞书指定群聊。
+    共 7 条范围条目（P0×4, P1×2, P2×1），
+    显式不做 7 项（不改 scan 脚本、不自动合入、不做 AI 摘要等），
+    验收口径覆盖自测+DoD+失败场景。
+decisions:
+  - id: d001
+    subject: 飞书推送机制
+    decision: 优先使用飞书自定义机器人 Webhook（零 OAuth 维护），次选 Bot API
+    rationale: 最小化凭据生命周期管理，Webhook URL 以环境变量注入
+  - id: d002
+    subject: lessons:scan 零侵入
+    decision: 不修改 scripts/lesson-scan.mjs 的任何逻辑或输出格式
+    rationale: 只读纪律不可突破，提取工作由下游脚本或 OpenClaw-Gateway 动作完成
+  - id: d003
+    subject: 调度机制
+    decision: 优先复用 OpenClaw Gateway 内置 Cron 调度，次选 Windows Task Scheduler
+    rationale: Gateway cron 与 Bot 进程共生，日志/重试可统一托管
+  - id: d004
+    subject: 凭据配置
+    decision: 飞书 Webhook URL 通过环境变量 LESSON_DIGEST_FEISHU_WEBHOOK 注入，不落库
+    rationale: 项目安全策略，防止凭据泄露
+open_questions:
+  - qid: q001
+    question: 飞书目标群聊是固定一个聊天，还是阶段性可配？
+    impact: 影响 Feishu 目标配置字段设计（单个 Webhook vs 多目标配置）
+    resolution_owner: Architect + ProductManager
+    deadline: H2 设计评审前
+  - qid: q002
+    question: OpenClaw-Bot 在当前 Home 机是 Gateway 进程直跑还是后台服务（NSSM / PM2）托管？
+    impact: 影响 cron 调度方案的选择（Gateway 内置 cron vs Windows Task Scheduler）
+    resolution_owner: Architect
+    deadline: H2 设计评审前
+  - qid: q003
+    question: 飞书推送失败时是否需要通知运维/报警渠道，还是仅记日志足够？
+    impact: 影响 P1 重试失败后的后续动作设计
+    resolution_owner: ProductManager（回应用户预期）
+    deadline: H1 结束前
+gate:
+  checklist:
+    - stage-gate-flow: requirements-complete
+    - evidence:
+      - 范围清单已产出并落盘：doc/phase4/pilot/AI代码生成范围清单_weekly-lesson-digest.md
+      - P0×4 条具有明确的 Given-When-Then 验收标准
+      - 显式不做 7 项已逐条标注理由，防止范围蔓延
+      - 约束引用覆盖项目纪律、技术约束、技能引用
+      - 飞书凭据硬编码风险已被排除（约束 5.1 明确用环境变量注入）
+lesson_hint: >
+  lessons:scan 输出尾部固定包含「终审动作」提示行，且「升格建议清单」节之前是「聚类报告」节。
+  提取时注意边界锚定：用 ## 升格建议清单 定位起始，用下一个 ##（或 EOF）定位结束，
+  无需全文全面解析——只锚定一个二级标题节的简单策略即可避免误入「已升格参考」等其他节。

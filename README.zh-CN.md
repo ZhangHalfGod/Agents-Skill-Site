@@ -21,6 +21,7 @@
 ## 目录
 
 - [流程 Demo：MCP → 干活 → 蒸馏 → 上传](#流程-demomcp--干活--蒸馏--上传)
+- [跨项目记忆复用闭环（四期）](#跨项目记忆复用闭环四期扫描--周推--人工终审--升格)
 - [背景：AI 编码工具的「治理真空」](#背景ai-编码工具的治理真空)
 - [痛点：为什么团队协作总出问题](#痛点为什么团队协作总出问题)
 - [本项目解决的问题](#本项目解决的问题)
@@ -46,6 +47,24 @@ MCP 只读查索引 → @ source 正文干活/出门
 ```
 
 要点：MCP **不写**正文；蒸馏与上传走 Git 与构建，无需为 MCP 单独实现写接口。
+
+---
+
+## 跨项目记忆复用闭环（四期）：扫描 → 周推 → 人工终审 → 升格
+
+项目里记的 Lesson 不再烂在各自目录——common 级教训每周浮出水面，人工拍板后升格进公共 skill 库：
+
+**[Doc/phase4/05-lesson-memory-loop.md](Doc/phase4/05-lesson-memory-loop.md)** —— 完整 Runbook（2026-07-29 已全链路实战验证，skills 11→13）
+
+```text
+Lesson 卡（raw，按项目隔离）→ lessons:scan 聚类 + 升格建议
+  → OpenClaw cron 每周一 09:00 推【每周升格建议】到飞书群
+  → 人工逐条终审（merged / distilled / rejected）
+  → merged → 新建/更新公共 skill + 注册 + 角色绑定
+  → generate + validate → commit/push → 站点与 MCP 自动反映
+```
+
+分工：机器负责发现与提醒（扫描/周推），人负责判断（终审），机器负责搬运与校验。周推里 agent 给的「判决建议」只是草稿，不替人拍板。
 
 ---
 
@@ -365,7 +384,8 @@ Agents-Skill-Site/                   # 本仓：发现站 + MCP + docs 真源
 │   ├── guides/                      #   跨项目流程 Demo（MCP→蒸馏→上传）
 │   ├── phase1/                      #   一期规划（网站 MVP）
 │   ├── phase2/                      #   二期规划（Cursor + MCP）
-│   └── phase3/                      #   三期（迭代闭环）
+│   ├── phase3/                      #   三期（迭代闭环）
+│   └── phase4/                      #   四期（跨项目记忆复用 + 编排总线；闭环 Runbook 见 05）
 │
 ├── Code/                            # 实现工程根
 │   ├── doc/                         #   实现笔记 / ADR / 部署日志
@@ -439,6 +459,8 @@ Agents-Skill-Site/                   # 本仓：发现站 + MCP + docs 真源
 1. 在 `docs/skills/custom/common/<id>/index.md` 写正文
 2. 更新 `Doc/phase1/05-agent-skill-matrix.md` 与 generate 脚本登记表
 3. `npm run generate` → 出现在网页和 MCP
+
+> 完整 8 步注册清单（含 EN 正文 / 双语索引 / 角色绑定 / validate）见 [Doc/phase4/05-lesson-memory-loop.md](Doc/phase4/05-lesson-memory-loop.md) §⑤。
 
 ### 三期 Lesson 怎么记？
 

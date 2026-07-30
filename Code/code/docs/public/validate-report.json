@@ -1,12 +1,12 @@
 {
   "ok": true,
-  "validatedAt": "2026-07-20T01:23:22.419Z",
-  "contentHash": "11551bc5b589d320",
-  "generatedAt": "2026-07-20T01:23:21.942Z",
+  "validatedAt": "2026-07-29T08:56:53.819Z",
+  "contentHash": "6029dcd3053d9df9",
+  "generatedAt": "2026-07-29T08:54:57.782Z",
   "standardsRoot": "docs/zh",
   "counts": {
     "agents": 8,
-    "skills": 11,
+    "skills": 13,
     "rules": 10,
     "relatedDocs": 6
   },
@@ -16,7 +16,7 @@
   "warnings": [],
   "expected": {
     "agents": 8,
-    "skills": 11,
+    "skills": 13,
     "rulesMin": 10
   }
 }

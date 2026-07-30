@@ -7,6 +7,9 @@ audience_guess: skill
 target_id: ""
 priority: P2
 status: raw
+scope: project           # project | domain | common（raw 时人工初判；common = 适用于所有类似项目）
+seen_in_projects: []     # 同一教训出现的项目列表；lessons:scan 聚类时辅助回填
+promoted_to: ""          # status=merged 时必填：合入的可复用正文路径
 related_agents: []
 related_skills: []
 ---

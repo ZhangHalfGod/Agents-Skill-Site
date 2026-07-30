@@ -98,10 +98,12 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 **必显**
 
 - [全流程可追溯与合规](/zh/skills/custom/common/traceability-compliance/)（`traceability-compliance`）
+- [OpenClaw 运维排查](/zh/skills/custom/common/openclaw-ops/)（`openclaw-ops`）
 
 **推荐**
 
 - [瀑布/敏捷阶段门禁](/zh/skills/custom/common/stage-gate-flow/)（`stage-gate-flow`）
+- [PowerShell UTF-8 读写约定](/zh/skills/custom/common/powershell-utf8/)（`powershell-utf8`）
 
 ## 相关文档
 
@@ -109,7 +111,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 
 ## 在 Cursor 中运行本角色
 
-<RunGuide role-id="OpsEngineer" role-path="docs/zh/agents/standard/OpsEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/zh/skills/custom/common/traceability-compliance"},{"id":"stage-gate-flow","label":"瀑布/敏捷阶段门禁","uri":"/zh/skills/custom/common/stage-gate-flow"}]' />
+<RunGuide role-id="OpsEngineer" role-path="docs/zh/agents/standard/OpsEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"全流程可追溯与合规","uri":"/zh/skills/custom/common/traceability-compliance"},{"id":"openclaw-ops","label":"OpenClaw 运维排查","uri":"/zh/skills/custom/common/openclaw-ops"},{"id":"stage-gate-flow","label":"瀑布/敏捷阶段门禁","uri":"/zh/skills/custom/common/stage-gate-flow"},{"id":"powershell-utf8","label":"PowerShell UTF-8 读写约定","uri":"/zh/skills/custom/common/powershell-utf8"}]' />
 
 本站只提供说明书与索引，**不执行模型推理**。正文真源即本页 Markdown。
 

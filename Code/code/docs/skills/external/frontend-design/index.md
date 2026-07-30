@@ -45,7 +45,7 @@ Then implement working code (HTML/CSS/JS, React, Vue, etc.) that is functional, 
 ## Use this skill in Cursor
 
 1. `@` reference: `docs/skills/external/frontend-design/index.md`
-2. Or follow the checklist on this page (skill 7)
+2. Or follow the checklist on this page (skill 9)
 
 This site does not run model inference.
 

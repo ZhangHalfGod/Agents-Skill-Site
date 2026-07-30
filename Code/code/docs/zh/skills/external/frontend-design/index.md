@@ -51,7 +51,7 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 ## 在 Cursor 中使用本技能
 
 1. `@` 引用：`docs/zh/skills/external/frontend-design/index.md`
-2. 或打开本页后按 checklist 执行（技能 7）
+2. 或打开本页后按 checklist 执行（技能 9）
 
 本站不执行模型推理。正文真源即本页 Markdown。
 

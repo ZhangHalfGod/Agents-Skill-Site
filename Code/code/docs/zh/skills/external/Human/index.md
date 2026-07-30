@@ -374,7 +374,7 @@ _暂无标准角色强绑定（见矩阵或领域角色）。_
 ## 在 Cursor 中使用本技能
 
 1. `@` 引用：`docs/zh/skills/external/Human/index.md`
-2. 或打开本页后按 checklist 执行（技能 11）
+2. 或打开本页后按 checklist 执行（技能 13）
 
 本站不执行模型推理。正文真源即本页 Markdown。
 

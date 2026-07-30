@@ -1,0 +1,84 @@
+# H2 交接信封（Architect → DevLead）—— 2026-07-29 15:07 openclaw agent --agent main 真实输出存档
+from: Architect
+to: DevLead
+project: weekly-lesson-digest
+stage: design
+deliverable:
+  kind: arch-constraints
+  path: doc/phase4/pilot/架构约束与接口_weekly-lesson-digest.md
+  summary: >
+    四层架构（调度层-Gateway Cron / 编排层-lesson-digest.mjs / 扫描工具-lessons:scan / 飞书通道-Webhook POST）。
+    新增 scripts/lesson-digest.mjs 为唯一 AI 生成模块（普通模块，零红色记录触发）。
+    技术选型：纯 Node.js ESM + 内置 fetch，零额外依赖。
+    接口契约覆盖了扫描调用、提取规则（## 升格建议清单 锚定）、飞书消息体（interactive card 三场景）、
+    日志格式全链路。含 Prompt 架构约束条款供嵌入 Prompt 模板。与 L0 范围清单逐条对照覆盖。
+decisions:
+  - id: d005
+    subject: 飞书目标群固定还是可配（原 q001）
+    decision: 单 Webhook + env 可换
+    rationale: >-
+      采用 LESSON_DIGEST_FEISHU_WEBHOOK 单环境变量承载目标 URL。
+      换群即改环境变量重启，不引入多目标配置复杂度。与 d001/d004 一致。
+  - id: d006
+    subject: Home 机 OpenClaw-Bot 进程形态（原 q002）
+    decision: 假设 Gateway 常驻服务
+    rationale: >-
+      Gateway 常驻是最简假设，脚本由 Gateway 进程 exec 启动，
+      不引入 PM2/NSSM。标注为假设，DevLead 实施前须确认。
+  - id: d007
+    subject: 推送失败是否需报警（原 q003）
+    decision: 日志 + 重试 1 次
+    rationale: >-
+      P1-6 已覆盖重试；重试仍失败仅写日志（§2.5 格式），
+      不引入额外报警渠道。放弃报警渠道，简化架构。
+  - id: d008
+    subject: 新增脚本位置
+    decision: scripts/lesson-digest.mjs（ESM）
+    rationale: >-
+      与 lessons:scan 同目录，版本对齐；不新增 /openclaw/ 目录，
+      不修改 package.json。代码合入 code/ 仓库即可。
+  - id: d009
+    subject: 飞书消息格式
+    decision: Interactive Card（msg_type=interactive）
+    rationale: >-
+      可保留 Markdown 表格对齐，视觉效果优于纯文本；
+      使用飞书 Webhook 原生支持的 card 格式。
+  - id: d010
+    subject: Markdown 提取方式
+    decision: 纯字符串 + 正则（H2 标题锚定）
+    rationale: >-
+      lessons:scan 输出格式稳定（固定 ## 升格建议清单 标题），
+      无需引入 marked/unified 解析器，减少依赖与脆弱性。
+  - id: d011
+    subject: 红色记录
+    decision: 本次不触发，不登记
+    rationale: 所有条目标记普通模块，不涉及核心/网关/安全/架构层。
+open_questions:
+  - qid: q004
+    question: Home 机 Gateway 实例是否已有可用的 Cron 调度配置入口？是在 Gateway 配置中写 cron 表达式，还是通过 OpenClaw API 注册？
+    impact: 影响 DevLead 的部署/配置文档写法
+    resolution_owner: DevLead（环境摸底）
+    deadline: H3 Prompt 编写前
+  - qid: q005
+    question: 是否需要在 package.json 中添加 "lessons:digest": "node scripts/lesson-digest.mjs" 别名？当前设计不修改 package.json，但如 Gateway Cron 的 exec 路径不支持直接运行 .mjs，可能需要 npm run 别名。
+    impact: 影响调用方式与部署脚本
+    resolution_owner: DevLead（实操验证）
+    deadline: H3 Prompt 编写前
+gate:
+  checklist:
+    - stage-gate-flow: design-complete
+    - evidence:
+      - 架构约束文档已产出并落盘：doc/phase4/pilot/架构约束与接口_weekly-lesson-digest.md
+      - 分层结构与交互规则定义清晰（调度/编排/扫描/通道四层）
+      - 接口数据模型已定义（扫描调用 / 飞书消息体 / 提取规则 / 日志格式）
+      - 技术选型附理由与 anti-choices（Node.js fetch / 纯字符串提取 / card 格式）
+      - 红色模块清单逐项检查，结论「不触发红色记录」
+      - L0 范围清单各条目逐一覆盖对照（✅×6, 🔲×2 延后）
+      - 悬置问题 q001/q002/q003 全部收口为 d005/d006/d007
+      - Prompt 架构约束条款已输出（可直接嵌入 DevLead Prompt 模板）
+lesson_hint: >
+  注意 Gateway Cron 的 exec 路径默认使用 Shell（cmd.exe 在 Windows 下），
+  node scripts/lesson-digest.mjs 的 cwd 要指向 D:\trae_git\Agents-Skill-Site\Code\code，
+  否则 npm run lessons:scan 会因找不到 package.json 而失败。
+  建议 Gateway 的 cron 命令写为：
+  cd /d D:\trae_git\Agents-Skill-Site\Code\code && node scripts/lesson-digest.mjs

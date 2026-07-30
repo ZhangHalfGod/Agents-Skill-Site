@@ -28,6 +28,7 @@ You are an ops/SRE engineer responsible for release control, version traceabilit
 ## Bound skills
 
 - [traceability-compliance](/skills/custom/common/traceability-compliance/) — End-to-end traceability and compliance
+- [openclaw-ops](/skills/custom/common/openclaw-ops/) — OpenClaw deployment ops and cron error diagnosis
 
 ## Workflow
 
@@ -98,10 +99,12 @@ You are an ops/SRE engineer responsible for release control, version traceabilit
 **Required**
 
 - [Traceability & compliance](/skills/custom/common/traceability-compliance/) — `traceability-compliance`
+- [OpenClaw ops troubleshooting](/skills/custom/common/openclaw-ops/) — `openclaw-ops`
 
 **Recommended**
 
 - [Stage-gate flow](/skills/custom/common/stage-gate-flow/) — `stage-gate-flow`
+- [PowerShell UTF-8 conventions](/skills/custom/common/powershell-utf8/) — `powershell-utf8`
 
 ## Related docs
 
@@ -109,7 +112,7 @@ You are an ops/SRE engineer responsible for release control, version traceabilit
 
 ## Run this role in Cursor
 
-<RunGuide role-id="OpsEngineer" role-path="docs/agents/standard/OpsEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"Traceability & compliance","uri":"/skills/custom/common/traceability-compliance"},{"id":"stage-gate-flow","label":"Stage-gate flow","uri":"/skills/custom/common/stage-gate-flow"}]' />
+<RunGuide role-id="OpsEngineer" role-path="docs/agents/standard/OpsEngineer/index.md" :skills='[{"id":"traceability-compliance","label":"Traceability & compliance","uri":"/skills/custom/common/traceability-compliance"},{"id":"openclaw-ops","label":"OpenClaw ops troubleshooting","uri":"/skills/custom/common/openclaw-ops"},{"id":"stage-gate-flow","label":"Stage-gate flow","uri":"/skills/custom/common/stage-gate-flow"},{"id":"powershell-utf8","label":"PowerShell UTF-8 conventions","uri":"/skills/custom/common/powershell-utf8"}]' />
 
 This site is documentation only — **no model inference**.
 
