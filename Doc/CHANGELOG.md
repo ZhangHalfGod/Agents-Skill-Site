@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-30 — phase4 补记：模型分档实例化（pm/arch → deepseek-v4-pro）
+
+- **top 档落地**：`openclaw.json` 中 pm/arch 的 `model` 改为 `deepseek/deepseek-v4-pro`（1000k ctx），Gateway 热加载免重启（pm 冒烟 session Model 列实证）；同 provider 免重注 key；其余角色维持 flash
+- **CLI 边界实证**：改模型正路 = 编辑 `openclaw.json`（CLI 无 update 子命令）；`gateway restart` 在 Windows 报 `Unknown signal: SIGUSR1`（Unix 服务化路径）——并入公共 skill `openclaw-ops` 已知坑（不记 Lesson、不进周推，用户定）
+- 契约同步：`agents.example.yaml`（分档 + 改法注释）、`03` §6.5 实测记录
+
 ## 2026-07-29 — phase4 补记：digest v3 定稿 + 首批 Lesson 终审闭环（skills 11→13）
 
 - **digest v3 定稿**：`lesson-scan.mjs` 骨架补全（`extractTitle` 取卡内 H1 + 卡号/优先级/scope 行）；消息模板 v3 = 骨架原样转发 + agent 每条追加一句判决建议（试探性、不替人拍板）；第三次飞书实推版式确认

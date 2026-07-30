@@ -13,8 +13,10 @@
 #   4. persona 注入：workspace 的 SOUL.md / AGENTS.md（本仓 prompts/role-session.md 的精简锚定版）
 #   5. 唤起：openclaw agent --agent <id> --message "..."（--session-key agent:<id>:<key> 可显式控会话）
 #   6. 删除：openclaw agents delete <id>（连 workspace/state 一起清）
+#   7. 改模型（2026-07-30 实证）：直接编辑 ~/.openclaw/openclaw.json 的 agents.list[].model
+#      即生效——Gateway 热加载免重启；CLI 无 update 子命令（set-identity 只管名字/主题/头像）
 #
-# bm 当前花名册（2026-07-29 已建，全部 deepseek/deepseek-v4-flash）：
+# bm 当前花名册（2026-07-29 已建；2026-07-30 分档实例化：pm/arch=deepseek-v4-pro，其余 flash）：
 #   main（default）+ pm / arch / ui / dev / test / sec / ops —— 与本文件 agents: 段一一对应。
 #
 # ⚠ 已知行为：CLI 唤起偶发 Gateway 1006 abnormal closure，自动回退 embedded agent 完成本轮；
@@ -23,7 +25,7 @@
 agents:
   main:                              # 编排者：收消息、校验信封、按路由表唤起下一跳
     persona: prompts/orchestrator-main.md
-    model_tier: mid                  # 意图分层；当前实际统一绑 flash
+    model_tier: mid                  # 意图分层；实际绑 flash
     model: "deepseek/deepseek-v4-flash"
     skills:
       - route-dispatch               # ✅ 已有（V4）
@@ -32,12 +34,12 @@ agents:
   pm:                                # H1 ProductManager
     persona_source: "docs/zh/agents/standard/ProductManager/index.md"   # SOUL.md 锚定此路径
     model_tier: top
-    model: "deepseek/deepseek-v4-flash"
+    model: "deepseek/deepseek-v4-pro"  # 2026-07-30 分档实例化（1000k ctx）
 
   arch:                              # H2 Architect
     persona_source: "docs/zh/agents/standard/Architect/index.md"
     model_tier: top
-    model: "deepseek/deepseek-v4-flash"
+    model: "deepseek/deepseek-v4-pro"  # 2026-07-30 分档实例化（1000k ctx）
 
   ui:                                # H2b UIDesigner（并行可选）
     persona_source: "docs/zh/agents/standard/UIDesigner/index.md"
@@ -67,8 +69,10 @@ agents:
     model: "deepseek/deepseek-v4-flash"
 
 # 模型分层原则（亮点文档 §1.2）：top=核心决策（pm/arch）；mid=执行类；econ=文档类（DeepSeek）。
-# 试点期统一 deepseek-v4-flash；后续分档由用户绑定——改法：
-#   openclaw agents delete <id> 重建带新 --model，或待官方 per-agent 改型命令；
-#   临时单跳覆盖用 openclaw agent --agent <id> --model <m>。
+# 2026-07-30 分档实例化：pm/arch → deepseek/deepseek-v4-pro（top 档落地）；其余角色维持 flash。
+# 改模型正路（2026-07-30 实测）：编辑 ~/.openclaw/openclaw.json → agents.list[].model，
+#   Gateway 热加载免重启；临时单跳覆盖用 openclaw agent --agent <id> --model <m>。
+#   ⚠ Windows 上 `openclaw gateway restart` 报 Unknown signal: SIGUSR1 不可用
+#     （见公共 skill openclaw-ops 已知坑）。
 # bm 已注册备选模型：qwen/qwen3.7-max 系、qwen-oauth/*、deepseek/deepseek-v4-pro 等（openclaw models list）。
 # 四期不做自动调配（优先级③再做数据反馈闭环）。

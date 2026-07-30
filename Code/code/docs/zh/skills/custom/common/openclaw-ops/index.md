@@ -26,6 +26,8 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 - CLI 偶发 `1006 abnormal closure`：`openclaw agent` 有 embedded 回退自动完成；`cron get/health` 等无回退，**重试一次**即可，连续失败才查 Gateway
 - `cron get/run/edit` 只认 job **UUID** 不认名字（`cron list` 第一列）
 - 同 session 内 agent 中断后续跑有效（重发消息会继续而非重来，2026-07-29 试点实证）
+- **`openclaw gateway restart` 在 Windows 报 `Unknown signal: SIGUSR1`**：restart 走 launchd/systemd/schtasks 服务化路径（Unix 设计），Windows 上不可用；要重启用 `gateway run --force`（2026-07-30 实证）
+- 改 `openclaw.json`（如 `agents.list[].model`）**Gateway 热加载免重启**（2026-07-30 实证，pm 换 pro 后 session Model 列即变）
 - Windows PowerShell 5.1 读仓内文本必须 `-Encoding UTF8`：见 [powershell-utf8](../powershell-utf8/index.md)
 
 ## 分层正文（按需 @）

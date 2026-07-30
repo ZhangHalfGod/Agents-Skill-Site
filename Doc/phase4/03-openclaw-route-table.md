@@ -123,3 +123,10 @@ bm 已按本文件 §2 建齐 7 个角色 agent（统一 flash），SOUL.md 已�
 **最大区别一句话**：投递通道归谁管——A 搭 OpenClaw 已验证的飞书渠道，B 由脚本自建投递。
 
 **选型定案（2026-07-29）**：weekly-lesson-digest 取 **A**——内容本质是给人看的清单文本，不需要卡片交互，省凭据省投递代码收益更大；B 保留为「需要富卡片 / 无 agent 参与」场景的备选（届时凭据走 `LESSON_DIGEST_FEISHU_WEBHOOK` env，脚本设计仍按 H2《架构约束》执行）。
+
+### 6.5 模型分档实例化（2026-07-30）
+
+- pm / arch → `deepseek/deepseek-v4-pro`（top 档落地，1000k ctx）；main 与其余角色维持 flash（mid/econ 待数据反馈再调，优先级③）
+- **改模型正路**：编辑 `~/.openclaw/openclaw.json` → `agents.list[].model`；Gateway **热加载免重启**（pm 冒烟后 `sessions list --agent pm` Model 列即 pro）
+- CLI 边界：`openclaw agents` 无 update 子命令（`set-identity` 只管名字/主题/头像）；`gateway restart` 在 Windows 报 `Unknown signal: SIGUSR1`（服务化路径为 Unix 设计）——已并入公共 skill `openclaw-ops` 已知坑
+- 同 provider 换模型**免重新注入 key**（auth store 按 provider 存）
