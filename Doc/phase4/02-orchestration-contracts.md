@@ -2,7 +2,7 @@
 
 > **文档级别**：四期契约  
 > **日期**：2026-07-29  
-> **原则**：交接 = 「交付物文件 + 信封消息」；交付物落业务仓 Markdown（SoT），信封是会话间唯一通信格式  
+> **原则**：交接 = 「交付物文件 + 信封消息」；机器 SoT = 本地 Markdown（`deliverable.path`，供校验/H3）；人对人展示 SoT = 飞书云文档（形态 A 双写，见 main SOUL「文档类交付双写」）；信封是会话间唯一通信格式  
 > **角色定义**：本仓 `docs/zh/agents/standard/**`；门禁：[`stage-gate-flow`](../../Code/code/docs/zh/skills/custom/common/stage-gate-flow/index.md)
 
 ---
@@ -27,8 +27,9 @@ handoff:
   stage: requirements             # requirements|design|develop|test|security|release
   deliverable:
     kind: scope-list              # 见 §3 各跳 kind
-    path: doc/iterations/<proj>/AI代码生成范围清单_xxx.md   # 业务仓相对路径
-    summary: |                    # 三行内：范围、显式不做、验收口径
+    path: doc/iterations/<proj>/AI代码生成范围清单_xxx.md   # 本地镜像路径（必填，须真实存在）
+    # feishu_url: https://...     # 可选；形态 A 文档类双写后由编排者填入 summary 或同级字段
+    summary: |                    # 三行内：范围、显式不做、验收口径（可附飞书链接）
   decisions: []                   # 已定决策——下游不可静默推翻，只能走回退边
   open_questions: []              # 留给下游的问题；为空表示无悬置
   gate:

@@ -1,0 +1,30 @@
+handoff:
+  from: Architect
+  to: dev
+  project: mechassist-openapi
+  stage: H2
+  deliverable:
+    kind: arch-constraints
+    path: D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-openapi-yaml-20260730\arch-constraints.md
+    summary: |
+      在已有 GET /api/openapi.json 基础上新增 GET /api/openapi.yaml；
+      两个端点共享 generateOpenApiSpec() 同一 JS 对象，序列化差异在路由层；
+      YAML 序列化使用 js-yaml 4.1.1 传递依赖（dump+load）；
+      Content-Type→application/yaml；dump 选项 noRefs:true + lineWidth:-1 + noCompatMode:true；
+      语义等价通过 yaml.load() 反向解析验证关键字段，不引入 YAML 快照文件；
+      openapiGenerator.js 零改动，index.js 零改动，不触发红色记录
+  decisions:
+    - "YAML 序列化使用 js-yaml（已存于 node_modules 传递依赖），import { dump } from 'js-yaml'"
+    - "openapiGenerator.js 零改动——generateOpenApiSpec() 对 JSON/YAML 返回相同 JS 对象"
+    - "server/index.js 零改动——YAML 路由挂在已有 openapiRoutes Router 上"
+    - "Content-Type 使用 application/yaml（res.type('application/yaml')）"
+    - "YAML dump 选项：noRefs:true、lineWidth:-1、noCompatMode:true、sortKeys:false"
+    - "YAML 语义等价通过 yaml.load() 反向解析 + 关键字段深度比较验证，不引入 YAML 快照文件"
+    - "openapiRoutes.js 改动：+1 import、+resolveServerUrl() 工具函数、+GET /api/openapi.yaml 路由（~15行）、JSON 路由 serverUrl 改为调用 resolveServerUrl()"
+    - "openapi.test.js 改动：+2 个 describe 块（YAML 解析+语义等价+端点集成）、request() 返回加 headers 字段、+1 import"
+    - "本次为普通模块扩展，不触发核心模块红色记录"
+  open_questions: []
+  gate:
+    checklist: stage-gate-flow
+    evidence: "实际读过：server/routes/openapiRoutes.js（现有 JSON 路由）、server/catalog/openapiGenerator.js（generateOpenApiSpec 完整实现+PATH_FALLBACKS）、server/test/openapi.test.js（request 辅助函数+buildSpec+存量描述子块）、node_modules/js-yaml/index.js（export dump/load CJS 模块）、node_modules/js-yaml/package.json（v4.1.1）、package.json（type:module ESM+test:server 脚本）"
+  lesson_hint: "js-yaml 4.x dump 默认 lineWidth:80 自动折行——lineWidth:-1 是避免长 description 被截断的关键；ESM import CJS named exports 无需 createRequire 桥接"

@@ -1,0 +1,38 @@
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi
+  stage: H1
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/run-openapi-yaml-20260730/scope-list.md
+    summary: |
+      在已有 GET /api/openapi.json 基础上新增 GET /api/openapi.yaml。
+      仅改 2 个文件：openapiRoutes.js（+8行，新增 yaml 路由）+ openapi.test.js（+~30行，YAML 解析+等价性校验）。
+      不改 openapiGenerator.js / registry / chatRoutes / index.js。
+      用 js-yaml（已在 node_modules）序列化，零新依赖。
+      验收：JSON/YAML 均 200，语义等价（openapi / info.x-generator / paths 键集合），存量不红。
+  decisions:
+    - "YAML 序列化使用 js-yaml（已存于 node_modules 的传递依赖），不引入新 npm 包、不跑 npm install"
+    - "不修改 openapiGenerator.js——generateOpenApiSpec() 对 JSON/YAML 返回相同 JS 对象，序列化差异在路由层处理"
+    - "不修改 server/index.js——YAML 路由挂在已有 openapiRoutes 的同一个 Express Router 上，index.js 无需感知"
+    - "Content-Type 使用 application/yaml（非 text/yaml），与 OpenAPI 生态一致"
+    - "YAML 语义等价通过反向解析（yaml.load()→JS对象）验证关键字段，不引入 YAML 快照文件"
+    - "本次改动为普通模块（路由扩展），不触发核心模块红色记录"
+  open_questions:
+    - "js-yaml 为间接依赖（非 package.json 直接声明）——Architect 是否建议将其提升为正式 dependency？"
+    - "是否需要在 YAML 响应头中额外设置 X-OpenAPI-Version 等自定义头供 CI 工具消费？"
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读文件清单（全部原位探查，证据完整）：
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\openapiRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\openapiGenerator.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\openapi.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\index.js（确认 openapiRoutes 挂载方式）
+      - D:\trae_git\MechAssist-Fusion\extern-api\node_modules\js-yaml（确认可用性）
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\agents\standard\ProductManager\index.md
+      - D:\trae_git\Agents-Skill-Site\Doc\phase4\02-orchestration-contracts.md
+      - D:\trae_git\Agents-Skill-Site\Code\orchestration\prompts\role-session.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\stage-gate-flow\index.md
+  lesson_hint: ""

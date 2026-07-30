@@ -1,5 +1,17 @@
 # CHANGELOG — All_URI
 
+## 2026-07-30 — phase4 补记：文档类交付形态 A（飞书 SoT + 本地镜像）
+
+- **定案**：人对人 SoT = 飞书云文档；机器校验/H3 = run-dir 本地镜像（信封 `path` 仍必填且须存在）
+- **SOUL v1.1**：流水线 H1/H2（及可行性分析）强制 `feishu_doc` 双写（create+write+链接）；编排者只发布已归档正文、不创作；云文档失败不阻断机器链路但必须上报
+- **契约**：`02-orchestration-contracts.md` 原则与信封注释对齐形态 A；线上 `~/.openclaw/workspace/SOUL.md` 同步替换流水线段
+
+## 2026-07-30 — phase4 补记：main 自编排 SOUL 定稿并部署（待飞书验）
+
+- **定稿**：`Code/orchestration/prompts/orchestrator-main-soul.draft.md` → v1（条件触发【新项目需求】、简链 H1→H2→M2→H3→H4、M2 签名=代码跳唯一触发器、硬护栏）
+- **线上部署**：追加到 `~/.openclaw/workspace/SOUL.md` 末尾；与已有「飞书云文档产出约定」去重（pipeline 段只补 owner_open_id / 禁自称未注册）
+- **未验**：飞书发【新项目需求】自驱全链仍待跑；部署后建议新 session 或清 main 群 session 使 SOUL 生效
+
 ## 2026-07-30 — phase4 补记：main 飞书云文档能力打通（feishu_doc 五层门禁）
 
 - **能力落地**：main agent 现可在飞书会话中调 `feishu_doc` 创建云文档并写入长 md（action=create → action=write → 回链接）；群聊链路 `owner_open_id` 自动授权发送者，CLI/群聊双冒烟 ✅；`feishu_drive`/`feishu_wiki`/`feishu_chat`/`feishu_app_scopes` 同批可用
