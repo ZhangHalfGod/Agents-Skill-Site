@@ -76,3 +76,7 @@ agents:
 #     （见公共 skill openclaw-ops 已知坑）。
 # bm 已注册备选模型：qwen/qwen3.7-max 系、qwen-oauth/*、deepseek/deepseek-v4-pro 等（openclaw models list）。
 # 四期不做自动调配（优先级③再做数据反馈闭环）。
+#
+# 一键重建脚本（2026-07-30 落地，幂等，bm 实跑零改动验证）：同目录 setup-agents.ps1
+#   新机器流程：装 OpenClaw → clone 本仓 → 跑脚本（预设 $env:DEEPSEEK_API_KEY 则自动逐 agent 注 key，
+#   否则末尾打印手动注入清单）；已存在的 agent 只对齐模型（改 openclaw.json，热加载免重启）。

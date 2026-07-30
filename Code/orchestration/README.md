@@ -10,8 +10,9 @@
 orchestration/
   README.md                        ← 本文件
   openclaw/
-    agents.example.yaml            ← 命名 agent + 模型分层（待验证项已标注）
+    agents.example.yaml            ← 命名 agent + 模型分层（含分档实例化与改模型正路注释）
     mcp.servers.example.yaml       ← MCP 服务挂接样例（对应 Doc/phase4/04）
+    setup-agents.ps1               ← 花名册一键重建/对齐脚本（幂等，无密钥；详见头注释）
   envelopes/
     handoff.example.yaml           ← 交接信封实例（H1：PM → Architect）
   prompts/
@@ -21,6 +22,7 @@ orchestration/
 
 ## 使用顺序（试点 B3）
 
+0. （新机器）跑 `openclaw/setup-agents.ps1` 一键建花名册；设 `$env:DEEPSEEK_API_KEY` 可自动注 key
 1. 部署侧对照 `openclaw/*.example.yaml` 写真实配置（键名待验证项见 `Doc/phase4/03` §1）
 2. 编排者 session 载入 `prompts/orchestrator-main.md`；角色 session 载入 `prompts/role-session.md`
 3. 每跳交接按 `envelopes/handoff.example.yaml` 格式提交信封

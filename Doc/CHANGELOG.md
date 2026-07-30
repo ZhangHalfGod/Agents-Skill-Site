@@ -5,6 +5,7 @@
 - **top 档落地**：`openclaw.json` 中 pm/arch 的 `model` 改为 `deepseek/deepseek-v4-pro`（1000k ctx），Gateway 热加载免重启（pm 冒烟 session Model 列实证）；同 provider 免重注 key；其余角色维持 flash
 - **CLI 边界实证**：改模型正路 = 编辑 `openclaw.json`（CLI 无 update 子命令）；`gateway restart` 在 Windows 报 `Unknown signal: SIGUSR1`（Unix 服务化路径）——并入公共 skill `openclaw-ops` 已知坑（不记 Lesson、不进周推，用户定）
 - 契约同步：`agents.example.yaml`（分档 + 改法注释）、`03` §6.5 实测记录
+- **`setup-agents.ps1` 落地**：花名册一键重建/对齐（幂等；bm 实跑 7/7 零改动验证）；新机器流程 = 装 OpenClaw → clone → 跑脚本 → 给 key；顺手实证「PS 5.1 解析无 BOM `.ps1` 按 ANSI」并已并入 `powershell-utf8`（含中文脚本必须带 BOM）
 
 ## 2026-07-29 — phase4 补记：digest v3 定稿 + 首批 Lesson 终审闭环（skills 11→13）
 

@@ -29,6 +29,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 ## 备注
 
 - PowerShell 7+（pwsh）默认 UTF-8，无此坑；本约定针对 5.1（bm 实测环境）
+- **`.ps1` 脚本文件本身也要带 BOM**：PS 5.1 解析无 BOM 的 `.ps1` 同样按系统 ANSI——含中文的脚本必须存「UTF-8 **带 BOM**」（2026-07-30 `Code/orchestration/openclaw/setup-agents.ps1` 实证，报 token 解析错误）
 - 来源 Lesson：`docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-ps-getcontent-utf8-cron.md`（merged）
 
 ## 在 Cursor 中使用本技能

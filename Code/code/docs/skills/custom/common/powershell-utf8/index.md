@@ -24,6 +24,7 @@ Rules for reading/writing this repo's UTF-8 (no BOM) text from **Windows PowerSh
 
 - Mojibake like `銆愭瘡鍛ㄤ换鍔°€` = UTF-8 bytes decoded as GBK → check the reading side for `-Encoding UTF8`
 - Chinese turning into `?` after passing through a command line → same cause, check the file-reading step first
+- `.ps1` files themselves need a BOM too: PS 5.1 parses BOM-less scripts as system ANSI — any script containing CJK must be saved as UTF-8 **with BOM** (verified 2026-07-30 via setup-agents.ps1)
 
 Source Lesson: `docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-ps-getcontent-utf8-cron.md` (merged)
 
