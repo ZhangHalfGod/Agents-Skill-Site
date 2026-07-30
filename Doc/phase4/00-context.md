@@ -93,6 +93,6 @@
 - **OpenClaw 不会「识别到 Cursor 连上」**：两个运行时互相不感知；Cursor 是被按需派遣的无头进程，跑完即走。MCP 配置写在项目仓 / 用户设置里，任何 Cursor 会话（手动或无头拉起）都自带 `agents-skill-remote`。
 - **Lesson 不写业务仓**：统一回本仓 `Code/code/docs/zh/operations/<project-id>/lessons/`——集中才能跨项目聚类、进周推；业务仓只收代码产出。
 
-验证状态诚实版：每一环均单独验证过（机制 A ✅ / Cursor CLI 派遣模式 ✅ / 记卡→周推→终审→升格 ✅ 2026-07-29 首跑）；「飞书进、代码出」**全自动端到端尚未一次性连跑**（目前由人或 orchestrator prompt 按契约驱动），为下一验证点。
+验证状态诚实版（2026-07-30 更新）：**「飞书进、代码出」端到端已首跑完成**——mechassist-openapi（extern-api registry → OpenAPI 3.0）：H1 pm(pro) → H2 arch(pro)（机制 A，Cursor 侧按契约驱动）→ `invoke-cursor-agent.ps1` 代码跳（机制 B）→ 验收三条独立复核全过（端点 200/3.0.3/28 路径、快照可复现、存量 43/1 唯一红为既有 vitest 冲突），证据 `Code/doc/phase4/e2e-openapi/`。注意边界：本次编排由 **Cursor 侧人控编排器**驱动；**main agent 自编排（SOUL 注入 + exec 派遣下一跳）未验证、已搁置**——那是"全自动"的最后一块，非本次目标。途中产出 3 张 raw Lesson（PS5.1 argv/stdout 双坑、cursor-agent node ABI 翻转、认证三层解剖），见 `operations/mechassist-openapi/lessons/`。
 
 流程参考：单环细节 [`../guides/mcp-work-then-distill-demo.md`](../guides/mcp-work-then-distill-demo.md)；记忆闭环 Runbook [`05`](05-lesson-memory-loop.md)；路由与机制 [`03`](03-openclaw-route-table.md)。

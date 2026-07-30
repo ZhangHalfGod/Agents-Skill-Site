@@ -1,0 +1,48 @@
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi
+  stage: H1
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/e2e-openapi/AI代码生成范围清单_registry-openapi.md
+    summary: |
+      新增 openapiGenerator.js（核心层，需红色记录）+ openapiRoutes.js + openapi.test.js，
+      修改 index.js（+2 行）。从 LAYERS + API_PATHS 生成 OpenAPI 3.0.3。
+      显式不做：不改 chatRoutes / registry LAYERS / apiPaths.js / 存量测试，不装新依赖。
+      验收：① GET /api/openapi.json 合法 3.0.3 覆盖 28 条 API_PATHS ② 快照测试 ③ 存量不红。
+  decisions:
+    - "生成器不修改 LAYERS 结构——对 API_PATHS 中未注册的 7 条路径（voice×3, gateway×3, V2_ROOT）采用保守补全策略（method=GET, auth=false, no parameters），标记 x-registry-status: inferred"
+    - "openapiGenerator.js 判定为核心层模块，触发「核心模块AI生成红色记录」，H2 Architect 必须审查"
+    - "不引入新 npm 依赖（如 swagger-jsdoc）——纯 JS 对象字面量构建 OpenAPI 3.0.3"
+    - "GET /api/openapi.json 为只读公开端点，不加 authenticateToken；复用 apiLimiter（在 index.js 统一挂载）"
+    - "路径参数转换规则：Express :param → OpenAPI {param}，由生成器统一处理"
+    - "快照测试策略：首次写入 __snapshots__/openapi.snapshot.json，后续对比；registry 变更后需手动更新快照"
+    - "不生成 YAML 静态文件，不接入 Swagger UI——都属于 H2+ 范围"
+  open_questions:
+    - "voice/gateway 端点当前不在 LAYERS 中——是否需要反向补注册到 registry 以丰富 OpenAPI 元数据？建议 H2 Architect 裁决"
+    - "OpenAPI 的 servers[].url 动态生成（req.hostname + req.protocol）还是固定占位？影响 CI 可移植性"
+    - "是否需要为 chat 相关端点补充 requestBody schema（messages 数组结构）？本清单暂不做，属 H2 扩展"
+    - "V2_ROOT（/v2/）仅作为目录入口——是否在 OpenAPI 中标注为 internal/x-discovery 而非稳定 API？"
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读文件清单（全部原位探查，证据完整）：
+      - D:\trae_git\MechAssist-Fusion\extern-api\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\doc\重构api架构\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\registry.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\shared\apiPaths.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\chatRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\releaseRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\gatewayRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\index.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\v2Catalog.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\apiPaths.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\releaseContract.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\package.json
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\agents\standard\ProductManager\index.md
+      - D:\trae_git\Agents-Skill-Site\Doc\phase4\02-orchestration-contracts.md
+      - D:\trae_git\Agents-Skill-Site\Code\orchestration\prompts\role-session.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\stage-gate-flow\index.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\ai-code-boundary\index.md
+  lesson_hint: ""

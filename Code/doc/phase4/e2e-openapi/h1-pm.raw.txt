@@ -1,0 +1,191 @@
+﻿浜や粯鐗╁凡钀界洏銆備笅闈㈡槸瀹屾暣鍥炲锛?
+---
+
+# AI浠ｇ爜鐢熸垚鑼冨洿娓呭崟 鈥?extern-api Registry 鈫?OpenAPI 3.0
+
+> **椤圭洰**: MechAssist-Fusion / extern-api  
+> **闃舵**: H1锛堥渶姹傝烦 鈫?鏋舵瀯璺筹級  
+> **浜у嚭鑰?*: ProductManager  
+> **鏃ユ湡**: 2026-07-30  
+> **鍘熷闇€姹?*: 浠?registry 鐢熸垚鏍囧噯 OpenAPI 3.0锛屾柊澧炲彧璇荤鐐?GET /api/openapi.json
+
+---
+
+## 1. 鐩爣
+
+涓?extern-api 鐢熸垚鏍囧噯 **OpenAPI 3.0.3** 瑙勮寖鏂囨。锛岄€氳繃鏂板鍙绔偣 `GET /api/openapi.json` 鏆撮湶锛屼緵 Swagger UI 娓叉煋涓?CI 濂戠害鏍￠獙浣跨敤銆傜敓鎴愬櫒浠ョ幇鏈?`server/catalog/registry.js`锛坄LAYERS` + `API_PATHS`锛変负鍗曟簮鐪熸簮锛屼笉寮曞叆绗簩濂楁弿杩颁綋绯汇€?
+**涓氬姟鎸囨爣**锛?- 涓€娆?`GET /api/openapi.json` 鍗冲彲鎷垮埌鍚堟硶 OpenAPI 3.0.3 JSON锛屽彲琚?swagger-parser / openapi-generator 绛夊伐鍏风洿鎺ユ秷璐?- `npm run test:server` 鍏ㄩ儴閫氳繃锛堟柊澧?+ 瀛橀噺锛?
+---
+
+## 2. 鑼冨洿鏉＄洰锛堢簿纭埌鏂囦欢锛?
+### 2.1 鏂板鏂囦欢
+
+| # | 鏂囦欢璺緞锛堢浉瀵?extern-api/锛?| 鑱岃矗 | AI鐢熸垚绾у埆 | 浼樺厛绾?|
+|---|---------------------------|------|-----------|--------|
+| N1 | `server/catalog/openapiGenerator.js` | 浠?`registry.js` 鐨?`LAYERS` + `SERVICE_NAME`/`SERVICE_VERSION` + `API_PATHS` 鐢熸垚鏍囧噯 OpenAPI 3.0.3 JSON 瀵硅薄銆傜函鍑芥暟锛屾棤鍓綔鐢紝涓?import Express銆傝鐩栧叏閮?API_PATHS 鏉＄洰锛堝惈 LAYERS 鏈敞鍐岀殑 voice/gateway/V2_ROOT/HEALTH锛夛紝瀵?LAYERS 宸叉敞鍐屾潯鐩娇鐢ㄧ粨鏋勫寲瀛楁锛坉escription/auth/parameters锛夛紝瀵规湭娉ㄥ唽鏉＄洰鎸変繚瀹堟帹鏂ˉ鍏紙method=GET锛宎uth=false锛宒escription 鏉ヨ嚜 API_PATHS key 璇箟鍖栵級銆?*涓嶄慨鏀?LAYERS 缁撴瀯鏈韩銆?* | **鏍稿績灞傦紙闇€绾㈣壊璁板綍锛?* 鈥?鐢熸垚鍣ㄥ畾涔変簡 API 濂戠害鐨勫澶栨帴鍙ｆ弿杩帮紝涓嬫父 CI/Swagger 渚濊禆鍏舵纭€?| P0 |
+| N2 | `server/routes/openapiRoutes.js` | Express Router锛屼粎鍚竴涓?GET 璺敱 `GET /api/openapi.json`锛岃皟鐢?N1 鐨勭敓鎴愬嚱鏁帮紝杩斿洖 `application/json`銆?*涓嶄緷璧?authenticateToken锛堝彧璇诲叕寮€绔偣锛?*锛屼笉鍔犻檺娴侊紙澶嶇敤 apiLimiter锛岀敱 index.js 缁熶竴鎸傝浇锛夈€?| 鏅€氭ā鍧?| P0 |
+| N3 | `server/test/openapi.test.js` | 娴嬭瘯鏂囦欢锛岃鐩栵細鈶?OpenAPI 3.0 缁撴瀯鍚堟硶鎬э紙`openapi`/`info`/`paths` 瀛楁蹇呭湪锛夛紱鈶?`paths` 瑕嗙洊鍏ㄩ儴 `API_PATHS`锛堥€愭潯鏂█锛夛紱鈶?蹇収娴嬭瘯锛堥娆¤繍琛屽啓鍏?`__snapshots__/openapi.snapshot.json`锛屽悗缁姣旓級锛涒懀 鑻ュ共鍏抽敭绔偣鐨?method/auth/parameters 鏍￠獙銆?| 鏅€氭ā鍧?| P0 |
+
+### 2.2 淇敼鏂囦欢
+
+| # | 鏂囦欢璺緞锛堢浉瀵?extern-api/锛?| 鏀瑰姩鍐呭 | 椋庨櫓绛夌骇 | 浼樺厛绾?|
+|---|---------------------------|---------|---------|--------|
+| M1 | `server/index.js` | 鏂板 `import openapiRoutes from './routes/openapiRoutes.js'`锛涘湪 chatRoutes 涔嬪悗銆乺eleaseRoutes 闄勮繎杩藉姞 `app.use('/api', apiLimiter, openapiRoutes)`锛堥浼?+2 琛岋級銆?*涓嶆敼鍔ㄧ幇鏈?import 椤哄簭涓庡凡鏈夎矾鐢辨敞鍐屻€?* | 浣庯紙绾閲忥級 | P0 |
+
+---
+
+## 3. 鏄惧紡涓嶅仛
+
+| 搴忓彿 | 涓嶅仛浜嬮」 | 鐞嗙敱 |
+|------|---------|------|
+| X1 | **涓嶄慨鏀?`server/routes/chatRoutes.js`** | 鐑矾寰勬枃浠讹紝鍙楄寖鍥寸害鏉熶繚鎶ゃ€俙GET /api/docs`锛坄getApiDocsPayload()`锛変繚鎸佸師鏍凤紝涓嶈蛋 OpenAPI 鐢熸垚鍣ㄣ€?|
+| X2 | **涓嶄慨鏀?`server/catalog/registry.js` 鐨?LAYERS 缁撴瀯** | 閬垮厤绾ц仈褰卞搷 `/v2` 鐩綍涓?`GET /api/docs`銆倂oice/gateway 绛夋湭娉ㄥ唽璺緞鍙湪鐢熸垚鍣ㄤ晶琛ュ叏锛屼笉鍙嶅悜鍐欏叆 registry銆?|
+| X3 | **涓嶆帴鍏?Swagger UI锛堝墠绔〉闈級** | 鏈湡鍙骇鍑?JSON 绔偣銆係wagger UI 椤甸潰灞炰簬 H2+ 鑼冨洿锛堝彲鍙︾珛闇€姹傦級銆?|
+| X4 | **涓嶇敓鎴?`openapi.yaml` 闈欐€佹枃浠?* | 浼樺厛 JSON 绔偣锛堝姩鎬佺敓鎴愶紝鏃犻渶鏋勫缓姝ラ锛夈€俌AML 鍙敱 CI 绔粠 JSON 杞崲銆?|
+| X5 | **涓嶄慨鏀?`shared/apiPaths.js`** | 璺緞鍗曟簮鏃犻渶鍙樺姩锛涚敓鎴愬櫒鍙寮曠敤銆?|
+| X6 | **涓嶅畨瑁呮柊 npm 渚濊禆** | 鐢熸垚鍣ㄨ嚜瀹炵幇锛屼笉寮曞叆 `swagger-jsdoc` / `openapi-types` 绛夌涓夋柟鍖呫€侽penAPI 3.0.3 瀵硅薄涓虹函 JS 瀵硅薄瀛楅潰閲忔瀯寤恒€?|
+| X7 | **涓嶅 voice/gateway 绔偣鍋氭繁搴﹀弬鏁版帹鏂?* | 杩欎簺绔偣褰撳墠涓嶅湪 LAYERS 涓紝鐢熸垚鍣ㄤ粎鍋氫繚瀹堣ˉ鍏紙method=GET锛宎uth=false锛夛紝涓嶅仛鍋囧弬鏁般€侶2 鍙墿灞曘€?|
+| X8 | **涓嶄慨鏀?`server/test/` 涓嬩换浣曠幇鏈夋祴璇曟枃浠?* | 鏂板娴嬭瘯鐙珛鎴愭枃浠讹紝瀛橀噺娴嬭瘯闆舵敼鍔ㄣ€?|
+
+---
+
+## 4. 楠屾敹鍙ｅ緞锛堥€愭潯鏄犲皠闇€姹傦級
+
+| 闇€姹傜紪鍙?| 楠屾敹鏉′欢 | 楠屾敹鏂瑰紡 | 瀵瑰簲娴嬭瘯 |
+|---------|---------|---------|---------|
+| 鈶?| `GET /api/openapi.json` 杩斿洖 HTTP 200锛宍Content-Type: application/json`锛屽搷搴旂殑 `openapi` 瀛楁鍊间负 `"3.0.3"` | 鎵嬪伐 curl + 鑷姩鍖栨祴璇?| N3 娴嬭瘯鐢ㄤ緥 `GET /api/openapi.json returns valid OpenAPI 3.0` |
+| 鈶?| 鍝嶅簲鐨?`paths` 瀵硅薄鍖呭惈鍏ㄩ儴 28 鏉?`API_PATHS`锛圓UTH_REGISTER / AUTH_LOGIN / AUTH_ME / AUTH_PROFILE / AUTH_PASSWORD / AUTH_REFRESH / CHAT_MESSAGE / CHAT_MESSAGE_STREAM / CHAT_CONVERSATIONS / CHAT_CONVERSATION_BY_ID / VOICE_CAPABILITIES / VOICE_TTS / VOICE_TTS_DOWNLOAD / SYSTEM_STATUS / FAQ_CATEGORIES / FAQ_LIST / FAQ_BY_ID / REPAIR_RECORDS / REPAIR_RECORD_BY_ID / ADMIN_USERS / ADMIN_USER_BY_ID / API_DOCS / RELEASE_MANIFEST / GATEWAY_PLANES / GATEWAY_CONTROL_PLANE / GATEWAY_DATA_PLANE / HEALTH / V2_ROOT锛?| 鑷姩鍖栨祴璇曪紙閫愭潯 `assert.ok(paths[...])`锛?| N3 娴嬭瘯鐢ㄤ緥 `paths covers all API_PATHS entries` |
+| 鈶?| 缁?`swagger-parser` 鎴栫瓑鏁堟牎楠岋紙鑷冲皯 `openapi`/`info`/`paths` 涓夎绱犻綈鍏?+ `info.title`/`info.version` 闈炵┖锛夛紝涓嶈鍒や负闈炴硶 spec | 鑷姩鍖栨祴璇曪紙缁撴瀯鏂█锛?| N3 娴嬭瘯鐢ㄤ緥 `OpenAPI 3.0 structure is valid` |
+| 鈶?| 蹇収娴嬭瘯锛氶娆¤繍琛岀敓鎴?`server/test/__snapshots__/openapi.snapshot.json`锛屽悗缁?`npm run test:server` 瀵规瘮涓€鑷?| 鑷姩鍖栨祴璇曪紙蹇収姣斿锛?| N3 娴嬭瘯鐢ㄤ緥 `openapi.json matches snapshot` |
+| 鈶?| `npm run test:server` 鍏ㄩ儴閫氳繃锛屽瓨閲?14 涓祴璇曟枃浠舵棤 regressions | CI / 鎵嬪伐鎵ц | 鍏ㄩ噺 `node --test server/test/*.test.js` |
+
+---
+
+## 5. 绾︽潫寮曠敤
+
+| 绾︽潫鏉ユ簮 | 鍐呭鎽樿 | 瀵规湰鑼冨洿鐨勫奖鍝?|
+|---------|---------|--------------|
+| `extern-api/README.md` 鈥?"缁撴瀯鍖栨枃妗ｏ細GET /api/docs锛圤penAPI 浠?registry 鐢熸垚锛?*瑙勫垝涓紝鏈疄鐜?*锛? | 宸查鐣欒鍒掑崰浣?| 鏈湡灏辨槸濉繖涓潙 |
+| `extern-api/doc/閲嶆瀯api鏋舵瀯/README.md` 鈥?"鍚庣画瑙勫垝锛堟湭瀹炵幇锛夛細浠?registry.js 鐢熸垚 OpenAPI 瑙勮寖" | 宸叉爣娉ㄤ负瑙勫垝椤?| 鍚屼笂 |
+| `shared/apiPaths.js` 鈥?28 鏉¤矾寰勫父閲忥紝鍗曟簮鍘熷垯 | 璺緞鍞竴鐪熸簮 | 鐢熸垚鍣ㄥ繀椤昏鐩栧叏閮?28 鏉?|
+| `server/catalog/registry.js` 鈥?`LAYERS` + `getApiDocsPayload()` + `listImplementedEndpointPaths()` | 缁撴瀯鍖?endpoint 鍏冩暟鎹?| 鐢熸垚鍣ㄥ鐢?LAYERS 鍏冩暟鎹紝瀵规湭娉ㄥ唽璺緞淇濆畧琛ュ叏 |
+| AI 浠ｇ爜鐢熸垚杈圭晫锛坄ai-code-boundary`锛?| 鏍稿績灞備唬鐮侀渶绾㈣壊璁板綍 | `openapiGenerator.js` 灞炴牳蹇冨眰锛堝畾涔夊澶?API 濂戠害锛夛紝鍚屾鐧昏绾㈣壊璁板綍 |
+| 闃舵闂ㄧ锛坄stage-gate-flow`锛?| 鍑洪棬蹇呭嬀 checklist | 鏈竻鍗曞嵆 H1 浜や粯鐗╋紱璇佹嵁瑙?搂7 |
+
+---
+
+## 6. 鏍稿績妯″潡AI鐢熸垚绾㈣壊璁板綍
+
+| 瀛楁 | 鍐呭 |
+|------|------|
+| **妯″潡鍚?* | `server/catalog/openapiGenerator.js` |
+| **鍙樻洿鑼冨洿** | 鏂板缓鏂囦欢锛寏150 琛岋紝绾嚱鏁颁粠 LAYERS + API_PATHS 鐢熸垚 OpenAPI 3.0.3 瀵硅薄 |
+| **椋庨櫓鐐?* | 1) 璺緞鍙傛暟鍖栭敊璇紙濡?`:id` 璺緞鍦?OpenAPI 涓渶杞负 `{id}`锛夛紱2) API_PATHS 涓?LAYERS 涓嶄竴鑷存椂琛ュ叏绛栫暐澶卞綋锛?) 蹇収婕傜Щ鈥斺€攔egistry 澧炲垹绔偣鍚庡揩鐓ф祴璇曢渶鍚屾鏇存柊 |
+| **瀹℃煡浜?* | Architect锛圚2 璺筹級 |
+| **瀹℃煡缁撹** | 寰?H2 鏋舵瀯瀹℃煡 |
+| **鍏宠仈 Prompt 鐗堟湰** | H1 scope-list锛堟湰娓呭崟锛?|
+| **缂撹В鎺柦** | 1) 鐢熸垚鍣ㄧ粺涓€ `:param` 鈫?`{param}` 杞崲锛?) 瀵?LAYERS 鏈敞鍐岃矾寰勪娇鐢ㄤ繚瀹堟帹鏂紙method=GET, auth=false, no parameters锛夛紝涓嶉€犲亣璁炬暟鎹紱3) 蹇収娴嬭瘯澶辫触鏃舵彁绀恒€岃鏇存柊蹇収鏂囦欢銆?|
+
+---
+
+## 7. 椋庨櫓涓庝緷璧?
+| 椋庨櫓/渚濊禆 | 褰卞搷 | 缂撹В |
+|----------|------|------|
+| `API_PATHS` 涓?`LAYERS` 瀛樺湪 7 鏉¤矾寰勭己鍙ｏ紙voice脳3, gateway脳3, V2_ROOT锛?| OpenAPI 鐢熸垚鍣ㄩ渶鑷琛ュ叏杩欎簺璺緞鐨勫厓鏁版嵁锛屽彲鑳戒笉鍑嗙‘ | 瑙?搂6 缂撹В鎺柦锛涚己鍙ｈ矾寰勬爣璁?`x-registry-status: "inferred"`锛屼緵 H2 瀹℃煡 |
+| 璺緞鍙傛暟杞崲锛圗xpress `:param` 鈫?OpenAPI `{param}`锛?| 杞崲閬楁紡浼氬鑷磋矾寰勪笉鍖归厤 | 娴嬭瘯閫愭潯鏍￠獙鎵€鏈夊甫鍙傛暟璺緞 |
+| 蹇収娴嬭瘯鍦?registry 鍙樻洿鍚庡け鏁?| 鏂板绔偣浼氬鑷村揩鐓т笉鍖归厤锛屾祴璇曞彉绾?| 蹇収澶辫触淇℃伅鍖呭惈銆岃鏇存柊蹇収銆嶆寚寮?|
+
+---
+
+## 8. 闄勫綍锛欰PI_PATHS 瑕嗙洊鐭╅樀
+
+| API_PATHS Key | Path | LAYERS 宸叉敞鍐岋紵 | 鏂规硶 | Auth |
+|--------------|------|:---:|------|:---:|
+| AUTH_REGISTER | /api/auth/register | 鉁?| POST | 鉁?|
+| AUTH_LOGIN | /api/auth/login | 鉁?| POST | 鉁?|
+| AUTH_ME | /api/auth/me | 鉁?| GET | 鉁?|
+| AUTH_PROFILE | /api/auth/profile | 鉁?| PUT | 鉁?|
+| AUTH_PASSWORD | /api/auth/password | 鉁?| PUT | 鉁?|
+| AUTH_REFRESH | /api/auth/refresh | 鉁?| POST | 鉁?|
+| CHAT_MESSAGE | /api/chat/message | 鉁?| POST | 鉁?|
+| CHAT_MESSAGE_STREAM | /api/chat/message/stream | 鉁?| POST | 鉁?|
+| CHAT_CONVERSATIONS | /api/chat/conversations | 鉁?| GET | 鉁?|
+| CHAT_CONVERSATION_BY_ID | /api/chat/conversations/:id | 鉁?| GET/DELETE | 鉁?|
+| SYSTEM_STATUS | /api/system/status | 鉁?| GET | 鉁?|
+| FAQ_CATEGORIES | /api/faq/categories | 鉁?| GET | 鉁?|
+| FAQ_LIST | /api/faq | 鉁?| GET | 鉁?|
+| FAQ_BY_ID | /api/faq/:id | 鉁?| GET | 鉁?|
+| REPAIR_RECORDS | /api/repair-records | 鉁?| GET | 鉁?|
+| REPAIR_RECORD_BY_ID | /api/repair-records/:id | 鉁?| GET/PATCH | 鉁?|
+| ADMIN_USERS | /api/admin/users | 鉁?| GET | 鉁?|
+| ADMIN_USER_BY_ID | /api/admin/users/:id | 鉁?| PATCH | 鉁?|
+| API_DOCS | /api/docs | 鉁?| GET | 鉁?|
+| RELEASE_MANIFEST | /api/release/manifest | 鉁?| GET | 鉁?|
+| HEALTH | /health | 鉁?| GET | 鉁?|
+| VOICE_CAPABILITIES | /api/voice/capabilities | 鉂?| GET | 鉁?|
+| VOICE_TTS | /api/voice/tts | 鉂?| POST | 鉁?|
+| VOICE_TTS_DOWNLOAD | /api/voice/tts/files/:fileName | 鉂?| GET | 鉁?|
+| GATEWAY_PLANES | /api/gateway/planes | 鉂?| GET | 鉁?|
+| GATEWAY_CONTROL_PLANE | /api/gateway/control-plane | 鉂?| GET | 鉁?|
+| GATEWAY_DATA_PLANE | /api/gateway/data-plane | 鉂?| GET | 鉁?|
+| V2_ROOT | /v2/ | 鉂?| GET | 鉁?|
+
+> **鍥句緥**: 鉁?LAYERS 宸叉敞鍐岋紙缁撴瀯鍖栧瓧娈靛彲鐢級 路 鉂?鏈敞鍐岋紙鐢熸垚鍣ㄤ繚瀹堣ˉ鍏紝鏍囪 `x-registry-status: inferred`锛?
+---
+
+## 9. 闂ㄧ鑷
+
+- [x] 姣忔潯 P0 鍧囨湁鍙墽琛岄獙鏀舵爣鍑嗭紙搂4锛?- [x] 鏍稿績/缃戝叧/瀹夊叏鐩稿叧鏉＄洰宸茶Е鍙戠孩鑹茶褰曟祦绋嬭鏄庯紙搂6锛宍openapiGenerator.js` 鍒ゅ畾涓烘牳蹇冨眰锛?- [x] 闈炵洰鏍囦笌鑼冨洿杈圭晫宸插啓鏄庯紝閬垮厤闅愭€ц敁寤讹紙搂3锛孹1锝瀀8锛?- [x] 褰撳墠闃舵杈撳叆锛堝師濮嬮渶姹傦級/ 杈撳嚭锛堟湰娓呭崟锛? 瀹℃牳鐘舵€侊紙寰?H2 Architect锛夊凡鏍囨槑
+- [x] 鏈樁娈?Lesson锛氬皻鏃犱笉閫傜敤锛宍lesson_hint` 鐣欑┖
+
+---
+
+---SPLIT---
+
+```yaml
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi
+  stage: H1
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/e2e-openapi/AI浠ｇ爜鐢熸垚鑼冨洿娓呭崟_registry-openapi.md
+    summary: |
+      鏂板 openapiGenerator.js锛堟牳蹇冨眰锛岄渶绾㈣壊璁板綍锛? openapiRoutes.js + openapi.test.js锛?      淇敼 index.js锛?2 琛岋級銆備粠 LAYERS + API_PATHS 鐢熸垚 OpenAPI 3.0.3銆?      鏄惧紡涓嶅仛锛氫笉鏀?chatRoutes / registry LAYERS / apiPaths.js / 瀛橀噺娴嬭瘯锛屼笉瑁呮柊渚濊禆銆?      楠屾敹锛氣憼 GET /api/openapi.json 鍚堟硶 3.0.3 瑕嗙洊 28 鏉?API_PATHS 鈶?蹇収娴嬭瘯 鈶?瀛橀噺涓嶇孩銆?  decisions:
+    - "鐢熸垚鍣ㄤ笉淇敼 LAYERS 缁撴瀯鈥斺€斿 API_PATHS 涓湭娉ㄥ唽鐨?7 鏉¤矾寰勶紙voice脳3, gateway脳3, V2_ROOT锛夐噰鐢ㄤ繚瀹堣ˉ鍏ㄧ瓥鐣ワ紙method=GET, auth=false, no parameters锛夛紝鏍囪 x-registry-status: inferred"
+    - "openapiGenerator.js 鍒ゅ畾涓烘牳蹇冨眰妯″潡锛岃Е鍙戙€屾牳蹇冩ā鍧桝I鐢熸垚绾㈣壊璁板綍銆嶏紝H2 Architect 蹇呴』瀹℃煡"
+    - "涓嶅紩鍏ユ柊 npm 渚濊禆锛堝 swagger-jsdoc锛夆€斺€旂函 JS 瀵硅薄瀛楅潰閲忔瀯寤?OpenAPI 3.0.3"
+    - "GET /api/openapi.json 涓哄彧璇诲叕寮€绔偣锛屼笉鍔?authenticateToken锛涘鐢?apiLimiter锛堝湪 index.js 缁熶竴鎸傝浇锛?
+    - "璺緞鍙傛暟杞崲瑙勫垯锛欵xpress :param 鈫?OpenAPI {param}锛岀敱鐢熸垚鍣ㄧ粺涓€澶勭悊"
+    - "蹇収娴嬭瘯绛栫暐锛氶娆″啓鍏?__snapshots__/openapi.snapshot.json锛屽悗缁姣旓紱registry 鍙樻洿鍚庨渶鎵嬪姩鏇存柊蹇収"
+    - "涓嶇敓鎴?YAML 闈欐€佹枃浠讹紝涓嶆帴鍏?Swagger UI鈥斺€旈兘灞炰簬 H2+ 鑼冨洿"
+  open_questions:
+    - "voice/gateway 绔偣褰撳墠涓嶅湪 LAYERS 涓€斺€旀槸鍚﹂渶瑕佸弽鍚戣ˉ娉ㄥ唽鍒?registry 浠ヤ赴瀵?OpenAPI 鍏冩暟鎹紵寤鸿 H2 Architect 瑁佸喅"
+    - "OpenAPI 鐨?servers[].url 鍔ㄦ€佺敓鎴愶紙req.hostname + req.protocol锛夎繕鏄浐瀹氬崰浣嶏紵褰卞搷 CI 鍙Щ妞嶆€?
+    - "鏄惁闇€瑕佷负 chat 鐩稿叧绔偣琛ュ厖 requestBody schema锛坢essages 鏁扮粍缁撴瀯锛夛紵鏈竻鍗曟殏涓嶅仛锛屽睘 H2 鎵╁睍"
+    - "V2_ROOT锛?v2/锛変粎浣滀负鐩綍鍏ュ彛鈥斺€旀槸鍚﹀湪 OpenAPI 涓爣娉ㄤ负 internal/x-discovery 鑰岄潪绋冲畾 API锛?
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      宸茶鏂囦欢娓呭崟锛堝叏閮ㄥ師浣嶆帰鏌ワ紝璇佹嵁瀹屾暣锛夛細
+      - D:\trae_git\MechAssist-Fusion\extern-api\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\doc\閲嶆瀯api鏋舵瀯\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\registry.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\shared\apiPaths.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\chatRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\releaseRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\gatewayRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\index.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\v2Catalog.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\apiPaths.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\releaseContract.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\package.json
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\agents\standard\ProductManager\index.md
+      - D:\trae_git\Agents-Skill-Site\Doc\phase4\02-orchestration-contracts.md
+      - D:\trae_git\Agents-Skill-Site\Code\orchestration\prompts\role-session.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\stage-gate-flow\index.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\ai-code-boundary\index.md
+  lesson_hint: ""
+```
+鈿狅笍 馃洜锔?Exec failed: `dir /b D:\trae_git\MechAssist-Fusion\extern-api\server\test\`

@@ -1,0 +1,26 @@
+handoff:
+  from: Architect
+  to: DevLead
+  project: mechassist-openapi
+  stage: H2
+  deliverable:
+    kind: arch-constraints
+    path: Code/doc/phase4/e2e-openapi/架构约束与接口_registry-openapi.md
+    summary: |
+      openapiGenerator.js 精确签名（入参 LAYERS+API_PATHS+config，出参 OpenAPI 3.0.3 对象）；
+      LAYERS→OpenAPI 映射规则定稿（含 parameters→requestBody/query 推断策略、auth→security）；
+      Express :param→{param} 转换规则；servers[].url→环境变量+默认值；快照测试约定；
+      红色模块 openapiGenerator.js 审查同意，附 reviewer checklist；4 条 H1 open_questions 全部收口
+  decisions:
+    - "voice/gateway/V2_ROOT 不反向补注册到 registry LAYERS——改为在 openapiGenerator.js 内部定义 PATH_FALLBACKS 常量提供精确元数据（不推翻 H1「不修改 registry」决策）"
+    - "servers[].url 采用「环境变量 OPENAPI_SERVER_URL 覆盖 + 默认 http://localhost:3002」策略，不依赖 req 动态生成——确保 CI 可移植性与快照确定性"
+    - "为 chat 端点（CHAT_MESSAGE/CHAT_MESSAGE_STREAM）补充 requestBody schema——基于 LAYERS 已有 parameters 直接转换，不下钻 message 内部结构"
+    - "V2_ROOT 标注 x-discovery: true（非 x-internal），保留在 paths 中——/v2/ 是设计给 API 消费者的服务发现入口"
+    - "红色模块 openapiGenerator.js 审查结论：同意 H1 判定，维持核心层红色记录。DevLead 须逐行审查并填满 §9 reviewer checklist"
+    - "生成器对 LAYERS 中 method∈{POST,PUT,PATCH} 且有 parameters 的端点生成 requestBody；GET/DELETE 的 parameters 映射为 query parameters"
+    - "快照测试 serverUrl 固定为 http://localhost:3002，避免环境差异导致快照漂移"
+  open_questions: []
+  gate:
+    checklist: stage-gate-flow
+    evidence: "实际读过文件：registry.js（LAYERS+SERVICE_NAME+SERVICE_VERSION+API_PATHS 引用）、shared/apiPaths.js（28 条路径+工具函数）、server/index.js（路由挂载点+限流配置）、server/routes/gatewayRoutes.js（gateway×3 全部 GET 无 auth）——均已现场验证；H1 交付物全文 AI代码生成范围清单_registry-openapi.md；角色说明书 index.md；交接契约 02-orchestration-contracts.md；角色通用模板 role-session.md；架构约束模板 architecture-constraints.md"
+  lesson_hint: "voice×3 路径当前无 Express 路由实现（仅 service 层存在）——PATH_FALLBACKS 已标注 xNote 提醒；voice 路由实现后需要更新 PATH_FALLBACKS 并刷新快照"

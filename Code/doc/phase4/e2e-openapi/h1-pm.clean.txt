@@ -1,0 +1,205 @@
+交付物已落盘。下面是完整回复：
+
+---
+
+# AI代码生成范围清单 — extern-api Registry → OpenAPI 3.0
+
+> **项目**: MechAssist-Fusion / extern-api  
+> **阶段**: H1（需求跳 → 架构跳）  
+> **产出者**: ProductManager  
+> **日期**: 2026-07-30  
+> **原始需求**: 从 registry 生成标准 OpenAPI 3.0，新增只读端点 GET /api/openapi.json
+
+---
+
+## 1. 目标
+
+为 extern-api 生成标准 **OpenAPI 3.0.3** 规范文档，通过新增只读端点 `GET /api/openapi.json` 暴露，供 Swagger UI 渲染与 CI 契约校验使用。生成器以现有 `server/catalog/registry.js`（`LAYERS` + `API_PATHS`）为单源真源，不引入第二套描述体系。
+
+**业务指标**：
+- 一次 `GET /api/openapi.json` 即可拿到合法 OpenAPI 3.0.3 JSON，可被 swagger-parser / openapi-generator 等工具直接消费
+- `npm run test:server` 全部通过（新增 + 存量）
+
+---
+
+## 2. 范围条目（精确到文件）
+
+### 2.1 新增文件
+
+| # | 文件路径（相对 extern-api/） | 职责 | AI生成级别 | 优先级 |
+|---|---------------------------|------|-----------|--------|
+| N1 | `server/catalog/openapiGenerator.js` | 从 `registry.js` 的 `LAYERS` + `SERVICE_NAME`/`SERVICE_VERSION` + `API_PATHS` 生成标准 OpenAPI 3.0.3 JSON 对象。纯函数，无副作用，不 import Express。覆盖全部 API_PATHS 条目（含 LAYERS 未注册的 voice/gateway/V2_ROOT/HEALTH），对 LAYERS 已注册条目使用结构化字段（description/auth/parameters），对未注册条目按保守推断补全（method=GET，auth=false，description 来自 API_PATHS key 语义化）。**不修改 LAYERS 结构本身。** | **核心层（需红色记录）** — 生成器定义了 API 契约的对外接口描述，下游 CI/Swagger 依赖其正确性 | P0 |
+| N2 | `server/routes/openapiRoutes.js` | Express Router，仅含一个 GET 路由 `GET /api/openapi.json`，调用 N1 的生成函数，返回 `application/json`。**不依赖 authenticateToken（只读公开端点）**，不加限流（复用 apiLimiter，由 index.js 统一挂载）。 | 普通模块 | P0 |
+| N3 | `server/test/openapi.test.js` | 测试文件，覆盖：① OpenAPI 3.0 结构合法性（`openapi`/`info`/`paths` 字段必在）；② `paths` 覆盖全部 `API_PATHS`（逐条断言）；③ 快照测试（首次运行写入 `__snapshots__/openapi.snapshot.json`，后续对比）；④ 若干关键端点的 method/auth/parameters 校验。 | 普通模块 | P0 |
+
+### 2.2 修改文件
+
+| # | 文件路径（相对 extern-api/） | 改动内容 | 风险等级 | 优先级 |
+|---|---------------------------|---------|---------|--------|
+| M1 | `server/index.js` | 新增 `import openapiRoutes from './routes/openapiRoutes.js'`；在 chatRoutes 之后、releaseRoutes 附近追加 `app.use('/api', apiLimiter, openapiRoutes)`（预估 +2 行）。**不改动现有 import 顺序与已有路由注册。** | 低（纯增量） | P0 |
+
+---
+
+## 3. 显式不做
+
+| 序号 | 不做事项 | 理由 |
+|------|---------|------|
+| X1 | **不修改 `server/routes/chatRoutes.js`** | 热路径文件，受范围约束保护。`GET /api/docs`（`getApiDocsPayload()`）保持原样，不走 OpenAPI 生成器。 |
+| X2 | **不修改 `server/catalog/registry.js` 的 LAYERS 结构** | 避免级联影响 `/v2` 目录与 `GET /api/docs`。voice/gateway 等未注册路径只在生成器侧补全，不反向写入 registry。 |
+| X3 | **不接入 Swagger UI（前端页面）** | 本期只产出 JSON 端点。Swagger UI 页面属于 H2+ 范围（可另立需求）。 |
+| X4 | **不生成 `openapi.yaml` 静态文件** | 优先 JSON 端点（动态生成，无需构建步骤）。YAML 可由 CI 端从 JSON 转换。 |
+| X5 | **不修改 `shared/apiPaths.js`** | 路径单源无需变动；生成器只读引用。 |
+| X6 | **不安装新 npm 依赖** | 生成器自实现，不引入 `swagger-jsdoc` / `openapi-types` 等第三方包。OpenAPI 3.0.3 对象为纯 JS 对象字面量构建。 |
+| X7 | **不对 voice/gateway 端点做深度参数推断** | 这些端点当前不在 LAYERS 中，生成器仅做保守补全（method=GET，auth=false），不做假参数。H2 可扩展。 |
+| X8 | **不修改 `server/test/` 下任何现有测试文件** | 新增测试独立成文件，存量测试零改动。 |
+
+---
+
+## 4. 验收口径（逐条映射需求）
+
+| 需求编号 | 验收条件 | 验收方式 | 对应测试 |
+|---------|---------|---------|---------|
+| ① | `GET /api/openapi.json` 返回 HTTP 200，`Content-Type: application/json`，响应的 `openapi` 字段值为 `"3.0.3"` | 手工 curl + 自动化测试 | N3 测试用例 `GET /api/openapi.json returns valid OpenAPI 3.0` |
+| ① | 响应的 `paths` 对象包含全部 28 条 `API_PATHS`（AUTH_REGISTER / AUTH_LOGIN / AUTH_ME / AUTH_PROFILE / AUTH_PASSWORD / AUTH_REFRESH / CHAT_MESSAGE / CHAT_MESSAGE_STREAM / CHAT_CONVERSATIONS / CHAT_CONVERSATION_BY_ID / VOICE_CAPABILITIES / VOICE_TTS / VOICE_TTS_DOWNLOAD / SYSTEM_STATUS / FAQ_CATEGORIES / FAQ_LIST / FAQ_BY_ID / REPAIR_RECORDS / REPAIR_RECORD_BY_ID / ADMIN_USERS / ADMIN_USER_BY_ID / API_DOCS / RELEASE_MANIFEST / GATEWAY_PLANES / GATEWAY_CONTROL_PLANE / GATEWAY_DATA_PLANE / HEALTH / V2_ROOT） | 自动化测试（逐条 `assert.ok(paths[...])`） | N3 测试用例 `paths covers all API_PATHS entries` |
+| ① | 经 `swagger-parser` 或等效校验（至少 `openapi`/`info`/`paths` 三要素齐全 + `info.title`/`info.version` 非空），不被判为非法 spec | 自动化测试（结构断言） | N3 测试用例 `OpenAPI 3.0 structure is valid` |
+| ② | 快照测试：首次运行生成 `server/test/__snapshots__/openapi.snapshot.json`，后续 `npm run test:server` 对比一致 | 自动化测试（快照比对） | N3 测试用例 `openapi.json matches snapshot` |
+| ③ | `npm run test:server` 全部通过，存量 14 个测试文件无 regressions | CI / 手工执行 | 全量 `node --test server/test/*.test.js` |
+
+---
+
+## 5. 约束引用
+
+| 约束来源 | 内容摘要 | 对本范围的影响 |
+|---------|---------|--------------|
+| `extern-api/README.md` — "结构化文档：GET /api/docs（OpenAPI 从 registry 生成：**规划中，未实现**）" | 已预留规划占位 | 本期就是填这个坑 |
+| `extern-api/doc/重构api架构/README.md` — "后续规划（未实现）：从 registry.js 生成 OpenAPI 规范" | 已标注为规划项 | 同上 |
+| `shared/apiPaths.js` — 28 条路径常量，单源原则 | 路径唯一真源 | 生成器必须覆盖全部 28 条 |
+| `server/catalog/registry.js` — `LAYERS` + `getApiDocsPayload()` + `listImplementedEndpointPaths()` | 结构化 endpoint 元数据 | 生成器复用 LAYERS 元数据，对未注册路径保守补全 |
+| AI 代码生成边界（`ai-code-boundary`） | 核心层代码需红色记录 | `openapiGenerator.js` 属核心层（定义对外 API 契约），同步登记红色记录 |
+| 阶段门禁（`stage-gate-flow`） | 出门必勾 checklist | 本清单即 H1 交付物；证据见 §7 |
+
+---
+
+## 6. 核心模块AI生成红色记录
+
+| 字段 | 内容 |
+|------|------|
+| **模块名** | `server/catalog/openapiGenerator.js` |
+| **变更范围** | 新建文件，~150 行，纯函数从 LAYERS + API_PATHS 生成 OpenAPI 3.0.3 对象 |
+| **风险点** | 1) 路径参数化错误（如 `:id` 路径在 OpenAPI 中需转为 `{id}`）；2) API_PATHS 与 LAYERS 不一致时补全策略失当；3) 快照漂移——registry 增删端点后快照测试需同步更新 |
+| **审查人** | Architect（H2 跳） |
+| **审查结论** | 待 H2 架构审查 |
+| **关联 Prompt 版本** | H1 scope-list（本清单） |
+| **缓解措施** | 1) 生成器统一 `:param` → `{param}` 转换；2) 对 LAYERS 未注册路径使用保守推断（method=GET, auth=false, no parameters），不造假设数据；3) 快照测试失败时提示「请更新快照文件」 |
+
+---
+
+## 7. 风险与依赖
+
+| 风险/依赖 | 影响 | 缓解 |
+|----------|------|------|
+| `API_PATHS` 与 `LAYERS` 存在 7 条路径缺口（voice×3, gateway×3, V2_ROOT） | OpenAPI 生成器需自行补全这些路径的元数据，可能不准确 | 见 §6 缓解措施；缺口路径标记 `x-registry-status: "inferred"`，供 H2 审查 |
+| 路径参数转换（Express `:param` → OpenAPI `{param}`） | 转换遗漏会导致路径不匹配 | 测试逐条校验所有带参数路径 |
+| 快照测试在 registry 变更后失效 | 新增端点会导致快照不匹配，测试变红 | 快照失败信息包含「请更新快照」指引 |
+
+---
+
+## 8. 附录：API_PATHS 覆盖矩阵
+
+| API_PATHS Key | Path | LAYERS 已注册？ | 方法 | Auth |
+|--------------|------|:---:|------|:---:|
+| AUTH_REGISTER | /api/auth/register | ✅ | POST | ✗ |
+| AUTH_LOGIN | /api/auth/login | ✅ | POST | ✗ |
+| AUTH_ME | /api/auth/me | ✅ | GET | ✓ |
+| AUTH_PROFILE | /api/auth/profile | ✅ | PUT | ✓ |
+| AUTH_PASSWORD | /api/auth/password | ✅ | PUT | ✓ |
+| AUTH_REFRESH | /api/auth/refresh | ✅ | POST | ✓ |
+| CHAT_MESSAGE | /api/chat/message | ✅ | POST | ✓ |
+| CHAT_MESSAGE_STREAM | /api/chat/message/stream | ✅ | POST | ✓ |
+| CHAT_CONVERSATIONS | /api/chat/conversations | ✅ | GET | ✓ |
+| CHAT_CONVERSATION_BY_ID | /api/chat/conversations/:id | ✅ | GET/DELETE | ✓ |
+| SYSTEM_STATUS | /api/system/status | ✅ | GET | ✓ |
+| FAQ_CATEGORIES | /api/faq/categories | ✅ | GET | ✗ |
+| FAQ_LIST | /api/faq | ✅ | GET | ✗ |
+| FAQ_BY_ID | /api/faq/:id | ✅ | GET | ✗ |
+| REPAIR_RECORDS | /api/repair-records | ✅ | GET | ✓ |
+| REPAIR_RECORD_BY_ID | /api/repair-records/:id | ✅ | GET/PATCH | ✓ |
+| ADMIN_USERS | /api/admin/users | ✅ | GET | ✓ |
+| ADMIN_USER_BY_ID | /api/admin/users/:id | ✅ | PATCH | ✓ |
+| API_DOCS | /api/docs | ✅ | GET | ✗ |
+| RELEASE_MANIFEST | /api/release/manifest | ✅ | GET | ✗ |
+| HEALTH | /health | ✅ | GET | ✗ |
+| VOICE_CAPABILITIES | /api/voice/capabilities | ❌ | GET | ✓ |
+| VOICE_TTS | /api/voice/tts | ❌ | POST | ✓ |
+| VOICE_TTS_DOWNLOAD | /api/voice/tts/files/:fileName | ❌ | GET | ✓ |
+| GATEWAY_PLANES | /api/gateway/planes | ❌ | GET | ✗ |
+| GATEWAY_CONTROL_PLANE | /api/gateway/control-plane | ❌ | GET | ✗ |
+| GATEWAY_DATA_PLANE | /api/gateway/data-plane | ❌ | GET | ✗ |
+| V2_ROOT | /v2/ | ❌ | GET | ✗ |
+
+> **图例**: ✅ LAYERS 已注册（结构化字段可用） · ❌ 未注册（生成器保守补全，标记 `x-registry-status: inferred`）
+
+---
+
+## 9. 门禁自检
+
+- [x] 每条 P0 均有可执行验收标准（§4）
+- [x] 核心/网关/安全相关条目已触发红色记录流程说明（§6，`openapiGenerator.js` 判定为核心层）
+- [x] 非目标与范围边界已写明，避免隐性蔓延（§3，X1～X8）
+- [x] 当前阶段输入（原始需求）/ 输出（本清单）/ 审核状态（待 H2 Architect）已标明
+- [x] 本阶段 Lesson：尚无不适用，`lesson_hint` 留空
+
+---
+
+---SPLIT---
+
+```yaml
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi
+  stage: H1
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/e2e-openapi/AI代码生成范围清单_registry-openapi.md
+    summary: |
+      新增 openapiGenerator.js（核心层，需红色记录）+ openapiRoutes.js + openapi.test.js，
+      修改 index.js（+2 行）。从 LAYERS + API_PATHS 生成 OpenAPI 3.0.3。
+      显式不做：不改 chatRoutes / registry LAYERS / apiPaths.js / 存量测试，不装新依赖。
+      验收：① GET /api/openapi.json 合法 3.0.3 覆盖 28 条 API_PATHS ② 快照测试 ③ 存量不红。
+  decisions:
+    - "生成器不修改 LAYERS 结构——对 API_PATHS 中未注册的 7 条路径（voice×3, gateway×3, V2_ROOT）采用保守补全策略（method=GET, auth=false, no parameters），标记 x-registry-status: inferred"
+    - "openapiGenerator.js 判定为核心层模块，触发「核心模块AI生成红色记录」，H2 Architect 必须审查"
+    - "不引入新 npm 依赖（如 swagger-jsdoc）——纯 JS 对象字面量构建 OpenAPI 3.0.3"
+    - "GET /api/openapi.json 为只读公开端点，不加 authenticateToken；复用 apiLimiter（在 index.js 统一挂载）"
+    - "路径参数转换规则：Express :param → OpenAPI {param}，由生成器统一处理"
+    - "快照测试策略：首次写入 __snapshots__/openapi.snapshot.json，后续对比；registry 变更后需手动更新快照"
+    - "不生成 YAML 静态文件，不接入 Swagger UI——都属于 H2+ 范围"
+  open_questions:
+    - "voice/gateway 端点当前不在 LAYERS 中——是否需要反向补注册到 registry 以丰富 OpenAPI 元数据？建议 H2 Architect 裁决"
+    - "OpenAPI 的 servers[].url 动态生成（req.hostname + req.protocol）还是固定占位？影响 CI 可移植性"
+    - "是否需要为 chat 相关端点补充 requestBody schema（messages 数组结构）？本清单暂不做，属 H2 扩展"
+    - "V2_ROOT（/v2/）仅作为目录入口——是否在 OpenAPI 中标注为 internal/x-discovery 而非稳定 API？"
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读文件清单（全部原位探查，证据完整）：
+      - D:\trae_git\MechAssist-Fusion\extern-api\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\doc\重构api架构\README.md
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\registry.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\shared\apiPaths.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\chatRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\releaseRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\gatewayRoutes.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\index.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\v2Catalog.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\apiPaths.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\releaseContract.test.js
+      - D:\trae_git\MechAssist-Fusion\extern-api\package.json
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\agents\standard\ProductManager\index.md
+      - D:\trae_git\Agents-Skill-Site\Doc\phase4\02-orchestration-contracts.md
+      - D:\trae_git\Agents-Skill-Site\Code\orchestration\prompts\role-session.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\stage-gate-flow\index.md
+      - D:\trae_git\Agents-Skill-Site\Code\code\docs\zh\skills\custom\common\ai-code-boundary\index.md
+  lesson_hint: ""
+```

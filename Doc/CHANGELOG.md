@@ -1,5 +1,15 @@
 # CHANGELOG — All_URI
 
+## 2026-07-30 — phase4 补记：端到端首跑完成（飞书进、代码出）
+
+- **E2E 首跑**：mechassist-openapi（extern-api registry → OpenAPI 3.0）飞书需求 → H1 pm(pro) → H2 arch(pro)（机制 A，Cursor 侧按契约驱动）→ `invoke-cursor-agent.ps1` 代码跳（机制 B）→ 验收三条**独立复核**全过（端点 200 / `openapi=3.0.3` / 28 路径、快照可复现、全量 43 pass / 1 fail 为既有 vitest 冲突）；证据 `Code/doc/phase4/e2e-openapi/`（H1/H2 交付物 + 双信封 + Goal + 各跳原始输出）
+- **代码跳产物**：extern-api 新增 `server/catalog/openapiGenerator.js`（核心层红色记录）/ `server/routes/openapiRoutes.js` / `server/test/openapi.test.js` + 首次快照，`server/index.js` +2 行；chatRoutes / registry / apiPaths / 存量测试零触碰；H2 四条 open_questions 全部裁决收口（PATH_FALLBACKS / servers 环境变量策略 / chat requestBody / x-discovery）
+- **A/B 实证**：同需求盲跑，main(flash) 单兵版要改 chatRoutes 热路径且无信封；pm(pro)+契约版热路径零触碰、信封/证据/红色记录齐全——分档+契约的约束服从性优势有实据
+- **工具新增**：`Code/orchestration/openclaw/invoke-openclaw-agent.cjs`（node spawn 数组传参，双杀 PS5.1 native argv 引号拆分 + stdout GBK 乱码；后续所有 `openclaw agent` 调起走它）；`invoke-cursor-agent.ps1` 补 WorkDir `.env` 加载（CURSOR_API_KEY 等，已有环境变量优先）
+- **401 故障修复**：deepseek key 三层认证路径补齐（main 隔离 store + 默认 profile + 用户级 setx 持久化）；根因 = `DEEPSEEK_API_KEY` 仅终端会话临时设置未持久化；从 pm store 提取有效 key 直连 provider 验 200 后三处补齐
+- **3 张 raw Lesson**：`operations/mechassist-openapi/lessons/`（PS5.1 argv/stdout 双坑 P2 / cursor-agent node ABI 翻转+残留进程占锁 P2 / 认证三层解剖 P1），待周一 digest 终审
+- **边界诚实**：本次编排由 Cursor 侧人控编排器驱动；**main agent 自编排（SOUL 注入 + exec 派遣下一跳）未验证、已搁置**——`00` §8 验证状态已照此更新
+
 ## 2026-07-30 — phase4 补记：模型分档实例化（pm/arch → deepseek-v4-pro）
 
 - **top 档落地**：`openclaw.json` 中 pm/arch 的 `model` 改为 `deepseek/deepseek-v4-pro`（1000k ctx），Gateway 热加载免重启（pm 冒烟 session Model 列实证）；同 provider 免重注 key；其余角色维持 flash
