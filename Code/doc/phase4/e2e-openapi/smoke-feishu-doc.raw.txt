@@ -1,0 +1,6 @@
+﻿我当前的工具列表中不存在 `feishu_doc` 这个 tool，无法执行 create/write 操作。可能的原因是：
+
+1. **渠道绑定** — 此 Feishu 插件工具仅在 `feishu` 渠道（飞书 bot 回调）上下文中可用，当前会话为 `webchat`，未挂载该工具。
+2. **配置未启用** — 配置文件中 `channels.feishu.tools.doc` 可能未设为 `true`。
+
+**结果：失败。** 无法在当前会话中调用 `feishu_doc`。如需进行冒烟测试，请在飞书私聊中向 bot 发送相同指令，或确认配置后重试。

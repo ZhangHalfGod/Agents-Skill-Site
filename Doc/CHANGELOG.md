@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-30 — phase4 补记：main 飞书云文档能力打通（feishu_doc 五层门禁）
+
+- **能力落地**：main agent 现可在飞书会话中调 `feishu_doc` 创建云文档并写入长 md（action=create → action=write → 回链接）；群聊链路 `owner_open_id` 自动授权发送者，CLI/群聊双冒烟 ✅；`feishu_drive`/`feishu_wiki`/`feishu_chat`/`feishu_app_scopes` 同批可用
+- **五层门禁根因链**（agent 自述"工具未注册" → 逐层实证）：① 插件包 `@openclaw/feishu` 已装（`openclaw plugins list`）② `channels.feishu.tools.doc` 开关 ③ session 工具清单缓存（改配置需清 session）④ **全局 `tools.profile: "coding"` 白名单静默过滤插件工具**（wizard 默认产物；改 `"full"`；该域热加载不接管必须重启 gateway）⑤ 飞书应用 scope（`docx:document` 等 6 个 + **发布新版本**才生效）
+- **沉淀**：raw Lesson `operations/openclaw-orchestration-pilot/lessons/2026-07-30-feishu-doc-five-layer-gates.md`（P2，待周一终审）；openclaw-ops 新增 L3 `docs/plugin-tool-gates.md`（五层门禁表 + CLI 冒烟先行 + 注册门槛实测法）+ 热加载例外坑双语同步；SOUL 草稿（orchestrator-main-soul.draft.md）补「长输出 → 飞书云文档」段
+- **配置变更**（bm 机 `.openclaw/openclaw.json`，备份 `.bak-*` 三份）：`channels.feishu.tools` 显式五开、`tools.profile` coding→full、main 两个陈旧 session 已清；gateway 两次重启（`run --force`）
+
 ## 2026-07-30 — phase4 补记：端到端首跑完成（飞书进、代码出）
 
 - **E2E 首跑**：mechassist-openapi（extern-api registry → OpenAPI 3.0）飞书需求 → H1 pm(pro) → H2 arch(pro)（机制 A，Cursor 侧按契约驱动）→ `invoke-cursor-agent.ps1` 代码跳（机制 B）→ 验收三条**独立复核**全过（端点 200 / `openapi=3.0.3` / 28 路径、快照可复现、全量 43 pass / 1 fail 为既有 vitest 冲突）；证据 `Code/doc/phase4/e2e-openapi/`（H1/H2 交付物 + 双信封 + Goal + 各跳原始输出）

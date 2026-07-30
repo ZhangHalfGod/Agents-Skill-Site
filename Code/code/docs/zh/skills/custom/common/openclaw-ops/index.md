@@ -19,6 +19,7 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 - [ ] 先 `openclaw health` + `openclaw doctor` 拿整体状态（勿凭猜）
 - [ ] cron error：按 [三步排查法](./docs/cron-troubleshooting.md) 定位，先看 `lastError` 再动手
 - [ ] Gateway 掉线（18789 无监听）：`openclaw gateway run --force` 拉起；反复掉线评估 `openclaw gateway install` 服务化
+- [ ] 插件工具"未注册"自述：按 [五层门禁排查](./docs/plugin-tool-gates.md) 逐层验，别信 agent 自述
 - [ ] 改配置后确认 `openclaw doctor` 无新增告警
 
 ## 已知坑（bm 实证）
@@ -27,7 +28,7 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 - `cron get/run/edit` 只认 job **UUID** 不认名字（`cron list` 第一列）
 - 同 session 内 agent 中断后续跑有效（重发消息会继续而非重来，2026-07-29 试点实证）
 - **`openclaw gateway restart` 在 Windows 报 `Unknown signal: SIGUSR1`**：restart 走 launchd/systemd/schtasks 服务化路径（Unix 设计），Windows 上不可用；要重启用 `gateway run --force`（2026-07-30 实证）
-- 改 `openclaw.json`（如 `agents.list[].model`）**Gateway 热加载免重启**（2026-07-30 实证，pm 换 pro 后 session Model 列即变）
+- 改 `openclaw.json`（如 `agents.list[].model`）**Gateway 热加载免重启**（2026-07-30 实证，pm 换 pro 后 session Model 列即变）；**例外：`tools.profile` 热加载不接管**（日志只 `evaluating reload` 无 applied），必须重启 gateway（同日实证）
 - Windows PowerShell 5.1 读仓内文本必须 `-Encoding UTF8`：见 [powershell-utf8](../powershell-utf8/index.md)
 
 ## 分层正文（按需 @）
@@ -36,6 +37,7 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 |------|------|----------|
 | L2 本页 | `docs/zh/skills/custom/common/openclaw-ops/index.md` | 默认清单 |
 | L3 cron 排查 | [cron error 三步排查法](./docs/cron-troubleshooting.md) | cron error / 投递异常时 |
+| L3 插件工具排查 | [插件工具五层门禁](./docs/plugin-tool-gates.md) | agent 自述工具"未注册"时 |
 
 ## 关联角色（矩阵反向）
 

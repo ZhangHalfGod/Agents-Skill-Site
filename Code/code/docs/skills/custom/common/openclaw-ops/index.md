@@ -18,6 +18,7 @@ Ops runbook for the bm OpenClaw deployment (Gateway + named agents + cron + Feis
 - [ ] Start with `openclaw health` + `openclaw doctor` — never guess
 - [ ] Cron errors: follow the three-step diagnosis (read `lastError` before acting)
 - [ ] Gateway down (nothing listening on 18789): `openclaw gateway run --force`; for recurring drops consider `openclaw gateway install` as a service
+- [ ] Plugin tool "not registered" claims: follow the five-gate diagnosis (see zh L3 doc `plugin-tool-gates.md`) — never trust the agent's self-report; check gateway log for `removed ... via tools.profile (coding)` (global profile allowlist silently filters plugin tools; `tools.profile` changes need a gateway restart, hot reload does not apply)
 - [ ] After config changes, re-run `openclaw doctor` and check for new warnings
 
 ## Known gotchas (bm-verified)
@@ -26,7 +27,7 @@ Ops runbook for the bm OpenClaw deployment (Gateway + named agents + cron + Feis
 - `cron get/run/edit` require the job UUID (first column of `cron list`), not the name
 - Within one session, an interrupted agent resumes on resend instead of starting over (pilot-verified 2026-07-29)
 - `openclaw gateway restart` fails on Windows with `Unknown signal: SIGUSR1` (service path is Unix-only); use `gateway run --force` to restart (verified 2026-07-30)
-- Editing `openclaw.json` (e.g. `agents.list[].model`) hot-reloads — no gateway restart needed (verified 2026-07-30)
+- Editing `openclaw.json` (e.g. `agents.list[].model`) hot-reloads — no gateway restart needed (verified 2026-07-30); **exception: `tools.profile` is not hot-reloadable** (log shows only `evaluating reload`, never applied) — restart the gateway
 - PowerShell 5.1 must pass `-Encoding UTF8` when reading repo text — see powershell-utf8
 
 Source Lesson: `docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-cron-error-model-snapshot-diag.md` (merged)
