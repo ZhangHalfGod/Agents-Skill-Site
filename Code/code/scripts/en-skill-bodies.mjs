@@ -25,6 +25,8 @@ Ops runbook for the bm OpenClaw deployment (Gateway + named agents + cron + Feis
 - Occasional CLI \`1006 abnormal closure\`: \`openclaw agent\` falls back to embedded automatically; for commands without fallback, retry once before investigating the Gateway
 - \`cron get/run/edit\` require the job UUID (first column of \`cron list\`), not the name
 - Within one session, an interrupted agent resumes on resend instead of starting over (pilot-verified 2026-07-29)
+- \`openclaw gateway restart\` fails on Windows with \`Unknown signal: SIGUSR1\` (service path is Unix-only); use \`gateway run --force\` to restart (verified 2026-07-30)
+- Editing \`openclaw.json\` (e.g. \`agents.list[].model\`) hot-reloads — no gateway restart needed (verified 2026-07-30)
 - PowerShell 5.1 must pass \`-Encoding UTF8\` when reading repo text — see powershell-utf8
 
 Source Lesson: \`docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-cron-error-model-snapshot-diag.md\` (merged)

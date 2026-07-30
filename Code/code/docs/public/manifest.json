@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T03:15:31.491Z",
+  "generatedAt": "2026-07-30T03:16:28.188Z",
   "contentRoot": "docs/zh",
   "standardsRoot": "docs/zh",
   "note": "SoT=本仓 docs/zh/**；英文 root 为 stub；agents + skills 1～13 + rules；domains 灰度",
@@ -396,6 +396,6 @@
   ],
   "domains": {},
   "contentHash": "6029dcd3053d9df9",
-  "validatedAt": "2026-07-30T03:15:32.045Z",
+  "validatedAt": "2026-07-30T03:16:28.740Z",
   "validateOk": true
 }
