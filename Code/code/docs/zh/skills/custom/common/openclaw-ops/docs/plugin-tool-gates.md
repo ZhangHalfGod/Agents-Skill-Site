@@ -24,3 +24,15 @@ agent 自述"工具未在运行上下文注册"时，它**只能看到最终工�
 
 - scope 清单（插件 SKILL.md 官方列出）：`docx:document`、`docx:document:readonly`、`docx:document.block:convert`、`drive:drive`(+`:readonly`)；另加 `contact:contact.base:readonly` 消除 sender 名字解析 400 噪音
 - 群聊链路：bot 建文档后 `owner_open_id` 会把完全访问权限授给@它的用户——回链接后让用户点开确认
+
+## 打通之后的运行时权限两层（同日 folder 落地实证）
+
+工具注册成功 ≠ 调用成功。调用期还有两层，报错均为 403 但层不同：
+
+| 层 | 特征 | 修法 |
+|----|------|------|
+| 应用 API scope | `feishu_app_scopes` 自查列表里缺 scope | 开发者后台补勾 + **发布新版本**（不发布不生效；补 scope 后旧版本不含） |
+| 资源级 ACL（文件夹/文档协作者） | scope 已齐仍 403 | 把资源分享给 bot：**加「群聊」为协作者最稳**（bot 作为群成员继承权限；直接搜机器人名可能搜不到）；文件夹链接范围保持「仅协作者可访问」即可，与 API 访问无关 |
+
+- 产出落盘约定：`feishu_doc create` 带 `folder_token`（bm：`MOLOfJVErlIgrOdVxSHcacD0nrf`「OpenClaw 产出」），不带则落到应用根目录（事后可 `feishu_drive move` 补救）
+- `feishu_drive` list 的 `page_size` 大值暂不支持，20 可用（插件 quirks）

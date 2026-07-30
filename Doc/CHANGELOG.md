@@ -6,6 +6,8 @@
 - **五层门禁根因链**（agent 自述"工具未注册" → 逐层实证）：① 插件包 `@openclaw/feishu` 已装（`openclaw plugins list`）② `channels.feishu.tools.doc` 开关 ③ session 工具清单缓存（改配置需清 session）④ **全局 `tools.profile: "coding"` 白名单静默过滤插件工具**（wizard 默认产物；改 `"full"`；该域热加载不接管必须重启 gateway）⑤ 飞书应用 scope（`docx:document` 等 6 个 + **发布新版本**才生效）
 - **沉淀**：raw Lesson `operations/openclaw-orchestration-pilot/lessons/2026-07-30-feishu-doc-five-layer-gates.md`（P2，待周一终审）；openclaw-ops 新增 L3 `docs/plugin-tool-gates.md`（五层门禁表 + CLI 冒烟先行 + 注册门槛实测法）+ 热加载例外坑双语同步；SOUL 草稿（orchestrator-main-soul.draft.md）补「长输出 → 飞书云文档」段
 - **配置变更**（bm 机 `.openclaw/openclaw.json`，备份 `.bak-*` 三份）：`channels.feishu.tools` 显式五开、`tools.profile` coding→full、main 两个陈旧 session 已清；gateway 两次重启（`run --force`）
+- **Gateway 服务化落地**：`openclaw gateway install` 创建 schtasks 计划任务「OpenClaw Gateway」（`gateway.vbs` 隐藏窗口 + 登录自启），替代裸终端 `run --force`；实证服务化后 `gateway start/stop/status/restart` 全可用（restart ~58s）——**修正 openclaw-ops 此前「restart 在 Windows 不可用」的表述**（真条件 = 未服务化时）；WMI 裸起会带可见 conhost 窗口，勿用
+- **产出落盘约定落地**：共享文件夹「OpenClaw 产出」（`folder_token=MOLOfJVErlIgrOdVxSHcacD0nrf`）经「群聊协作者（可编辑）」授权 bot；约定写入线上 main SOUL.md（即时生效）+ 仓内 SOUL 草稿（防部署回退）；smoke 终验 `create 带 folder_token` 建文档落盘正确 ✅；运行时权限两层（scope 发布才生效 / 资源 ACL 加群聊最稳）补入 openclaw-ops L3；冒烟期两篇无 folder_token 的文档遗留应用根目录（可 `feishu_drive move` 补救，未动）
 
 ## 2026-07-30 — phase4 补记：端到端首跑完成（飞书进、代码出）
 

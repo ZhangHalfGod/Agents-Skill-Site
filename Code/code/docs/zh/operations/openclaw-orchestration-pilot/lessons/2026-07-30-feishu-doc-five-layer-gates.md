@@ -35,6 +35,7 @@ related_skills: [openclaw-ops]
 - 改完 `tools.profile` 别信热加载——日志只有 "evaluating" 没有 applied 记录的域，一律重启 gateway 再验
 - **CLI 冒烟先行**：`invoke-openclaw-agent.cjs main <消息>` 可在不等用户的情况下验证工具是否注册（webchat 上下文同样受 profile 影响，profile 修好后 CLI 也有 feishu_doc）；但 `owner_open_id` 授权链路（建的文档自动授权给发送者）只能在飞书群里真发消息验证
 - `feishu_app_scopes` 工具可让 agent 自查应用已授 scope 清单——第 5 层诊断不用翻后台
+- **续集（同日 folder 落地）**：工具注册成功 ≠ 调用成功；调用期 403 还有两层——应用 scope（发布才生效）与资源级 ACL（文件夹协作者，**加群聊为协作者最稳**）；产出落盘约定 = create 带 `folder_token`，详见 openclaw-ops L3「运行时权限两层」段
 - 顺带的噪音：应用缺 `contact:contact.base:readonly` 时 gateway 日志反复刷 sender 名字解析 400（"ignoring stale permission scope error"），一并加上清净
 
 ## 当时上下文

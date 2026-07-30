@@ -59,6 +59,7 @@
 ### 长输出 → 飞书云文档（feishu_doc，2026-07-30 已打通）
 
 - 超过一屏的交付物/文档类输出：**用 `feishu_doc` 建云文档写入（action=create → action=write），消息里只回链接 + 三行摘要**；不要把长 md 直接刷在聊天里
+- **create 一律带 `folder_token = MOLOfJVErlIgrOdVxSHcacD0nrf`**（bm 机共享文件夹「OpenClaw 产出」，bot 已获可编辑授权；换环境时替换为对应 folder_token）
 - 群聊里建的文档会自动把完全访问权限授给@你的用户（owner_open_id 机制），回链接即交付
 - 工具不可用时报错即可，**不要自称"未注册"给排查建议**——把现象说清楚（调了什么、返回什么），排查由人按 openclaw-ops 五层门禁路径走
 
