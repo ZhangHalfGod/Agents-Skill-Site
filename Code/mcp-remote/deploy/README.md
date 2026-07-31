@@ -11,7 +11,10 @@
 | 探活 | `http://<PUBLIC_HOST>/agents-skill-mcp/healthz`（无 Token） |
 | MCP | `http://<PUBLIC_HOST>/agents-skill-mcp/mcp`（Bearer） |
 | 索引 | 默认 `MANIFEST_PATH` → 本仓 `Code/code/docs/public/manifest.json`（与静态站同源 generate） |
+| 正文 | `get_source_text` 读 `DOCS_ROOT`（默认 manifest 上一级 = `Code/code`）；须与站同源 `docs/zh|en` |
 | 密钥 | 仅服务器 `.env`；**禁止**提交真实 Token |
+
+拉取含 SF-HS 的代码后务必 `pm2 restart agents-skill-mcp-remote`，再用客户端 probe 确认工具列表含 **`get_source_text`**（共 10 个只读工具）。
 
 `<PUBLIC_HOST>` = Nginx `server_name`（公网 IP 或域名）。用 `127.0.0.1` 测 Nginx 时须加 `-H 'Host: <PUBLIC_HOST>'`，否则易进 `default` 得假 404。详见 [07-deploy §6](../../doc/phase1/07-deploy.md)。
 

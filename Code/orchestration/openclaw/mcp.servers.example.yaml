@@ -1,30 +1,22 @@
-# mcp.servers.example.yaml — MCP 服务挂进 OpenClaw 样例（四期 4B）
-# 对应契约：Doc/phase4/04-tool-registration.md
-# ⚠ `mcp.servers` 确切键名结构「待验证」：Home 机挂 mcp-gaode 已走通，但配置文件
-#   键名以部署侧实测为准；本文件表达意图，不是已验证语法。
-# 密钥纪律：值只放 ~/.openclaw/.env 或部署侧 env；本文件只出现 *_env 键名。
+# mcp.servers.example.yaml — MCP 挂进 OpenClaw 样例（四期 · SF-HS）
+# 对应：Doc/phase4/04-tool-registration.md · 06-single-facade-hop-snapshot.md
+# 密钥纪律：值只放 ~/.openclaw/.env 或 CLI --header；本文件只出现占位。
+# 推荐挂接（已验证字段意图）：
+#   openclaw mcp add agents-skill-remote \
+#     --transport streamable-http \
+#     --url "http://<PUBLIC_HOST>/agents-skill-mcp/mcp" \
+#     --header "Authorization=Bearer <MCP_TOKEN>"
 
 mcp:
   servers:
-    agents-skill-remote:             # 本仓只读索引（9 tools：health/list_*/get_*/resolve_number/validate/refresh_catalog）
-      transport: http
-      url: "http://127.0.0.1:3921/mcp"           # R1 本机；公网用 http(s)://<PUBLIC_HOST>/agents-skill-mcp/mcp
+    agents-skill-remote:
+      transport: streamable-http
+      url: "http://<PUBLIC_HOST>/agents-skill-mcp/mcp"
+      # 或 header Authorization=Bearer …（CLI --header）
       auth:
         type: bearer
         token_env: "MCP_TOKEN"
 
-    mcp-gaode:                       # 出行/天气（自建 HTTP：GET /capabilities + POST /tools/call）
-      transport: http
-      url: "http://<部署侧地址>/tools/call"
-      capabilities_url: "http://<部署侧地址>/capabilities"
-      auth:
-        type: header
-        key_env: "AMAP_WEB_SERVICE_KEY"
-
-    mcp-faq:                         # 机械 FAQ（同构）
-      transport: http
-      url: "http://<部署侧地址>/tools/call"
-      capabilities_url: "http://<部署侧地址>/capabilities"
-
-# 只读纪律：本文件挂入的服务均不写文件、不记 Lesson、不部署。
-# 需要改业务仓 → 走机制 B（Cursor CLI headless，见 Doc/phase4/03 §3）。
+# 本流水线不挂 mcp-gaode / mcp-faq。
+# 本机 127.0.0.1:3921 为后续另一条路，当前编排统一公网。
+# 只读纪律：含 get_source_text；不写文件、不记 Lesson、不部署。

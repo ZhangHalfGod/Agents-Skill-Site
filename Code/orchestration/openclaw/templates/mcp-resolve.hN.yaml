@@ -1,0 +1,22 @@
+# 模板：复制为 <run-dir>/mcp-resolve-h1.yaml / mcp-resolve-h2.yaml / mcp-resolve-h3.yaml
+# 来源：角色自查 agents-skill-remote；禁止写入任何 token
+mcp_resolve:
+  scheme: single-facade-mcp+hop-snapshot
+  from_hop: H2
+  queried_at: "2026-07-31T00:00:00+08:00"
+  endpoint: "http://<PUBLIC_HOST>/agents-skill-mcp/mcp"
+  health:
+    ok: true
+    dataSource: ""
+    contentHash: ""
+  agents:
+    - id: Architect
+      source: docs/zh/agents/standard/Architect/index.md
+      contentHash: ""
+  skills:
+    - id: stage-gate-flow
+      source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+      contentHash: ""
+  bind_note: |
+    正文已由 get_source_text 拉取并摘入 playbook-pack-hN.md。
+    Cursor 侧禁止再调 MCP；只消费 Goal 内 Playbook Pack。

@@ -1,0 +1,39 @@
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi-voice
+  stage: requirements
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/run-openapi-voice-20260731/h1-pm.scope-checklist.md
+    summary: |
+      范围：registry.js 新增 voice 模块(chat层)+getApiDocsPayload 顶层 openapi 字段；
+      openapiGenerator.js PATH_FALLBACKS 移除 voice 三键 xNote；
+      openapi.test.js 适配 VOICE_TTS 断言 + 快照更新。
+      显式不做：不改 chatRoutes/voiceTtsService/apiPaths/index.js/openapiRoutes 生成器核心。
+      验收：①②③④⑤ 逐条映射到条目 A1/A2/M1-M6（共 5 验收项 9 改动条目）。
+
+  decisions:
+    - voice 模块挂 chat 层（slug=chat），与 chatRoutes.js 物理归属一致，auth 设为 true（与 authenticateToken 中间件一致）
+    - voice 在 LAYERS 注册后 PATH_FALLBACKS 不再作为真源（collectLayerEndpoints 优先命中 LAYERS）；fallback 中移除 xNote 但保留其余字段作为安全网
+    - 发现面增加 OpenAPI 入口采用双路径：getApiDocsPayload 顶层加 openapi 字段 + system/docs 模块加两个端点
+    - /api/openapi.json 和 /api/openapi.yaml 均为 auth:false（与 openapiRoutes.js 实现一致，无需认证）
+    - 不改 openapiGenerator 核心生成逻辑；不改 chatRoutes 热路径
+
+  open_questions:
+    - PATH_FALLBACKS 中 voice 三键在 LAYERS 注册后是否需要完全删除（当前方案保留为安全网，H2 可决定）
+    - A3（system/docs 下加 OpenAPI 端点）是否为必须——如果 A2 顶层字段已满足验收①，A3 可降为 P2 或取消
+    - voice TTS POST 的 parameters 在 LAYERS 中应包含哪些字段（当前 PATH_FALLBACKS 写 { text, voice, speed }；chatRoutes handler 实际使用 body.text / body.conversationId / body.messageId / body.save）——H2 需对齐真实入参
+
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读：registry.js / openapiGenerator.js / chatRoutes.js(voice) / index.js / openapiRoutes.js / v2Catalog.js / apiPaths.js / openapi.test.js / v2Catalog.test.js / doc/重构api架构/README.md / README.md
+      LAYERS 缺失 voice 模块：已确认
+      PATH_FALLBACKS xNote 与代码不符：已确认
+      getApiDocsPayload 无 openapi 字段：已确认
+      openapiRoutes 已实现但未注册到发现面：已确认
+      collectLayerEndpoints 控制流（命中 LAYERS → continue 不触 fallback）：已阅读确认
+      chatRoutes voice handler 挂 authenticateToken：已确认
+
+  lesson_hint: ""

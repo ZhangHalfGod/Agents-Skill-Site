@@ -53,6 +53,7 @@ async function main() {
     'get_agent',
     'list_skills',
     'get_skill',
+    'get_source_text',
     'list_rules',
     'resolve_number',
     'validate'
@@ -79,6 +80,19 @@ async function main() {
   const agentList = JSON.parse(agents.content?.[0]?.text || '[]')
   assert(Array.isArray(agentList) && agentList.length >= 1, 'list_agents empty')
   console.log('OK list_agents count=', agentList.length)
+
+  const src = await client.callTool({
+    name: 'get_source_text',
+    arguments: { kind: 'skill', id: 'stage-gate-flow', maxChars: 800 }
+  })
+  const srcBody = JSON.parse(src.content?.[0]?.text || '{}')
+  assert(srcBody.ok === true && typeof srcBody.text === 'string', 'get_source_text failed')
+  assert(srcBody.source?.includes('stage-gate'), 'get_source_text source unexpected')
+  console.log('OK get_source_text', {
+    source: srcBody.source,
+    chars: srcBody.chars,
+    truncated: srcBody.truncated
+  })
 
   await client.close()
   console.log('SMOKE PASS')

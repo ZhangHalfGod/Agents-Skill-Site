@@ -1,15 +1,20 @@
 /**
  * 二期 catalog API — 只读消费 manifest（本地 PATH 或远程 URL）
  * 约束：Doc/phase2/01-mcp-server-plan.md、Doc/phase2/02-remote-manifest.md
+ * 四期 SF-HS：getSourceText 只读返回 docs 正文（仍禁止写）
  */
 import fs from 'node:fs'
 import path from 'node:path'
+import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PUBLIC_DIR = path.resolve(__dirname, '../docs/public')
 const DEFAULT_MANIFEST = path.join(PUBLIC_DIR, 'manifest.json')
+/** Code/code — source 形如 docs/zh/... 相对此根 */
+const DEFAULT_DOCS_ROOT = path.resolve(__dirname, '..')
 const DEFAULT_TTL_MS = 60_000
+const DEFAULT_SOURCE_MAX_CHARS = 48_000
 
 /** @type {{ manifest: object, loadedAt: number, source: string } | null} */
 let cache = null
@@ -42,6 +47,66 @@ export function resolveCatalogBaseUrl() {
   } catch {
     return null
   }
+}
+
+/** 正文根目录：DOCS_ROOT > MANIFEST_PATH 的上一级（public→code）> 默认 Code/code */
+export function resolveDocsRoot() {
+  if (process.env.DOCS_ROOT?.trim()) {
+    return path.resolve(process.env.DOCS_ROOT.trim())
+  }
+  if (process.env.MANIFEST_PATH?.trim()) {
+    return path.resolve(path.dirname(path.resolve(process.env.MANIFEST_PATH)), '..')
+  }
+  if (!resolveManifestUrl()) {
+    return DEFAULT_DOCS_ROOT
+  }
+  return DEFAULT_DOCS_ROOT
+}
+
+/** 可选：无本地文件时按 CONTENT_BASE_URL + source 拉取（勿含密钥） */
+export function resolveContentBaseUrl() {
+  const u = process.env.CONTENT_BASE_URL?.trim()
+  return u ? u.replace(/\/$/, '') : null
+}
+
+/**
+ * @param {string} raw
+ * @returns {{ ok: true, source: string } | { ok: false, error: string, message: string }}
+ */
+export function normalizeSourcePath(raw) {
+  if (raw == null || String(raw).trim() === '') {
+    return { ok: false, error: 'BAD_SOURCE', message: '需要 source 或可解析的 id' }
+  }
+  let s = String(raw).trim().replace(/\\/g, '/')
+  if (s.startsWith('./')) s = s.slice(2)
+  if (s.startsWith('/')) s = s.slice(1)
+  if (s.includes('\0') || s.split('/').some((p) => p === '..')) {
+    return { ok: false, error: 'BAD_SOURCE', message: 'source 含非法路径段' }
+  }
+  if (!/^docs\/(zh|en)\//.test(s)) {
+    return {
+      ok: false,
+      error: 'BAD_SOURCE',
+      message: 'source 必须在 docs/zh/ 或 docs/en/ 下'
+    }
+  }
+  if (!s.endsWith('.md')) {
+    return { ok: false, error: 'BAD_SOURCE', message: 'source 须为 .md 文件' }
+  }
+  return { ok: true, source: s }
+}
+
+async function fetchText(url) {
+  const res = await fetch(url, {
+    headers: { Accept: 'text/plain, text/markdown, */*' },
+    signal: AbortSignal.timeout(20_000)
+  })
+  if (!res.ok) {
+    const err = new Error(`FETCH_FAIL: HTTP ${res.status} for ${url}`)
+    err.code = 'FETCH_FAIL'
+    throw err
+  }
+  return res.text()
 }
 
 function cacheTtlMs() {
@@ -264,6 +329,112 @@ export function createCatalogApi(m) {
       })()
     },
 
+    /**
+     * 只读返回 SoT 正文（Single-Facade MCP）。
+     * 入参：source，或 kind+id（agent|skill|rule）解析 source。
+     */
+    getSourceText({ source, kind, id, maxChars } = {}) {
+      return (async () => {
+        let resolved = source
+        let resolvedVia = source ? 'source' : null
+        if (!resolved && id && kind) {
+          const k = String(kind).toLowerCase()
+          if (k === 'agent' || k === 'role') {
+            const a = await api.getAgent({ id })
+            if (a.error) return a
+            resolved = a.source
+            resolvedVia = `agent:${a.id}`
+          } else if (k === 'skill') {
+            const s = await api.getSkill({ id })
+            if (s.error) return s
+            resolved = s.source
+            resolvedVia = `skill:${s.id}`
+          } else if (k === 'rule') {
+            const rules = await api.listRules({})
+            const r = (rules || []).find(
+              (x) => x.name === id || x.title === id || x.source?.endsWith(`/${id}`)
+            )
+            if (!r) return { error: 'NOT_FOUND', kind: 'rule', id }
+            resolved = r.source
+            resolvedVia = `rule:${r.name || id}`
+          } else {
+            return {
+              error: 'BAD_KIND',
+              message: 'kind 须为 agent|skill|rule（或直接传 source）'
+            }
+          }
+        }
+
+        const norm = normalizeSourcePath(resolved)
+        if (!norm.ok) return { error: norm.error, message: norm.message }
+
+        const capRaw = Number(maxChars)
+        const cap =
+          Number.isFinite(capRaw) && capRaw > 0
+            ? Math.min(Math.floor(capRaw), 200_000)
+            : Number(process.env.SOURCE_MAX_CHARS) > 0
+              ? Math.min(Number(process.env.SOURCE_MAX_CHARS), 200_000)
+              : DEFAULT_SOURCE_MAX_CHARS
+
+        const docsRoot = resolveDocsRoot()
+        const abs = path.resolve(docsRoot, ...norm.source.split('/'))
+        const rootResolved = path.resolve(docsRoot)
+        const relToRoot = path.relative(rootResolved, abs)
+        if (
+          !relToRoot ||
+          relToRoot.startsWith('..') ||
+          path.isAbsolute(relToRoot)
+        ) {
+          return { error: 'BAD_SOURCE', message: 'source 越界' }
+        }
+
+        let text = null
+        let dataOrigin = null
+        if (fs.existsSync(abs) && fs.statSync(abs).isFile()) {
+          text = fs.readFileSync(abs, 'utf8')
+          dataOrigin = `file:${abs}`
+        } else {
+          const base = resolveContentBaseUrl()
+          if (base) {
+            try {
+              text = await fetchText(`${base}/${norm.source}`)
+              dataOrigin = `url:${base}/${norm.source}`
+            } catch (e) {
+              return {
+                error: 'NOT_FOUND',
+                message: `本地无文件且 CONTENT_BASE_URL 拉取失败: ${e.message}`,
+                source: norm.source
+              }
+            }
+          } else {
+            return {
+              error: 'NOT_FOUND',
+              message:
+                '正文文件不存在；部署侧请保证 DOCS_ROOT 含 docs/**，或设 CONTENT_BASE_URL',
+              source: norm.source,
+              docsRoot
+            }
+          }
+        }
+
+        const hash = crypto.createHash('sha256').update(text, 'utf8').digest('hex').slice(0, 16)
+        const truncated = text.length > cap
+        const outText = truncated ? text.slice(0, cap) : text
+        return {
+          ok: true,
+          source: norm.source,
+          resolvedVia,
+          chars: outText.length,
+          totalChars: text.length,
+          truncated,
+          maxChars: cap,
+          contentHash: hash,
+          dataOrigin,
+          text: outText
+        }
+      })()
+    },
+
     listRules({ level } = {}) {
       return (async () => {
         const manifest = m || (await loadManifest())
@@ -393,9 +564,24 @@ if (isMain) {
         n: process.argv[4] || 2
       })
     else if (cmd === 'validate') out = await api.validate()
+    else if (cmd === 'get_source_text') {
+      const a3 = process.argv[3]
+      if (a3 && String(a3).replace(/\\/g, '/').startsWith('docs/')) {
+        out = await api.getSourceText({
+          source: a3,
+          maxChars: process.argv[4] ? Number(process.argv[4]) : undefined
+        })
+      } else {
+        out = await api.getSourceText({
+          kind: a3,
+          id: process.argv[4],
+          maxChars: process.argv[5] ? Number(process.argv[5]) : undefined
+        })
+      }
+    }
     else {
       console.error(
-        'usage: node mcp/catalog-api.mjs health|refresh|list_agents|get_agent|…'
+        'usage: node mcp/catalog-api.mjs health|refresh|list_agents|get_agent|get_source_text|…'
       )
       process.exit(1)
     }

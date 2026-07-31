@@ -177,6 +177,14 @@
 
 > 历史条目保持原样；若结论被推翻，新增条目并写明「废止/取代：YYYY-MM-DD-xx」。
 
+### 2026-07-31-01｜Single-Facade MCP + Hop Snapshot（正文只读进 MCP；Cursor 吃快照）
+
+- **背景**：编排要统一公网 MCP、角色自查；Cursor 侧 MCP 触发不稳；又不希望 OpenClaw/Cursor 依赖本机 Site 路径读说明书。  
+- **选项**：A) Cursor/OpenClaw 读本机绝对路径；B) HTTP 爬站点正文；C) MCP 增只读 `get_source_text` + 派 Cursor 前 Playbook Pack 跳界快照。  
+- **结论**：**选 C（SF-HS）**。磁盘 `docs/**` 仍为 SoT；MCP 仍禁止写；允许只读返回正文。Hop Snapshot 不是第二数据源，是跳边界序列化。本流水线不挂 gaode/faq；本机 3921 延后。  
+- **约束落地**：§2 发现层可经 MCP 交付只读正文；§3.2「MCP 不替网站」不废止（人仍逛站）；§3.2 写工具禁令不变。  
+- **影响**：`Code/code/mcp/catalog-api.mjs`、`Code/mcp-remote`、`Doc/phase4/04`/`06`、main SOUL v1.3、`Code/orchestration/openclaw/templates/`。
+
 ### 2026-07-29-01｜四期启动：跨项目记忆复用 + OpenClaw 编排总线契约（运行时外置）
 
 - **背景**：亮点文档优先级①②进入开发：Lesson 按项目隔离导致跨项目重复踩坑；角色接力靠手动 `@` 断链多。  

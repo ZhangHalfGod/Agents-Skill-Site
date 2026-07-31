@@ -63,7 +63,12 @@ MCP_TOKEN=change-me-local-token npm run smoke
 | `MANIFEST_URL` | 远程索引 | 见 `.env.example` |
 | `MANIFEST_PATH` | 本地 manifest（无 URL 时） | `Code/code/docs/public/manifest.json` |
 | `CACHE_TTL_MS` | 缓存 TTL | `60000` |
+| `DOCS_ROOT` | `get_source_text` 正文根（含 `docs/zh|en`） | 同 `MANIFEST_PATH` 上一级或仓内 `Code/code` |
+| `CONTENT_BASE_URL` | 无本地文件时可选拉正文 | — |
+| `SOURCE_MAX_CHARS` | 正文默认截断 | `48000` |
 | `ALLOWED_HOSTS` | 可选；逗号分隔 Host 白名单（Nginx 已改写 Host 时通常不需要） | — |
+
+只读工具含 **`get_source_text`**（SF-HS 单门面正文）。部署后需重启 PM2 进程才对公网生效。
 
 ## 布局
 

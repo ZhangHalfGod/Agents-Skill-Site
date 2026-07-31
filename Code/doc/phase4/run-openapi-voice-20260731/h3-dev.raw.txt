@@ -1,0 +1,28 @@
+# H3 代码跳 · DevLead 原始输出（invoke-cursor-agent.ps1，chatId=ec44eaa0-b3b4-4890-953f-f9274991705e，exitCode=0）
+
+## 当前进度
+已完成 A1/A2/M1–M3/M5/M6：chat 层注册 voice×3（auth:true）、getApiDocsPayload 增加 openapi 顶层字段、PATH_FALLBACKS voice 仅去 xNote、VOICE_TTS 测试与快照已对齐 LAYERS。HTTP 验收：/api/docs 含 openapi、/v2/chat/voice 三条 implemented、openapi.json 无 x-note/inferred。
+
+## 下一步计划
+A3（system/docs 挂 openapi 纯字符串 path）已跳过：会破坏存量 apiPaths.test.js（path?API_PATHS），与「无新失败」冲突；A2 已满足验收①。全量服务因 better-sqlite3 ABI 无法启动（禁 rebuild，已上报）。
+
+## 本次结果摘要
+
+### 改动文件清单
+- server/catalog/registry.js — A1 voice 模块；A2 openapi:{json,yaml}
+- server/catalog/openapiGenerator.js — PATH_FALLBACKS voice×3 删除 xNote
+- server/test/openapi.test.js — VOICE_TTS 断言改为 LAYERS/auth/requestBody
+- server/test/__snapshots__/openapi.snapshot.json — voice 三条转 LAYERS 元数据
+
+### 测试/验收摘要
+- baseline / 实施后全量：pass 43 / fail 7（与 baseline 同类环境失败，无新失败；OpenAPI 16/16 ✅）
+- 全量 node server/server.js：sqlite ABI 失败（NODE 127 vs 137）— 禁 rebuild，未修
+- 临时发现面服务：data.openapi 正确；voice×3 auth+implemented；openapi=3.0.3、x-generator=mechassist-openapi；voice 无 x-note/inferred；已按 PID 结束
+- git status --porcelain 本跳相关 ⊆ 白名单 4 文件
+
+### 红色记录
+- server/catalog/registry.js：LAYERS+voice×3；docs payload+openapi；风险 auth/parameters 与 handler 漂移；对齐 chatRoutes 解构；通过
+- server/catalog/openapiGenerator.js：仅删 voice fallback 的 xNote；风险 LAYERS 未命中时仍走旧 fallback（auth:false）；安全网按 H2 保留；通过
+
+### 附加说明
+全量服务因 better-sqlite3 与当前 Node ABI 不匹配未能启动；3002 端口已被占用。HTTP 验收改用临时端口完成（docs / v2 voice / openapi.json 均通过），验收后已按 PID 结束该进程。

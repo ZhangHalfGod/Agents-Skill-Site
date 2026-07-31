@@ -1,0 +1,39 @@
+handoff:
+  from: Architect
+  to: DevLead
+  project: mechassist-openapi-voice
+  stage: design
+  deliverable:
+    kind: arch-constraints
+    path: Code/doc/phase4/run-openapi-voice-20260731/h2-arch.constraints.md
+    summary: |
+      H2 架构约束分析完成。模块拓扑：LAYERS 为真源 → collectLayerEndpoints → generateOpenApiSpec/gApiDocsPayload；
+      voice 进 chat 层后 fallback 不再被命中。精确改点约束：registry.js A1/A2（+A3 可选），openapiGenerator.js M1-M3 仅去 xNote，
+      openapi.test.js M5 断言翻转 x-registry-status→undefined / 新增 security+401+required 检查。
+      裁决：PATH_FALLBACKS voice 键保留不删；A3 降 P1/P2 可选；VOICE_TTS parameters 对齐真实 handler ({text, conversationId, messageId, save})。
+      改动面 = 白名单文件，无隐式依赖。
+  decisions:
+    - voice 模块挂 chat 层（slug=chat），auth=true（与 authenticateToken 中间件一致）
+    - voice 在 LAYERS 注册后 PATH_FALLBACKS 保留为安全网（仅去 xNote），不再作为真源
+    - getApiDocsPayload 顶层加 openapi: { json: "/api/openapi.json", yaml: "/api/openapi.yaml" }
+    - A3（system/docs 加 openapi 端点）降为 P1 可选——A2 已满足验收①
+    - VOICE_TTS parameters 对齐真实 handler: { text: 'string', conversationId: 'string (可选)', messageId: 'string (可选)', save: 'boolean (可选，默认 true)' }
+    - PATH_FALLBACKS voice 键不删除，xRegistryStatus 不修改
+  open_questions: []
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读取源码文件：
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\registry.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\catalog\openapiGenerator.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\chatRoutes.js（voice 部分 L1104-L1215）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\openapiRoutes.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\routes\v2Catalog.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\index.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\shared\apiPaths.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\test\openapi.test.js（完整）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\services\voiceTtsService.js（前 80 行）
+      - D:\trae_git\MechAssist-Fusion\extern-api\server\services\voiceTtsStorage.js（完整）
+      - D:\trae_git\Agents-Skill-Site\Doc\phase4\02-orchestration-contracts.md（交接契约）
+      - D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-openapi-voice-20260731\h1-pm.scope-checklist.md（H1 信封）
+  lesson_hint: "PATH_FALLBACKS 的 voice parameters 写 { text, voice, speed } 而实际 handler 只用 { text }（其余是 conversationId/messageId/save），说明 fallback 维护容易滞后于实现——强化 LAYERS 单一真源原则的价值"

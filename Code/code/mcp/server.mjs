@@ -25,7 +25,7 @@ async function createServer() {
 
   const server = new McpServer({
     name: 'agents-skill',
-    version: '0.3.0'
+    version: '0.4.0'
   })
 
   server.tool(
@@ -54,7 +54,7 @@ async function createServer() {
 
   server.tool(
     'get_agent',
-    '按 id 或 index 取角色详情与技能。用返回的 source 在 Cursor 中 @ 文件。只读。',
+    '按 id 或 index 取角色详情与技能。返回 source；正文用 get_source_text。只读。',
     {
       id: z.string().optional(),
       index: z.number().int().optional()
@@ -74,12 +74,25 @@ async function createServer() {
 
   server.tool(
     'get_skill',
-    '按 id 或 index 取技能详情。只读。',
+    '按 id 或 index 取技能详情。返回 source；正文用 get_source_text。只读。',
     {
       id: z.string().optional(),
       index: z.number().int().optional()
     },
     async ({ id, index }) => jsonContent(await api.getSkill({ id, index }))
+  )
+
+  server.tool(
+    'get_source_text',
+    '只读返回 SoT 正文（Single-Facade MCP）。传 source 或 kind+id（agent|skill|rule）。可截断。禁止写入。',
+    {
+      source: z.string().optional(),
+      kind: z.enum(['agent', 'skill', 'rule', 'role']).optional(),
+      id: z.string().optional(),
+      maxChars: z.number().int().positive().optional()
+    },
+    async ({ source, kind, id, maxChars }) =>
+      jsonContent(await api.getSourceText({ source, kind, id, maxChars }))
   )
 
   server.tool(

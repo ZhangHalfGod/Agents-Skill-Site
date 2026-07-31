@@ -1,5 +1,20 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — phase4：Single-Facade MCP + Hop Snapshot（SF-HS）
+
+- **流程定名**：说明书唯一门面 = 公网 `agents-skill-remote`；派 Cursor 前冻 **Playbook Pack** 进 Goal（跳界快照）
+- **MCP**：新增只读 `get_source_text`（`catalog-api` + stdio/HTTP 双端）；工具数 9→10；仍禁止写
+- **契约**：`Doc/phase4/06-single-facade-hop-snapshot.md`；`04` 修订（只挂 Site MCP、公网主路径）；模板 `Code/orchestration/openclaw/templates/`
+- **SOUL v1.3**：角色自查 MCP → resolve/pack 落盘 → H3 Goal 内嵌 Pack；禁本机 Site 说明书主路径
+- **S0**：`SYSTEM-DIRECTION` 决策日志 2026-07-31-01
+- **运维**：须将含 `get_source_text` 的 mcp-remote **部署到 ECS** 后，公网 probe 才有第 10 工具；OpenClaw `mcp add` 挂接见 04
+
+## 2026-07-31 — phase4 补记：main SOUL v1.2 防空转 + 回合切割
+
+- **SOUL v1.2**：H1+H2+M2 同一飞书回合必须停住；H3/H4 仅放行后新回合；禁无进度 `process poll`（最多 3 次 / 连续 2 次无输出即停）；子 agent 禁 `feishu_doc`；双写必须 folder_token 且失败不得假装完成；超时后续跑优先续 run-dir 勿重跑已完成跳
+- **线上**：`~/.openclaw/workspace/SOUL.md` 流水线段已替换；仓内草稿 `orchestrator-main-soul.draft.md` 同步
+- **背景**：2026-07-31 OpenAPI+Voice 编排轮因空转 poll 触达 900s embedded timeout，飞书只见 timeout、双写链接未稳定投递
+
 ## 2026-07-30 — phase4 补记：文档类交付形态 A（飞书 SoT + 本地镜像）
 
 - **定案**：人对人 SoT = 飞书云文档；机器校验/H3 = run-dir 本地镜像（信封 `path` 仍必填且须存在）

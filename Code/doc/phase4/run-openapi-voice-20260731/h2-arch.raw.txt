@@ -1,0 +1,52 @@
+飞书双写完成。下面是 H2 架构跳产出摘要。
+
+---
+
+## H2 架构约束分析 — 交付完成
+
+**本地镜像**: `Code/doc/phase4/run-openapi-voice-20260731/h2-arch.constraints.md`
+
+**飞书云文档**: https://feishu.cn/docx/DNf6dCmApo4XLoxXyM6ci626nag
+
+> ⚠️ 飞书文档权限：由于当前为 webchat 会话无法自动授予你编辑权限，你可能需要在飞书中手动将文档设为可编辑。
+
+---
+
+### 摘要
+
+**模块拓扑**: LAYERS（registry.js）为真源 → `collectLayerEndpoints()` → `generateOpenApiSpec()` / `getApiDocsPayload()` / `v2Catalog`。voice 进 chat 层后，`byPath.get()` 命中 LAYERS，`PATH_FALLBACKS` 分支不被触发。
+
+**改点精确约束**:
+- **A1** — `registry.js` LAYERS chat 层新增 voice 模块（3 端点, auth:true, implemented:true），parameters 对齐真实 handler: `{ text, conversationId, messageId, save }`（非过时的 voice/speed）
+- **A2** — `getApiDocsPayload()` 顶层加 `openapi: { json, yaml }`，向后兼容
+- **A3** — system/docs 加 openapi 端点，**降为 P1 可选**（A2 已满足验收①）
+- **M1-M3** — `PATH_FALLBACKS` 仅去 xNote，其余字段不动
+- **M4** — voice fallback 保留为安全网，不删，不改 xRegistryStatus
+- **M5** — 测试断言翻转：`x-registry-status` → `undefined`，新增 `security` + `responses.401` + `required.text` 检查
+- **M6** — 快照更新
+
+**三条 open_questions 裁决**:
+1. PATH_FALLBACKS voice 键 → **保留**（安全网，控制流走不到）
+2. A3 是否必须 → **非必须**（A2 已满足验收①），建议 P1
+3. VOICE_TTS parameters → **对齐 handler**：`{ text, conversationId, messageId, save }`
+
+**隐式依赖**: 全部通过 — auth:true 副效应对齐，x-generator 保持，无 router/middleware 隐含逻辑，改动面 ⊆ 白名单文件。
+
+---
+
+### 交接信封（to: DevLead）
+
+```yaml
+from: Architect
+to: DevLead
+decisions:
+  - voice 模块挂 chat 层，auth=true（与 authenticateToken 一致）
+  - voice 进 LAYERS 后 PATH_FALLBACKS 保留为安全网（仅去 xNote）
+  - getApiDocsPayload 顶层加 openapi: { json, yaml }
+  - A3 降为 P1 可选
+  - VOICE_TTS parameters 对齐 handler: { text, conversationId, messageId, save }
+  - PATH_FALLBACKS voice 键不删，xRegistryStatus 不改
+open_questions: []
+lesson_hint: "PATH_FALLBACKS 的 voice parameters 与 handler 实参长期不一致，印证 fallback 维护滞后——强化 LAYERS 单一真源原则"
+```
+⚠️ 🛠️ Exec failed: `run dir /b → print text`

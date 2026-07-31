@@ -15,6 +15,7 @@
 | 4 | [03-openclaw-route-table.md](03-openclaw-route-table.md) | 角色路由表 / 模型分层 / 回退 |
 | 5 | [04-tool-registration.md](04-tool-registration.md) | MCP 服务 → OpenClaw tool 注册映射 |
 | 6 | **[05-lesson-memory-loop.md](05-lesson-memory-loop.md)** | **跨项目记忆复用闭环全流程 Runbook（已实战验证）** |
+| 7 | **[06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md)** | **SF-HS：单门面 MCP + 跳界快照（H3 Goal 灌包）** |
 
 ## 本目录文件
 
@@ -26,6 +27,7 @@
 | [03-openclaw-route-table.md](03-openclaw-route-table.md) | ✅ |
 | [04-tool-registration.md](04-tool-registration.md) | ✅ |
 | [05-lesson-memory-loop.md](05-lesson-memory-loop.md) | ✅ |
+| [06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md) | ✅ |
 
 ## 配套落点
 

@@ -1,0 +1,163 @@
+# AI代码生成范围清单
+
+> **项目**: MechAssist-Fusion / extern-api  
+> **阶段**: H1（需求拆解）  
+> **原始需求**: 发现面挂载 OpenAPI + Voice 进 registry（契约对齐）  
+> **产出日期**: 2026-07-31  
+> **优先级约定**: P0 = 验收口径直接命中 / P1 = 质量增强（测试/快照/标注） / P2 = 可选体验优化
+
+---
+
+## 1. 目标
+
+使 `GET /api/docs` 与 `GET /v2` 的发现面完整反映当前已实现的 API 能力：
+
+- **目标 A — OpenAPI 挂发现面**：`/api/docs` 和 `/v2` 中增加 OpenAPI 契约入口（`/api/openapi.json`、`/api/openapi.yaml`），使 API 消费者仅通过浏览发现面即可定位契约文件。
+- **目标 B — Voice 进 registry + 修正过时标注**：三条已落地的 voice 路由（`GET /api/voice/capabilities`、`POST /api/voice/tts`、`GET /api/voice/tts/files/:fileName`）以 `implemented: true` 写入 `LAYERS`，并修正 `PATH_FALLBACKS` 中「尚未实现 Express handler」的错误 xNote，使 `/api/docs` 与 `/api/openapi.json` 均反映真实状态。
+- **目标 C — 存量不破**：不引入新的测试失败，不改动热路径，不改业务逻辑。
+
+---
+
+## 2. 范围条目
+
+### 2.1 新增（Add）
+
+| # | 文件 | 位置 | 改动说明 | 优先级 |
+|---|------|------|----------|--------|
+| A1 | `server/catalog/registry.js` | `LAYERS` 数组 → `chat` 层 → `modules[]` | 新增 `voice` 模块，包含三个端点：`VOICE_CAPABILITIES`（GET, auth:true, implemented:true）、`VOICE_TTS`（POST, auth:true, implemented:true, parameters）、`VOICE_TTS_DOWNLOAD`（GET, auth:true, implemented:true）。描述字段与 `PATH_FALLBACKS.summary` 对齐。**auth 设为 true，与 chatRoutes.js 中 `authenticateToken` 中间件一致**。 | P0 |
+| A2 | `server/catalog/registry.js` | `getApiDocsPayload()` 函数 → 返回体顶层 | 增加 `openapi` 字段：`{ json: "/api/openapi.json", yaml: "/api/openapi.yaml" }`，插入在 `layers` 之前或之后均可。不改动函数签名。 | P0 |
+| A3 | `server/catalog/registry.js` | `LAYERS` → `system` 层 → `docs` 模块 → `endpoints[]` | 在 `API_DOCS` 端点旁新增两个端点：`/api/openapi.json`（GET, implemented:true, auth:false）和 `/api/openapi.yaml`（GET, implemented:true, auth:false）。使 `/v2/system/docs` 下钻也能发现 OpenAPI 入口。若 `/v2` 发现面已满足则此项降为 P2。 | P1 |
+
+### 2.2 修改（Modify）
+
+| # | 文件 | 位置 | 改动前 | 改动后 | 优先级 |
+|---|------|------|--------|--------|--------|
+| M1 | `server/catalog/openapiGenerator.js` | `PATH_FALLBACKS.VOICE_CAPABILITIES` | 含 `xNote: 'voice routes 尚未实现 Express handler（仅 service 层存在）'` | **移除 `xNote` 字段**。保留其余字段（method, auth, summary, parameters, xRegistryStatus）。 | P0 |
+| M2 | `server/catalog/openapiGenerator.js` | `PATH_FALLBACKS.VOICE_TTS` | 含 `xNote: 'voice routes 尚未实现 Express handler（仅 service 层存在）'` | **移除 `xNote` 字段**。保留其余字段。 | P0 |
+| M3 | `server/catalog/openapiGenerator.js` | `PATH_FALLBACKS.VOICE_TTS_DOWNLOAD` | 含 `xNote: 'voice routes 尚未实现 Express handler（仅 service 层存在）'` | **移除 `xNote` 字段**。保留其余字段。 | P0 |
+| M4 | `server/catalog/openapiGenerator.js` | `PATH_FALLBACKS` → voice 三键 | `xRegistryStatus: 'inferred'` | 由于 voice 已写入 `LAYERS`，`collectLayerEndpoints()` 将从 LAYERS 中拾取 voice 端点（而非 fallback）。`PATH_FALLBACKS` 中的 voice 三键**可保留作为安全网**（带 removed-xNote 后的字段），但如果 A1 已使 LAYERS 成为真源，则 `generateOpenApiSpec()` 中的 `byPath.get(expressPath)` 会优先命中 LAYERS，fallback 不再被使用。**可选项：将 voice fallback 的 `xRegistryStatus` 改为 `'fallback'` 以区分真假源，不阻塞验收**。 | P1 |
+| M5 | `server/test/openapi.test.js` | `'VOICE_TTS inferred post has requestBody from PATH_FALLBACKS'` | 断言 `op['x-registry-status'] === 'inferred'` | 因 voice 进 LAYERS，status 不会是 `inferred`。改为**断言 voice TTS POST 存在且 x-registry-status 不等于 'inferred'**，或验证 `implemented:true` 后的 auth/requestBody 元数据。 | P0 |
+| M6 | `server/test/__snapshots__/openapi.snapshot.json` | 快照文件 | 旧快照（voice 路径带 xNote） | 更新快照（`npm run test:server -- --update-snapshots`），确认 voice 路径无 xNote，paths 中 voice 操作来自 LAYERS 而非 fallback。 | P1 |
+
+### 2.3 不改（Confirm-no-change）
+
+| # | 说明 | 理由 |
+|---|------|------|
+| N1 | 不修改 `server/routes/chatRoutes.js` 热路径逻辑 | 约束明确禁止；voice handler 已实现，仅注册缺失 |
+| N2 | 不修改 `server/services/voiceTtsService.js` | 约束明确禁止；业务逻辑无需改动 |
+| N3 | 不修改 `shared/apiPaths.js` 常量值 | 路径已定义且正确（`VOICE_CAPABILITIES`、`VOICE_TTS`、`VOICE_TTS_DOWNLOAD`） |
+| N4 | 不修改 `server/index.js` 挂载方式 | `openapiRoutes` 已挂载在 `/api`；`chatRoutes` 已挂载在 `/api`；voice 经 `chatRoutes` 可达 |
+| N5 | 不修改 `server/routes/openapiRoutes.js` | 已正确处理 `/api/openapi.json` 和 `/api/openapi.yaml` |
+| N6 | 不修改 v2 目录路由 `server/routes/v2Catalog.js` | 路由通用，`LAYERS` 变更自动反映 |
+| N7 | 不创建新的 voice 路由文件 | 约束明确禁止搬迁已有 handler |
+| N8 | 不运行 `npm install` / `git push` | 约束明确禁止 |
+| N9 | 不修改 `openapiGenerator.js` 核心生成逻辑 | `collectLayerEndpoints()` / `generateOpenApiSpec()` 流程本身正确，只需输入数据（LAYERS + PATH_FALLBACKS）正确 |
+
+---
+
+## 3. 显式不做
+
+1. **不做 OpenAPI 生成器重构**：不改 `generateOpenApiSpec()` 的算法、不新增 `parseParamMeta()` 的解析能力、不新增 operation 字段类型。
+2. **不做 Swagger UI 前端集成**：仅暴露 JSON/YAML 文件路径供外部工具消费，不嵌入 Swagger UI 页面。
+3. **不做 voice 服务的认证模式变更**：voice 端点按 `chatRoutes.js` 现状保持 `authenticateToken`（auth: true），不改为公开。
+4. **不做全量 PATH_FALLBACKS 审计**：仅修正 voice 三条，GATEWAY_PLANES / GATEWAY_CONTROL_PLANE / GATEWAY_DATA_PLANE 的 fallback 暂不动（与本次需求无关）。
+5. **不做 `/api/docs` 的 JSON Schema 版本升级**：`getApiDocsPayload()` 保持现有结构，仅插入 `openapi` 字段。
+
+---
+
+## 4. 验收口径（逐条映射）
+
+| 验收项 | 映射到条目 | 验证方法 |
+|--------|-----------|----------|
+| ① `GET /api/docs` 正文能发现 `/api/openapi.json` 与 `/api/openapi.yaml`（路径或顶层字段任一即可） | A2 | `curl http://localhost:3002/api/docs` → 响应 JSON 顶层含 `openapi: { json: "/api/openapi.json", yaml: "/api/openapi.yaml" }` |
+| ② `GET /v2` 相关下钻或 `/api/docs` 中能看到 voice 三条（capabilities/tts/download），implemented 为真 | A1 + A3 | `GET /v2/chat/voice` → `Link[].href` 指向三条 voice API 实现路径，method 正确；或 `GET /api/docs` → `layers[chat].modules[voice].apis[].implemented === true` |
+| ③ `GET /api/openapi.json` 中 voice 三条不再带「尚未实现 Express handler」类 x-note；仍 200 且 x-generator 保持 | M1/M2/M3 + M4 | `jq '.paths["/api/voice/tts"].post' openapi.json` 中不含 `x-note` 字段；`jq '.info["x-generator"]'` 仍为 `"mechassist-openapi"` |
+| ④ 相关测试通过；存量不新增失败 | M5/M6 | `npm run test:server` 全绿；`openapi.test.js` 所有 describe/it 通过 |
+| ⑤ `git status` 改动面 ⊆ 上述允许文件 | 全部 | `git status --porcelain` 仅含 `registry.js`、`openapiGenerator.js`、`openapi.test.js`、`openapi.snapshot.json`（及本清单文件） |
+
+---
+
+## 5. 约束引用
+
+| 约束 | 来源 |
+|------|------|
+| 业务仓 / 子项目根 | `D:\trae_git\MechAssist-Fusion\extern-api\` |
+| 允许改的文件（白名单） | `server/catalog/registry.js`、`server/catalog/openapiGenerator.js`（仅 fallbacks/标注/LAYERS 对齐）、`server/test/openapi.test.js`、`server/test/__snapshots__/openapi.snapshot.json` |
+| 不允许改的文件 | `chatRoutes.js`（热路径）、`apiPaths.js`（常量）、`index.js`（挂载）、`voiceTtsService.js`（业务逻辑）、`openapiRoutes.js`、`v2Catalog.js` |
+| 不允许的操作 | `npm install` / `git push` / 重写 voice handler / 搬迁已有代码 |
+| 认证一致性 | voice 端点 auth 必须与 `chatRoutes.js` 实际中间件一致：均使用 `authenticateToken` → `auth: true` |
+
+---
+
+## 6. 风险与回滚
+
+| 风险 | 概率 | 影响 | 缓解 |
+|------|------|------|------|
+| A1 后 `PATH_FALLBACKS` 与 `LAYERS` 双源导致 `/api/openapi.json` 中 voice 端点重复 | 低 | `/api/openapi.json` 同一路径下出现重复 method → OpenAPI 校验警告 | `collectLayerEndpoints()` 命中 LAYERS 后 `continue`，不会走到 fallback 分支；已通过代码阅读确认该控制流。若出现意外重复，移除 `PATH_FALLBACKS` 中 voice 三键即可（M4 可选做）。 |
+| 快照更新误引入无关 Diff | 中 | 快照测试假阳性失败，阻塞 CI | 仅允许变更与 voice / openapi 相关的 diff；快照更新前 `diff` 确认变更范围。 |
+| A2 顶层字段 `openapi` 被现有前端代码消费时不受影响 | 极低 | 前端消费 `/api/docs` 时忽略未知字段 | `/api/docs` 返回 `{ success: true, data: getApiDocsPayload() }`；`openapi` 在 `data` 内部，前端按需取用，不破坏现有结构。 |
+| auth 属性与 PATH_FALLBACKS 不一致 | 低 | A1 设 `auth: true`，但 PATH_FALLBACKS 原设 `auth: false` | `collectLayerEndpoints()` 从 LAYERS 取值，fallback 不再生效；以 LAYERS 为真源即可。 |
+| 回滚 | — | `git checkout -- server/catalog/registry.js server/catalog/openapiGenerator.js server/test/openapi.test.js`；还原快照文件 | |
+
+---
+
+## 7. 证据清单（codebase exploration）
+
+已实际阅读的源码文件：
+
+- `server/catalog/registry.js`（完整） — LAYERS 无 voice 模块；`getApiDocsPayload()` 无 openapi 字段
+- `server/catalog/openapiGenerator.js`（完整） — PATH_FALLBACKS 中 voice 三条带 xNote；`collectLayerEndpoints()` / `generateOpenApiSpec()` 控制流确认
+- `server/routes/chatRoutes.js`（voice 部分） — 三条 voice handler 已实现（L1104-L1215），均挂 `authenticateToken`
+- `server/index.js`（完整） — `openapiRoutes` 挂 `/api`；`chatRoutes` 挂 `/api`；无独立 voice router
+- `server/routes/openapiRoutes.js`（完整） — `/api/openapi.json` 与 `/api/openapi.yaml` 已实现
+- `server/routes/v2Catalog.js`（完整） — 目录路由通用，依赖 `LAYERS`
+- `shared/apiPaths.js`（完整） — VOICE_CAPABILITIES / VOICE_TTS / VOICE_TTS_DOWNLOAD 已定义
+- `server/test/openapi.test.js`（完整） — 测试结构、VOICE_TTS 断言需更新
+- `server/test/v2Catalog.test.js`（完整） — 测试模式
+- `doc/重构api架构/README.md` — 架构文档
+- `README.md` — 项目总览
+
+---SPLIT---
+
+```yaml
+handoff:
+  from: ProductManager
+  to: Architect
+  project: mechassist-openapi-voice
+  stage: requirements
+  deliverable:
+    kind: scope-list
+    path: Code/doc/phase4/run-openapi-voice-20260731/h1-pm.scope-checklist.md
+    summary: |
+      范围：registry.js 新增 voice 模块(chat层)+getApiDocsPayload 顶层 openapi 字段；
+      openapiGenerator.js PATH_FALLBACKS 移除 voice 三键 xNote；
+      openapi.test.js 适配 VOICE_TTS 断言 + 快照更新。
+      显式不做：不改 chatRoutes/voiceTtsService/apiPaths/index.js/openapiRoutes 生成器核心。
+      验收：①②③④⑤ 逐条映射到条目 A1/A2/M1-M6（共 5 验收项 9 改动条目）。
+
+  decisions:
+    - voice 模块挂 chat 层（slug=chat），与 chatRoutes.js 物理归属一致，auth 设为 true（与 authenticateToken 中间件一致）
+    - voice 在 LAYERS 注册后 PATH_FALLBACKS 不再作为真源（collectLayerEndpoints 优先命中 LAYERS）；fallback 中移除 xNote 但保留其余字段作为安全网
+    - 发现面增加 OpenAPI 入口采用双路径：getApiDocsPayload 顶层加 openapi 字段 + system/docs 模块加两个端点
+    - /api/openapi.json 和 /api/openapi.yaml 均为 auth:false（与 openapiRoutes.js 实现一致，无需认证）
+    - 不改 openapiGenerator 核心生成逻辑；不改 chatRoutes 热路径
+
+  open_questions:
+    - PATH_FALLBACKS 中 voice 三键在 LAYERS 注册后是否需要完全删除（当前方案保留为安全网，H2 可决定）
+    - A3（system/docs 下加 OpenAPI 端点）是否为必须——如果 A2 顶层字段已满足验收①，A3 可降为 P2 或取消
+    - voice TTS POST 的 parameters 在 LAYERS 中应包含哪些字段（当前 PATH_FALLBACKS 写 { text, voice, speed }；chatRoutes handler 实际使用 body.text / body.conversationId / body.messageId / body.save）——H2 需对齐真实入参
+
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      已读：registry.js / openapiGenerator.js / chatRoutes.js(voice) / index.js / openapiRoutes.js / v2Catalog.js / apiPaths.js / openapi.test.js / v2Catalog.test.js / doc/重构api架构/README.md / README.md
+      LAYERS 缺失 voice 模块：已确认
+      PATH_FALLBACKS xNote 与代码不符：已确认
+      getApiDocsPayload 无 openapi 字段：已确认
+      openapiRoutes 已实现但未注册到发现面：已确认
+      collectLayerEndpoints 控制流（命中 LAYERS → continue 不触 fallback）：已阅读确认
+      chatRoutes voice handler 挂 authenticateToken：已确认
+
+  lesson_hint: ""
+```
+⚠️ 🛠️ Exec failed: `dir /b D:\trae_git\MechAssist-Fusion\extern-api\server\test\`

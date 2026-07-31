@@ -25,9 +25,9 @@
 
 ## 唤起下一跳
 
-- 角色 session：按 `agents.yaml` 的 persona_source，先经 agents-skill-remote `get_agent` 取 source 再交给执行层 `@`（MCP 只读）
+- 角色 session（SF-HS）：经 agents-skill-remote **自查** `get_agent`/`get_skill` → **`get_source_text`** 取正文；落 `mcp-resolve` + `playbook-pack`（见 `Doc/phase4/06`）
 - 信封 YAML 原样作为下一跳的开场消息附件；不改写 decisions
-- 需要改业务仓文件的跳（典型 H3）：走机制 B——`invoke-cursor-agent.ps1 -WorkDir <业务仓> -Goal "<角色 Prompt + 信封>"`，复用 code-via-cursor-cli skill 的全部规则（`--trust -f --approve-mcps --resume`，失败 `-Fresh` 重试一次）
+- 需要改业务仓文件的跳（典型 H3）：走机制 B——Goal **内嵌 Playbook Pack**（跳界快照）后 `invoke-cursor-agent.ps1`；Cursor **禁止**再调 Site MCP / 再读 Site 说明书
 
 ## 每跳结束
 

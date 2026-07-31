@@ -80,9 +80,9 @@
 ```text
 ① 飞书 → OpenClaw Gateway（长期在线）：项目需求进来
 ② 文档跳（OpenClaw 内，机制 A ✅）：PM → Architect 等命名 agent 在 session 里产出
-   范围清单 / 架构约束 + 交接信封（角色可经 agents-skill-remote MCP 查绑定，见 04）
+   范围清单 / 架构约束 + 交接信封；角色经 agents-skill-remote 自查并用 get_source_text 取正文（SF-HS，见 04/06）
 ③ 代码跳（机制 B 模式 ✅）：按需拉起无头 Cursor CLI（invoke-cursor-agent.ps1），
-   走 demo 流程：health → get_agent → get_skill → @ source 清单干活 → 阶段出门
+   Goal 内嵌 Playbook Pack（跳界快照）；Cursor 不依赖再调 Site MCP
 ④ 踩坑/出门：触发句记 Lesson → 写回本仓 operations/<项目>/lessons/（raw，集中真源）
 ⑤ 周一 09:00：weekly-lesson-digest 推飞书 ✅ → 人工逐条终审（merged/distilled/rejected）
 ⑥ merged → 公共 skill 注册 ✅（清单见 05 §⑤）→ 下个项目的 agent 绑定里就有它
