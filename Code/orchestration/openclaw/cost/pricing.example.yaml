@@ -1,0 +1,26 @@
+# 单价表示例（无密钥）— 复制为 pricing.yaml 后填实价
+# 单位：每 1M tokens；currency 与 cost-ledger totals 对齐
+
+schema_version: 1
+as_of: "2026-07-31"
+models:
+  - model_id: deepseek/deepseek-v4-pro
+    billing_mode: token
+    input_per_1m: null    # TBD
+    output_per_1m: null   # TBD
+    currency: CNY
+    note: "填 DeepSeek 官方/渠道价"
+
+  - model_id: deepseek/deepseek-v4-flash
+    billing_mode: token
+    input_per_1m: null
+    output_per_1m: null
+    currency: CNY
+    note: "填 DeepSeek 官方/渠道价"
+
+  - model_id: cursor/agent
+    billing_mode: subscription
+    input_per_1m: null
+    output_per_1m: null
+    currency: USD
+    note: "包月则 amount 记 0；仍采集 tokens 作用量"

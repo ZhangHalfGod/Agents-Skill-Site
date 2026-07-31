@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — phase4：成本台账字段草案（DeepSeek / Cursor）
+
+- **契约**：`Doc/phase4/08-cost-ledger-schema.md` — run-dir `cost-ledger.yaml` 字段（hops / quality / totals / recommendations）
+- **现网锚定**：pm/arch=`deepseek-v4-pro`；ui/dev/test/sec/ops=`deepseek-v4-flash`；H3=`cursor/agent`（token vs subscription）
+- **样例单价表**：`Code/orchestration/openclaw/cost/pricing.example.yaml`（实价 TBD；调档仅人闸建议）
+
 ## 2026-07-31 — phase4：M0 run-dir 飞书 presentation 交互卡
 
 - **能力**：【新项目需求】先发 OpenClaw presentation 按钮卡选痕迹目录；支持预设 / `run_dir=` 自定义 / 首条内嵌跳过

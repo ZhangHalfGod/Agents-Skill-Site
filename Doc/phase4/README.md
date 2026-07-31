@@ -17,6 +17,7 @@
 | 6 | **[05-lesson-memory-loop.md](05-lesson-memory-loop.md)** | **跨项目记忆复用闭环全流程 Runbook（已实战验证）** |
 | 7 | **[06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md)** | **SF-HS：单门面 MCP + 跳界快照（H3 Goal 灌包）** |
 | 8 | **[07-run-dir-m0-card.md](07-run-dir-m0-card.md)** | **M0：飞书 presentation 卡指定 run-dir** |
+| 9 | **[08-cost-ledger-schema.md](08-cost-ledger-schema.md)** | **成本台账字段草案（DeepSeek / Cursor）** |
 
 ## 本目录文件
 
@@ -30,6 +31,7 @@
 | [05-lesson-memory-loop.md](05-lesson-memory-loop.md) | ✅ |
 | [06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md) | ✅ |
 | [07-run-dir-m0-card.md](07-run-dir-m0-card.md) | ✅ |
+| [08-cost-ledger-schema.md](08-cost-ledger-schema.md) | 📝 字段草案 |
 
 ## 配套落点
 
