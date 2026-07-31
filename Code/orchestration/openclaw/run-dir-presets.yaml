@@ -1,0 +1,19 @@
+# run-dir 预设（M0 飞书交互卡）
+# 修改后无需重启 Gateway；下次【新项目需求】即生效
+# 安全：解析后的绝对路径必须落在 allowRoots 之下
+
+defaultPreset: phase4
+
+allowRoots:
+  - "D:\\trae_git\\Agents-Skill-Site\\Code\\doc"
+  - "D:\\trae_git\\MechAssist-Fusion\\doc"
+  - "D:\\trae_git"
+
+presets:
+  phase4:
+    label: "默认 phase4"
+    # 最终目录 = root / run-<shortName>-<YYYYMMDD>
+    root: "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4"
+  fusion-doc:
+    label: "MechAssist doc"
+    root: "D:\\trae_git\\MechAssist-Fusion\\doc"

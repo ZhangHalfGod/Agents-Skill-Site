@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — phase4：M0 run-dir 飞书 presentation 交互卡
+
+- **能力**：【新项目需求】先发 OpenClaw presentation 按钮卡选痕迹目录；支持预设 / `run_dir=` 自定义 / 首条内嵌跳过
+- **脚本**：`build-run-dir-card.cjs`、`resolve-run-dir.cjs`、`run-dir-presets.yaml`
+- **契约**：`Doc/phase4/07-run-dir-m0-card.md`；SOUL **v1.4**（M0 单独回合停）
+- **说明**：飞书无本机文件选择器；自定义路径仍粘贴绝对路径（白名单校验）
+
 ## 2026-07-31 — fix: get_source_text DOCS_ROOT 从 MANIFEST_PATH 上溯两级
 
 - **现象**：公网已暴露 `get_source_text`（10 tools），调用返回 NOT_FOUND；`docsRoot` 误为 `…/Code/code/docs`

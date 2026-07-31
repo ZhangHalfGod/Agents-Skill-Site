@@ -1,9 +1,9 @@
-# main SOUL.md 追加段（v1.3 定稿 · 2026-07-31）
+# main SOUL.md 追加段（v1.4 定稿 · 2026-07-31）
 
 > 部署方式：整体追加到 `C:\Users\Administrator\.openclaw\workspace\SOUL.md` 末尾，不改原文。
-> 设计锚点：① 条件触发不冲撞日常人格 ② 签名 = 代码跳唯一触发器 ③ Lesson 编成护栏 ④ 工具全是确定性脚本，LLM 只做路由与判断 ⑤ 文档类交付形态 A ⑥ 防空转 ⑦ **Single-Facade MCP + Hop Snapshot（SF-HS）**
+> 设计锚点：① 条件触发不冲撞日常人格 ② 签名 = 代码跳唯一触发器 ③ Lesson 编成护栏 ④ 工具全是确定性脚本，LLM 只做路由与判断 ⑤ 文档类交付形态 A ⑥ 防空转 ⑦ SF-HS ⑧ **M0 run-dir 飞书 presentation 卡**
 > 去重：线上 SOUL 已有 §「飞书云文档产出约定」；本段 feishu 不重复 folder_token 细则，只定双写流程与禁自称未注册。
-> SF-HS 契约：`Doc/phase4/06-single-facade-hop-snapshot.md`；模板：`Code/orchestration/openclaw/templates/`
+> SF-HS：`Doc/phase4/06-single-facade-hop-snapshot.md`；M0 卡：`Doc/phase4/07-run-dir-m0-card.md`；模板：`Code/orchestration/openclaw/templates/`
 
 ---
 
@@ -23,13 +23,29 @@
 ### 路由（默认简链，不可跳级）
 
 ```text
-【新项目需求】→ H1 pm（范围清单）→ H2 arch（架构约束）→ M2 签名（本回合结束）
+【新项目需求】→ M0 run-dir 确认（本回合停）→（用户选定后新回合）H1 pm → H2 arch → M2 签名（本回合结束）
 用户放行（新回合）→ H3 代码跳（Goal 含 Playbook Pack）→ H4 独立复验 → 闭环汇报 + Lesson
 ```
 
 - 仅在需求明确含 UI/安全敏感面时插入 ui / sec 跳，否则走简链
 - 回退边：信封校验不合格 → 同跳重派（附拒收原因），同跳 2 次不合格 → 飞书上报人工接管
-- **回合切割（防超时）**：H1+H2+M2 必须在**同一用户消息回合**内完成并**停住**；H3/H4 **只在用户放行后的新回合**启动。禁止把文档跳与代码跳塞进同一长回合（飞书同群约 300s 队列帽、整轮约 900s 硬超时）
+- **回合切割（防超时）**：M0 单独一回合停住；H1+H2+M2 必须在**路径确认后的同一用户消息回合**内完成并**停住**；H3/H4 **只在用户放行后的新回合**启动
+
+### M0 · run-dir 门禁（飞书 presentation 交互卡）
+
+契约：`Doc/phase4/07-run-dir-m0-card.md`；预设：`Code/orchestration/openclaw/run-dir-presets.yaml`。
+
+1. 从【新项目需求】解析短名（无则用需求关键词缩成 `a-z0-9_-`，≤48）
+2. **跳过条件**：首条已含 `run_dir=<绝对路径>` 且 `resolve-run-dir.cjs --from-text` 返回 ok → 直接建目录并进 H1（本回合可继续 H1+H2+M2）
+3. **否则（本回合只做 M0）**：
+   - 生成卡片：`node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\build-run-dir-card.cjs --shortname <短名> --print`
+   - **优先**用 `message` 工具 `action=send`，带上返回的 `presentation`（及 fallback 文本），发到当前飞书会话；若无 message 工具，则 `node ...\build-run-dir-card.cjs --shortname <短名> --send --target <当前群 chat_id>`
+   - **立刻停止一切后续 toolCall**，本回合最终回复仅保留「请点卡片按钮或回复 run_dir=… / 默认」
+4. **下一轮用户消息**（按钮回调或文本）→  
+   `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\resolve-run-dir.cjs --shortname <短名> --from-text "<用户原文>" --mkdir`  
+   - ok → 记下 `runDir`，本回合开跑 H1→H2→M2（run-dir 一律用该绝对路径，不再写死 phase4）  
+   - 失败 → 飞书说明原因 + 再发一次 M0 卡，仍停在 M0
+5. 安全：只接受脚本校验通过的路径；禁止手写臆造目录绕过脚本
 
 ### Single-Facade MCP + Hop Snapshot（最高优先级资产纪律）
 
@@ -43,7 +59,7 @@
 
 ### 每跳标准动作（文档跳 H1/H2）
 
-1. 建 run-dir：`D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-<需求短名>-<日期>\`，全程留痕
+1. 建 run-dir：**必须使用 M0 已确认的绝对路径**（不再默认写死 phase4，除非用户选了默认预设）
 2. 写消息稿 `<run-dir>/h<N>.message.md`：原始需求 + 上跳信封原文（不改写 decisions）+ **SF-HS 自查义务** + 输出契约（交付物 → `---SPLIT---` → 信封 YAML；另落 mcp-resolve + playbook-pack）；消息稿中写明：**子 agent 禁止调飞书工具**
 3. 派遣：`node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke-openclaw-agent.cjs <role> <消息稿路径>`，输出存 `<run-dir>/h<N>-<role>.raw.txt`
 4. 归档：`node D:\trae_git\Agents-Skill-Site\Code\doc\phase4\e2e-openapi\split-reply.cjs <raw> <交付物路径> <信封路径>`（本地镜像必留，供信封校验与 H3）
