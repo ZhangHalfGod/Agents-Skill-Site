@@ -79,7 +79,9 @@ function buildPresentation({ shortname, date, meta }) {
     '预设根目录：'
   ];
   for (const p of meta.presets) {
-    lines.push(`- **${p.label}**（\`${p.id}\`）：\`${p.root}\\${folder}\``);
+    // 展示用正斜杠，避免 Feishu markdown 把 \r 当成回车（曾显示成 phase4 un-swagger...）
+    const shown = `${p.root.replace(/\\/g, '/')}/${folder}`;
+    lines.push(`- **${p.label}**（\`${p.id}\`）：\`${shown}\``);
   }
 
   const buttons = [
