@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — fix: get_source_text DOCS_ROOT 从 MANIFEST_PATH 上溯两级
+
+- **现象**：公网已暴露 `get_source_text`（10 tools），调用返回 NOT_FOUND；`docsRoot` 误为 `…/Code/code/docs`
+- **根因**：`resolveDocsRoot()` 对 `…/docs/public/manifest.json` 只上跳一级；source 为 `docs/zh/...` 须相对 `Code/code`
+- **修复**：上溯 `public → docs → code`；`env.production.example` 注明可选 `DOCS_ROOT`
+
 ## 2026-07-31 — docs：ECS 部署前 `git restore .` 原因备忘
 
 - **定案**：索引 JSON 继续入库；部署机 `build`/`generate` 后工作区变脏为**预期**（时间戳/hash），下次更新前 `git restore .`，禁止在 ECS commit 这些产物
