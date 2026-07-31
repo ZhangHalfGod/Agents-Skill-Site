@@ -27,6 +27,7 @@
 - [本项目解决的问题](#本项目解决的问题)
 - [双消费端架构总览](#双消费端架构总览)
 - [快速开始](#快速开始)
+- [本机 OpenClaw 运行时（大脑 + 手脚）](#本机-openclaw-运行时大脑--手脚)
 - [生产部署（服务器）](#生产部署服务器)
 - [使用场景](#使用场景)
 - [目录结构](#目录结构)
@@ -309,6 +310,22 @@ npm run dev
   }
 }
 ```
+
+### 本机 OpenClaw 运行时（大脑 + 手脚）
+
+要在**另一台 Windows / Mac**上跑同一套飞书编排流水线，**不能**只做到「把机器人拉进群」——那只接通**话筒**。每台机器需要自己的 OpenClaw Gateway（大脑）、MCP 挂接、SOUL，以及可选的 Cursor Agent CLI（手脚）。
+
+**按此清单执行（给人与 AI 阅读后逐步部署）：**
+
+**[Doc/guides/local-openclaw-runtime-deploy.md](Doc/guides/local-openclaw-runtime-deploy.md)**
+
+```text
+Clone → 装 OpenClaw → 为本机配飞书 Bot → setup-agents
+  → mcp add agents-skill-remote → 追加 SOUL（改成本机路径）
+  → gateway 服务化 → 可选 Cursor H3 → 冒烟 health / agents / mcp / 飞书探活
+```
+
+ECS 上的静态站与远程 MCP 见下方 [生产部署（服务器）](#生产部署服务器)，与本机大脑不是同一件事。
 
 ### 生产部署（服务器）
 

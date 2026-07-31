@@ -27,6 +27,7 @@
 - [What this project solves](#what-this-project-solves)
 - [Dual-consumer architecture](#dual-consumer-architecture)
 - [Quick start](#quick-start)
+- [Local OpenClaw runtime (brain + hands)](#local-openclaw-runtime-brain--hands)
 - [Production deploy (server)](#production-deploy-server)
 - [Use cases](#use-cases)
 - [Repository layout](#repository-layout)
@@ -305,6 +306,22 @@ Local stdio if remote MCP is not deployed yet:
   }
 }
 ```
+
+### Local OpenClaw runtime (brain + hands)
+
+To run the **same Feishu-orchestrated pipeline on another Windows or Mac**, do **not** stop at “add the bot to the group.” That only connects the **channel**. Each machine needs its own OpenClaw Gateway (brain), MCP mount, SOUL, and optionally Cursor Agent CLI (hands).
+
+**Follow this checklist (written for humans and AI assistants):**
+
+**[Doc/guides/local-openclaw-runtime-deploy.md](Doc/guides/local-openclaw-runtime-deploy.md)**
+
+```text
+Clone → install OpenClaw → Feishu bot for THIS machine → setup-agents
+  → mcp add agents-skill-remote → append SOUL (remap paths)
+  → gateway install → optional Cursor H3 → smoke health / agents / mcp / Feishu ping
+```
+
+Server static site + remote MCP (ECS) remain under [Production deploy (server)](#production-deploy-server) below — different from this local runtime.
 
 ### Production deploy (server)
 

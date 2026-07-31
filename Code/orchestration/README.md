@@ -20,9 +20,15 @@ orchestration/
     role-session.md                ← 角色 session 通用 Prompt 模板
 ```
 
+## 新机器整机部署（大脑 + 手脚）
+
+完整清单（含飞书 / MCP / SOUL / Gateway / Cursor H3，供 AI 按文档执行）：
+
+**[`Doc/guides/local-openclaw-runtime-deploy.md`](../../Doc/guides/local-openclaw-runtime-deploy.md)**
+
 ## 使用顺序（试点 B3）
 
-0. （新机器）跑 `openclaw/setup-agents.ps1` 一键建花名册；设 `$env:DEEPSEEK_API_KEY` 可自动注 key
+0. （新机器）先读上节部署文档；再跑 `openclaw/setup-agents.ps1` 一键建花名册；设 `$env:DEEPSEEK_API_KEY` 可自动注 key
 1. 部署侧对照 `openclaw/*.example.yaml` 写真实配置（键名待验证项见 `Doc/phase4/03` §1）
 2. 编排者 session 载入 `prompts/orchestrator-main.md`；角色 session 载入 `prompts/role-session.md`
 3. 每跳交接按 `envelopes/handoff.example.yaml` 格式提交信封

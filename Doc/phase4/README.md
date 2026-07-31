@@ -39,6 +39,7 @@
 |------|------|
 | [`../../Code/code/scripts/lesson-scan.mjs`](../../Code/code/scripts/lesson-scan.mjs) | 4A 扫描脚本（`npm run lessons:scan`） |
 | [`../../Code/orchestration/`](../../Code/orchestration/README.md) | 4B OpenClaw 配置样例 + 交接 Prompt 模板（`*.example`，无密钥） |
+| [`../guides/local-openclaw-runtime-deploy.md`](../guides/local-openclaw-runtime-deploy.md) | **新机器本机大脑+手脚部署清单**（根 README 已挂） |
 | [`../../Code/doc/phase4/`](../../Code/doc/phase4/) | 实现笔记 / 试点证据（落地时按日追加） |
 
 ## 一句话定位

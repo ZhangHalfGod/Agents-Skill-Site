@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — docs：本机 OpenClaw 运行时部署清单（大脑 + 手脚）
+
+- **入口**：根 `README.md` / `README.zh-CN.md` → [`Doc/guides/local-openclaw-runtime-deploy.md`](guides/local-openclaw-runtime-deploy.md)
+- **用途**：新 Win/Mac 按清单装 Gateway、花名册、公网 MCP、SOUL、可选 Cursor H3；明确「只加群 ≠ 部署完成」
+- **交叉**：`Code/orchestration/README.md` 挂链
+
 ## 2026-07-31 — phase4：成本台账字段草案（DeepSeek / Cursor）
 
 - **契约**：`Doc/phase4/08-cost-ledger-schema.md` — run-dir `cost-ledger.yaml` 字段（hops / quality / totals / recommendations）
