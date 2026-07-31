@@ -86,7 +86,10 @@ async function main() {
     arguments: { kind: 'skill', id: 'stage-gate-flow', maxChars: 800 }
   })
   const srcBody = JSON.parse(src.content?.[0]?.text || '{}')
-  assert(srcBody.ok === true && typeof srcBody.text === 'string', 'get_source_text failed')
+  assert(
+    srcBody.ok === true && typeof srcBody.text === 'string',
+    `get_source_text failed: ${src.content?.[0]?.text || '(empty)'}`
+  )
   assert(srcBody.source?.includes('stage-gate'), 'get_source_text source unexpected')
   console.log('OK get_source_text', {
     source: srcBody.source,

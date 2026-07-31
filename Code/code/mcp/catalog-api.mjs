@@ -49,13 +49,16 @@ export function resolveCatalogBaseUrl() {
   }
 }
 
-/** 正文根目录：DOCS_ROOT > MANIFEST_PATH 的上一级（public→code）> 默认 Code/code */
+/** 正文根目录：DOCS_ROOT > MANIFEST_PATH 推导（…/docs/public/manifest.json → …/code）> 默认 Code/code */
 export function resolveDocsRoot() {
   if (process.env.DOCS_ROOT?.trim()) {
     return path.resolve(process.env.DOCS_ROOT.trim())
   }
   if (process.env.MANIFEST_PATH?.trim()) {
-    return path.resolve(path.dirname(path.resolve(process.env.MANIFEST_PATH)), '..')
+    // manifest 在 <codeRoot>/docs/public/；source 形如 docs/zh/...，相对 <codeRoot>
+    const publicDir = path.dirname(path.resolve(process.env.MANIFEST_PATH))
+    const docsDir = path.dirname(publicDir)
+    return path.dirname(docsDir)
   }
   if (!resolveManifestUrl()) {
     return DEFAULT_DOCS_ROOT

@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-07-31 — docs：ECS 部署前 `git restore .` 原因备忘
+
+- **定案**：索引 JSON 继续入库；部署机 `build`/`generate` 后工作区变脏为**预期**（时间戳/hash），下次更新前 `git restore .`，禁止在 ECS commit 这些产物
+- **不采用**：把 `public/*.json` 改成不入库（会动 MCP/CI/本地 MANIFEST_PATH 契约）
+- **落点**：`Code/doc/phase1/07-deploy.md` §4.2/§4.3；`Code/mcp-remote/deploy/README.md` 日常 pull 步骤补 restore
+
 ## 2026-07-31 — phase4：Single-Facade MCP + Hop Snapshot（SF-HS）
 
 - **流程定名**：说明书唯一门面 = 公网 `agents-skill-remote`；派 Cursor 前冻 **Playbook Pack** 进 Goal（跳界快照）

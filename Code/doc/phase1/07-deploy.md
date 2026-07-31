@@ -96,11 +96,20 @@ ls -la docs/.vitepress/dist/index.html
 **网站**：无 PM2，一般**不必** `nginx -s reload`（只换了 dist 内容）。  
 **远程 MCP**：见 [`../../mcp-remote/deploy/README.md`](../../mcp-remote/deploy/README.md)；仅更新索引时通常**不必**重启（有缓存）；想立刻生效可 `pm2 restart agents-skill-mcp-remote`。
 
-### 4.2 工作区有脏文件、切不了分支
+### 4.2 工作区有脏文件、切不了分支（**预期行为，先 `git restore .`）
 
-服务器上跑过 `build`/`generate` 后，常出现未提交改动（`manifest.json`、角色页矩阵段、`health.json` 等），会挡住 `git checkout` / `git pull`。
+#### 为什么每次部署后都会脏？
 
-**部署机不要提交这些产物**，直接丢掉再切分支：
+`docs/public/manifest.json`、`health.json`、`validate-report.json` 以及部分 `docs/**/health/index.md` 等是 **`npm run generate` / `build` 的产物，且当前契约下要进 Git**（本机改 docs → generate → commit，供站点与 MCP 同源索引）。
+
+ECS 日常更新又会再跑一次 `npm run build`（`prebuild` = generate）。同一次 generate 在部署机重算后，常见只变：
+
+- `generatedAt` / `validatedAt` / `contentHash` 等时间戳与哈希  
+- 侧栏 / 矩阵等生成段  
+
+于是相对刚 `pull` 下来的 commit，工作区**必然变脏**。这不是误改业务正文，也不是 Git 坏了。
+
+#### 标准处置（保留此流程，不要在服务器 commit 这些脏文件）
 
 ```bash
 cd /var/www/agents-skill-site
@@ -111,7 +120,14 @@ git checkout main
 git pull origin main
 ```
 
-然后按 §4.1 重新 `npm run build`。
+然后按 §4.1 重新 `npm run build`（需要更新站/索引时）。
+
+**禁止**：在 ECS 上把 generate 脏文件 `git add`/`commit`/`push`（会把部署机时间戳打回 main，污染协作）。
+
+#### 为何不「治本」把 `public/*.json` 改成不入库？
+
+曾考虑 `.gitignore` 掉索引 JSON、只在部署机生成。对外功能（站 + 公网 MCP）可以等价，但会推翻现有约定：仓内/CI/`MANIFEST_PATH` 默认有一份可 clone 即读的索引；本地与 CI 必须强制先 generate。  
+**当前定案：不改该契约**；接受「部署机每次 build 后脏 → 下次更新前 `git restore .`」。原因备忘见上，免以后误当成事故去改分层模型。
 
 ### 4.3 一键脚本备忘
 
@@ -119,9 +135,10 @@ git pull origin main
 #!/usr/bin/env bash
 set -euo pipefail
 cd /var/www/agents-skill-site
+git restore .                 # 丢掉上次 build 弄脏的 generate 产物（见 §4.2）
 git pull origin main
 cd Code/code
-npm ci
+npm ci                        # lock 无变更可省略
 npm run build
 test -f docs/.vitepress/dist/index.html
 echo "OK → http://<PUBLIC_HOST>/agents-skill/"

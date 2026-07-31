@@ -63,8 +63,10 @@ pm2 restart agents-skill-mcp-remote
 ### 日常：MCP 代码有变更
 
 ```bash
-cd /var/www/agents-skill-site && git pull origin main
-cd Code/mcp-remote && npm ci
+cd /var/www/agents-skill-site
+git restore .    # 上次 Code/code build 弄脏的 generate 产物；原因见 07-deploy §4.2
+git pull origin main
+cd Code/mcp-remote && npm ci   # lock 无变更可省略
 pm2 restart agents-skill-mcp-remote
 ```
 
