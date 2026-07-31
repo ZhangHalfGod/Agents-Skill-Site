@@ -86,7 +86,8 @@ function buildPresentation({ shortname, date, meta }) {
 
   const buttons = [
     {
-      label: `✓ ${meta.presets.find((p) => p.id === meta.defaultPreset)?.label || '默认'}`,
+      // 「推荐」= 默认预设，不是选中态。飞书卡点按后不会改按钮文案。
+      label: `推荐 · ${meta.presets.find((p) => p.id === meta.defaultPreset)?.label || '默认'}`,
       value: 'run_dir_choice=default',
       style: 'success'
     }
@@ -109,7 +110,7 @@ function buildPresentation({ shortname, date, meta }) {
       { type: 'buttons', buttons },
       {
         type: 'context',
-        text: '点按钮 = 选预设；自定义请回复 run_dir=<绝对路径>。也可在【新项目需求】首条内嵌 run_dir= 跳过本门禁。'
+        text: '点按钮即选定（卡片不会改成打勾；以 bot 下一轮确认为准）。自定义请回复 run_dir=<绝对路径>。首条可内嵌 run_dir= 跳过 M0。'
       }
     ]
   };
