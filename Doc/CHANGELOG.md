@@ -1,5 +1,25 @@
 # CHANGELOG — All_URI
 
+## 2026-08-03 — phase4：飞书「同意升格」整包流水线（commit develop，禁 push）
+
+- **契约**：`Doc/phase4/09-feishu-promote-pipeline.md`；S0 决策日志 2026-08-03-01
+- **触发**：飞书 `同意升格` / `执行本周升格` / `执行升格`（与 H3「放行/同意」互斥）
+- **脚本**：`Code/orchestration/openclaw/promote-commit.cjs`（develop-only、路径白名单、永不 push）
+- **SOUL**：草稿增加「升格流水线模式」——须同步 `~/.openclaw/workspace/SOUL.md`
+- **digest**：`lesson-scan --format digest` 末行提示终审触发句
+
+## 2026-07-31 — docs：本机 OpenClaw 运行时部署清单（大脑 + 手脚）
+
+- **入口**：根 `README.md` / `README.zh-CN.md` → [`Doc/guides/local-openclaw-runtime-deploy.md`](guides/local-openclaw-runtime-deploy.md)
+- **用途**：新 Win/Mac 按清单装 Gateway、花名册、公网 MCP、SOUL、可选 Cursor H3；明确「只加群 ≠ 部署完成」
+- **交叉**：`Code/orchestration/README.md` 挂链
+
+## 2026-07-31 — phase4：成本台账字段草案（DeepSeek / Cursor）
+
+- **契约**：`Doc/phase4/08-cost-ledger-schema.md` — run-dir `cost-ledger.yaml` 字段（hops / quality / totals / recommendations）
+- **现网锚定**：pm/arch=`deepseek-v4-pro`；ui/dev/test/sec/ops=`deepseek-v4-flash`；H3=`cursor/agent`（token vs subscription）
+- **样例单价表**：`Code/orchestration/openclaw/cost/pricing.example.yaml`（实价 TBD；调档仅人闸建议）
+
 ## 2026-07-31 — phase4：M0 run-dir 飞书 presentation 交互卡
 
 - **能力**：【新项目需求】先发 OpenClaw presentation 按钮卡选痕迹目录；支持预设 / `run_dir=` 自定义 / 首条内嵌跳过

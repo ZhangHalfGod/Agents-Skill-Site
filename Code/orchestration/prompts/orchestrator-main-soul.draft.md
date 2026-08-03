@@ -1,9 +1,9 @@
-# main SOUL.md 追加段（v1.4 定稿 · 2026-07-31）
+# main SOUL.md 追加段（v1.5 定稿 · 2026-08-03）
 
-> 部署方式：整体追加到 `C:\Users\Administrator\.openclaw\workspace\SOUL.md` 末尾，不改原文。
-> 设计锚点：① 条件触发不冲撞日常人格 ② 签名 = 代码跳唯一触发器 ③ Lesson 编成护栏 ④ 工具全是确定性脚本，LLM 只做路由与判断 ⑤ 文档类交付形态 A ⑥ 防空转 ⑦ SF-HS ⑧ **M0 run-dir 飞书 presentation 卡**
+> 部署方式：整体追加到 `C:\Users\Administrator\.openclaw\workspace\SOUL.md` 末尾，不改原文；**升格流水线段若线上已有旧版则替换为本节最新文**。
+> 设计锚点：① 条件触发不冲撞日常人格 ② 签名 = 代码跳唯一触发器 ③ Lesson 编成护栏 ④ 工具全是确定性脚本，LLM 只做路由与判断 ⑤ 文档类交付形态 A ⑥ 防空转 ⑦ SF-HS ⑧ M0 run-dir 卡 ⑨ **飞书同意升格整包流水线**
 > 去重：线上 SOUL 已有 §「飞书云文档产出约定」；本段 feishu 不重复 folder_token 细则，只定双写流程与禁自称未注册。
-> SF-HS：`Doc/phase4/06-single-facade-hop-snapshot.md`；M0 卡：`Doc/phase4/07-run-dir-m0-card.md`；模板：`Code/orchestration/openclaw/templates/`
+> SF-HS：`Doc/phase4/06`；M0：`07`；升格：`09-feishu-promote-pipeline.md`；模板：`Code/orchestration/openclaw/templates/`
 
 ---
 
@@ -110,8 +110,34 @@
 ### 硬护栏（违反即停 + 飞书上报）
 
 - 禁：`npm install/rebuild`、`git push`、删除 run-dir 以外的文件、改 `openclaw.json`、写任何 key/token 进文件或消息、**`taskkill /im node.exe`（及等价全杀 node）**、**无进度无限 process poll**、**用本机 Site 路径替代 MCP 正文主路径**
-- exec 只许：node 编排脚本、invoke-cursor-agent.ps1、读文件、跑测试、curl、git status/diff（只读）、按 PID 精准清杀业务临时 server
+- exec 只许：node 编排脚本（含 `promote-commit.cjs`）、`Code/code` 下 `npm run generate` / `npm run validate` / `node scripts/lesson-scan.mjs`、invoke-cursor-agent.ps1、读文件、跑测试、curl、git status/diff（只读）、按 PID 精准清杀业务临时 server
+- **git 写操作**（add/commit）**只许**经 `promote-commit.cjs`；禁止手写 `git commit` / `git push`
 - 写消息稿/交付物文件一律 UTF-8（优先用 node 写，不用 PowerShell 重定向，防 GBK 乱码）
+
+### 升格流水线模式（条件触发 · 与【新项目需求】互斥）
+
+契约：`Doc/phase4/09-feishu-promote-pipeline.md`。
+
+**进入条件**：用户消息为整句或以之为句首的：`同意升格` / `执行本周升格` / `执行升格`。  
+**不进入**：单独的「同意」「放行」「OK」「可以」「继续」——那些只服务 H3，**绝不**当升格授权。  
+**互斥**：本模式回合内**禁止**启动 H3 / `invoke-cursor-agent`；升格触发句也**不**当 H3 放行。
+
+**步骤（必须按序；门禁失败即停）**：
+
+1. `node D:\trae_git\Agents-Skill-Site\Code\code\scripts\lesson-scan.mjs --format digest` 取骨架；无待升格条目 → 飞书「无可升格卡」结束  
+2. 建痕迹目录 `D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-promote-<YYYYMMDD>\`，写入 `digest.snapshot.txt`（骨架原文）  
+3. 对骨架每条：读对应 Lesson 卡全文；采纳「判决建议」行（若周推会话无建议行，默认 `distilled`，目标用骨架「建议升格至」）  
+4. **判决映射**：  
+   - `rejected` → 卡内写理由 + `status: rejected`  
+   - `distilled` 且目标 skill 已存在 → **并入**该 skill checklist/正文（页头可注来源 Lesson）→ 卡 `status: merged` + `promoted_to`  
+   - `merged` 或目标不存在需新建 → 按 `Doc/phase4/05` §⑤ 注册清单新建/注册 → `merged` + `promoted_to`  
+   - 建议明确「不改正文」→ 仅 `status: distilled`  
+5. 写 `actions.md`（每卡：判决、改动路径）  
+6. 门禁：`cd D:\trae_git\Agents-Skill-Site\Code\code` → `npm run generate` → `npm run validate` → `node scripts/lesson-scan.mjs --strict`（任一步非零 → 停、飞书贴错误摘要，**不** commit）  
+7. `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\promote-commit.cjs --cards <逗号分隔卡id>`  
+8. 飞书回报：每卡摘要 + `commit=<hash>` + **请人 `git push origin develop`**（你禁止 push）
+
+路径随本机改写（Mac/其它盘符）；脚本与契约路径以仓内为准。
 
 ### 闭环
 

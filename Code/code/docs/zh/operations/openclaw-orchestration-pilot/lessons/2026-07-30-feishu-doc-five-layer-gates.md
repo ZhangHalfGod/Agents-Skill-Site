@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P2
-status: raw
+status: merged
 scope: common
 seen_in_projects: [openclaw-orchestration-pilot]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/docs/plugin-tool-gates.md
 related_agents: [OpsEngineer]
 related_skills: [openclaw-ops]
 ---
@@ -59,7 +59,7 @@ related_skills: [openclaw-ops]
 - profile 白名单定义：openclaw `dist/tool-catalog-*.js` 的 `CORE_TOOL_PROFILES`（coding = 核心工具 allowlist + bundle-mcp，full = `["*"]`）
 - 配置备份：`.openclaw/openclaw.json.bak-feishu-tools` / `.bak-tool-profile` / `.bak-clear-0730`（sessions）
 
-## 蒸馏笔记（status=distilled 后填）
+## 蒸馏笔记（status=merged 后填）
 
-- 升格目标路径：
-- 变更摘要：
+- 升格目标路径：docs/zh/skills/custom/common/openclaw-ops/docs/plugin-tool-gates.md
+- 变更摘要：plugin-tool-gates.md 已含五层门禁表 + CLI 冒烟先行 + 运行时权限两层（2026-07-30 落地，来源标注本卡）；本次仅标记 merged 闭环

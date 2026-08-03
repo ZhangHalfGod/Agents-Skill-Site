@@ -20,6 +20,8 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 - [ ] 写入仓内文件：**优先用编辑器 / agent 文件工具**，不用 PS 重定向（`>` 是 UTF-16LE，`Set-Content -Encoding utf8` 在 5.1 会带 BOM）
 - [ ] 必须 PS 写时：`[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding $false))`
 - [ ] 排查顺序：先确认**文件真实字节**（勿信终端显示——PS 控制台显示 UTF-8 也常乱，文件本身可能是好的）
+- [ ] 调 native CLI（node 等）传参：**PS 5.1 不转义内嵌双引号**，argv 会被拆碎（`Too many arguments` 即中枪）——参数含引号时不要 `& openclaw agent --message "..."`，改走 node wrapper（`Code/orchestration/openclaw/invoke-openclaw-agent.cjs`，spawnSync 数组传参）或先把内容写文件再传路径
+- [ ] native 命令 stdout（UTF-8）被 PS 5.1 按 ANSI/GBK 解码 → 中文乱码：`[Console]::OutputEncoding=[Text.Encoding]::UTF8` 只修 stdout 方向（修不了 argv）；**已乱码输出不必重跑**——agent session 转录在 `~/.openclaw/agents/<id>/sessions/*.jsonl`，取最后一条 assistant 消息即干净全文（2026-07-30 H1 跳实测，零 token 损耗）
 
 ## 拦截提示
 
@@ -31,6 +33,7 @@ description: 本仓 docs 真源；直接编辑本页后 npm run generate
 - PowerShell 7+（pwsh）默认 UTF-8，无此坑；本约定针对 5.1（bm 实测环境）
 - **`.ps1` 脚本文件本身也要带 BOM**：PS 5.1 解析无 BOM 的 `.ps1` 同样按系统 ANSI——含中文的脚本必须存「UTF-8 **带 BOM**」（2026-07-30 `Code/orchestration/openclaw/setup-agents.ps1` 实证，报 token 解析错误）
 - 来源 Lesson：`docs/operations/openclaw-orchestration-pilot/lessons/2026-07-29-ps-getcontent-utf8-cron.md`（merged）
+- 来源 Lesson：`docs/operations/mechassist-openapi/lessons/2026-07-30-ps51-openclaw-cli-argv-stdout.md`（merged）
 
 ## 在 Cursor 中使用本技能
 

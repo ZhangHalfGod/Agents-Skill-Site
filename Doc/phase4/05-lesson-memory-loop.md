@@ -11,13 +11,13 @@
   └─ ① 记 Lesson Card（Code/code/docs/zh/operations/<project>/lessons/*.md，raw）
         └─ ② 扫描 npm run lessons:scan（聚类 + 升格建议清单）
               └─ ③ 每周一 09:00 OpenClaw cron → 飞书群【每周升格建议】
-                    └─ ④ 人工终审（逐条拍板：merged / distilled / rejected）
+                    └─ ④ 人工终审（飞书「同意升格」整包授权，或仓内逐条拍板）
                           └─ ⑤ 升格执行（merged → 新/更新公共 skill + 注册；rejected → 注理由+抢救）
-                                └─ ⑥ 门禁收尾（generate / validate / scan --strict / commit / push）
-                                      └─ 站点 + MCP manifest 自动反映 → 下个项目的 agent 可直接 @ 到
+                                └─ ⑥ 门禁收尾（generate / validate / scan --strict / commit develop；push 由人）
+                                      └─ 人 push 后站点 + MCP manifest 反映 → 下个项目的 agent 可直接 @ 到
 ```
 
-关键分工：**机器负责发现与提醒（②③），人负责判断（④），机器负责搬运与校验（⑤⑥）**。agent 在周推里给的「判决建议」只是草稿，不替人拍板。
+关键分工：**机器负责发现与提醒（②③）；人负责授权/判断（④）；机器在授权后负责搬运与校验（⑤⑥ commit）**。无「同意升格」时禁止自动改正文。agent 周推「判决建议」仍是草稿，整包采纳须人发触发句。整包契约见 [`09-feishu-promote-pipeline.md`](09-feishu-promote-pipeline.md)。
 
 ---
 
@@ -56,12 +56,21 @@ npm run lessons:scan -- --format digest # 确定性周推骨架（cron 用）
 - 无建议时发空态消息（含 raw/distilled/merged 计数）——链路存活的信号
 - 为什么不用 webhook 脚本：对比表见 [`03-openclaw-route-table.md`](03-openclaw-route-table.md) §6.4
 
-## ④ 人工终审（飞书消息 → 逐条拍板）
+## ④ 人工终审
+
+### 路径 A — 飞书整包授权（2026-08-03）
+
+- 触发句（整句或句首）：`同意升格` / `执行本周升格` / `执行升格`
+- 效果：main 按当前 `lesson-scan --format digest` + 判决建议整包执行 §⑤⑥（**commit `develop`，不 push**）
+- 与 H3「放行/同意」互斥；详见 [`09-feishu-promote-pipeline.md`](09-feishu-promote-pipeline.md)
+- **线上须同步 SOUL**：`~/.openclaw/workspace/SOUL.md` ← 仓内 `orchestrator-main-soul.draft.md` 升格段
+
+### 路径 B — 仓内逐条拍板（原模式）
 
 - 审阅对象：仓里对应的 Lesson 卡全文（不是只看推送）
 - 每张卡拍两个板：**判决** + （若 merged）**合入目标**
 - 推荐模式：逐条细审——每卡给「正文要点 + 建议 + 理由」，人逐条确认（2026-07-29 首跑即此模式）
-- agent 的判决建议可采纳也可推翻（首跑 3 条中 2 条被改为更积极的 merged）
+- agent 的判决建议可采纳也可推翻
 
 ## ⑤ 升格执行
 
@@ -95,11 +104,14 @@ cd Code/code
 npm run generate                        # 重刷 manifest / 侧栏 / EN 页（skills 计数随之更新）
 npm run validate                        # 应 OK（agents=8 skills=N rules=10）
 node scripts/lesson-scan.mjs --strict   # 卡 frontmatter 合法
-git add -A && git commit && git push
+# 飞书整包路径：经白名单脚本 commit（禁 push）
+node ../orchestration/openclaw/promote-commit.cjs --cards <id1,id2,...>
+# 或人工：git add（限治理相关路径）&& git commit；push 永远由人
+git push origin develop                 # 人执行；SOUL / 编排者禁 push
 ```
 
 - validate 会顺带刷新站点健康页（Skills 计数（期望 N））
-- 部署：服务器 pull + build 后站点可见；MCP manifest 同源更新
+- 部署：人 push 后服务器 pull + build；MCP manifest 同源更新
 
 ## 首跑实例（2026-07-29）
 

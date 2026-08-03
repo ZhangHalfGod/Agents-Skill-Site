@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P1
-status: raw
+status: merged
 scope: common
 seen_in_projects: [mechassist-openapi]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/index.md
 related_agents: [Architect, DevLead]
 related_skills: [openclaw-ops]
 ---
@@ -49,7 +49,7 @@ MechAssist-Fusion extern-api 的 openapiGenerator.js `PATH_FALLBACKS` 中 VOICE_
 - git status 改动面 = 白名单 4 文件（registry.js / openapiGenerator.js / openapi.test.js / openapi.snapshot.json）
 - 本 session 2026-07-31（run-openapi-voice-20260731）
 
-## 蒸馏笔记（status=distilled 后填）
+## 蒸馏笔记（status=merged 后填）
 
-- 升格目标路径：
-- 变更摘要：
+- 升格目标路径：docs/zh/skills/custom/common/openclaw-ops/index.md
+- 变更摘要：openclaw-ops 已知坑增两条：发现面/OpenAPI 契约只认单一真源（LAYERS），PATH_FALLBACKS 仅兑底；文档跳 agent 禁调 feishu 工具（双写是编排者职责）+ 信封校验重派口径

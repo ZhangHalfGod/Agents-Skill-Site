@@ -53,7 +53,8 @@ raw ──蒸馏──► distilled ──合入 docs/** ──► merged
 3. 重复违规且须强制？→ **Rule L2**（慎 L0）  
 4. 否则 → `rejected` 或仅留 operations
 
-> 扫描只出建议清单；**合入永远走人工蒸馏终审**，禁止脚本自动改正文。  
+> 扫描只出建议清单；**无飞书授权时禁止脚本/cron 自动改正文**。  
+> **飞书整包授权**（2026-08-03）：群内回复「同意升格」= 授权本机 OpenClaw main 按 digest 判决建议执行合入 + `generate`/`validate` + **本机 commit `develop`**（仍禁 push）。契约：`Doc/phase4/09-feishu-promote-pipeline.md`。亦可继续在仓内逐条人工蒸馏。  
 
 ## 收尾清单（项目 / 周）
 

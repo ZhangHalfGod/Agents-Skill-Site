@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P1
-status: raw
+status: merged
 scope: common
 seen_in_projects: [mechassist-openapi]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/index.md
 related_agents: [OpsEngineer]
 related_skills: [openclaw-ops]
 ---
@@ -54,7 +54,7 @@ related_skills: [openclaw-ops]
 - 修复过程：2026-07-30 本 session（models status 显示 effective=env；GetEnvironmentVariable User/Machine 均为 null；从 pm store 提取有效 key 直连 deepseek API 验 200；三处补齐后 main CLI ping 通、飞书恢复）
 - `Code/orchestration/openclaw/setup-agents.ps1`（现只覆盖角色 agent store，未含 main 与默认 profile——待补齐口径）
 
-## 蒸馏笔记（status=distilled 后填）
+## 蒸馏笔记（status=merged 后填）
 
-- 升格目标路径：
-- 变更摘要：
+- 升格目标路径：docs/zh/skills/custom/common/openclaw-ops/index.md
+- 变更摘要：openclaw-ops 首页增「认证三层解剖」表 + 401 诊断顺序 + 注入三件套 checklist 条目（含 gateway 重启生效口径）

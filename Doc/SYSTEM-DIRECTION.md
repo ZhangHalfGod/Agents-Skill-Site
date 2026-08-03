@@ -177,6 +177,14 @@
 
 > 历史条目保持原样；若结论被推翻，新增条目并写明「废止/取代：YYYY-MM-DD-xx」。
 
+### 2026-08-03-01｜飞书「同意升格」整包执行合入（commit develop，禁 push）
+
+- **背景**：周推 digest 只提醒；人要在 Cursor 手改才能升格，摩擦高。希望飞书一句话触发整套合入。  
+- **选项**：A) 整包采纳判决建议并由 main 写 skill + 门禁 + commit；B) 只改卡 status；C) 逐条卡 id 才执行。Git：1) commit 不 push；2) 自动 push develop；3) 开 PR。  
+- **结论**：**选 A + Git-1**。触发句与 H3「放行/同意」互斥；`git push` 仍禁；无触发句时扫描/cron 仍不改正文。人一句话授权 = 终审形态，不废止「蒸馏靠人判断」。  
+- **约束落地**：`Doc/phase4/09-feishu-promote-pipeline.md`；SOUL「升格流水线模式」；`promote-commit.cjs`。  
+- **影响**：`05-lesson-memory-loop` §④⑥；operations README；须同步线上 SOUL。
+
 ### 2026-07-31-01｜Single-Facade MCP + Hop Snapshot（正文只读进 MCP；Cursor 吃快照）
 
 - **背景**：编排要统一公网 MCP、角色自查；Cursor 侧 MCP 触发不稳；又不希望 OpenClaw/Cursor 依赖本机 Site 路径读说明书。  

@@ -17,6 +17,8 @@
 | 6 | **[05-lesson-memory-loop.md](05-lesson-memory-loop.md)** | **跨项目记忆复用闭环全流程 Runbook（已实战验证）** |
 | 7 | **[06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md)** | **SF-HS：单门面 MCP + 跳界快照（H3 Goal 灌包）** |
 | 8 | **[07-run-dir-m0-card.md](07-run-dir-m0-card.md)** | **M0：飞书 presentation 卡指定 run-dir** |
+| 9 | **[08-cost-ledger-schema.md](08-cost-ledger-schema.md)** | **成本台账字段草案（DeepSeek / Cursor）** |
+| 10 | **[09-feishu-promote-pipeline.md](09-feishu-promote-pipeline.md)** | **飞书「同意升格」整包流水线** |
 
 ## 本目录文件
 
@@ -30,6 +32,8 @@
 | [05-lesson-memory-loop.md](05-lesson-memory-loop.md) | ✅ |
 | [06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md) | ✅ |
 | [07-run-dir-m0-card.md](07-run-dir-m0-card.md) | ✅ |
+| [08-cost-ledger-schema.md](08-cost-ledger-schema.md) | 📝 字段草案 |
+| [09-feishu-promote-pipeline.md](09-feishu-promote-pipeline.md) | ✅ 契约 |
 
 ## 配套落点
 
@@ -37,6 +41,7 @@
 |------|------|
 | [`../../Code/code/scripts/lesson-scan.mjs`](../../Code/code/scripts/lesson-scan.mjs) | 4A 扫描脚本（`npm run lessons:scan`） |
 | [`../../Code/orchestration/`](../../Code/orchestration/README.md) | 4B OpenClaw 配置样例 + 交接 Prompt 模板（`*.example`，无密钥） |
+| [`../guides/local-openclaw-runtime-deploy.md`](../guides/local-openclaw-runtime-deploy.md) | **新机器本机大脑+手脚部署清单**（根 README 已挂） |
 | [`../../Code/doc/phase4/`](../../Code/doc/phase4/) | 实现笔记 / 试点证据（落地时按日追加） |
 
 ## 一句话定位
