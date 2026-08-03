@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P1
-status: raw
-scope: project
+status: merged
+scope: common
 seen_in_projects: [release-notes-gen]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/docs/orchestration-pitfalls.md
 related_agents: [ProductManager, Architect, DevLead]
 related_skills: [openclaw-ops]
 ---

@@ -130,14 +130,14 @@
 
 契约：`Doc/phase4/09-feishu-promote-pipeline.md`。
 
-**进入条件**：用户消息为整句或以之为句首的：`同意升格` / `执行本周升格` / `执行升格`。  
+**进入条件**：用户消息为整句或以之为句首的：`同意升格` / `执行本周升格` / `执行升格` / `同意蒸馏`（同义别名）。  
 **不进入**：单独的「同意」「放行」「OK」「可以」「继续」——那些只服务 H3，**绝不**当升格授权。  
 **互斥**：本模式回合内**禁止**启动 H3 / `invoke-cursor-agent`；升格触发句也**不**当 H3 放行。
 
 **步骤（必须按序；门禁失败即停）**：
 
-1. `node D:\trae_git\Agents-Skill-Site\Code\code\scripts\lesson-scan.mjs --format digest` 取骨架；无待升格条目 → 飞书「无可升格卡」结束  
-2. 建痕迹目录 `D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-promote-<YYYYMMDD>\`，写入 `digest.snapshot.txt`（骨架原文）  
+1. `node E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\code\scripts\lesson-scan.mjs --format digest` 取骨架；无待升格条目 → 飞书「无可升格卡」结束  
+2. 建痕迹目录 `E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-promote-<YYYYMMDD>\`，写入 `digest.snapshot.txt`（骨架原文）  
 3. 对骨架每条：读对应 Lesson 卡全文；采纳「判决建议」行（若周推会话无建议行，默认 `distilled`，目标用骨架「建议升格至」）  
 4. **判决映射**：  
    - `rejected` → 卡内写理由 + `status: rejected`  
@@ -145,9 +145,9 @@
    - `merged` 或目标不存在需新建 → 按 `Doc/phase4/05` §⑤ 注册清单新建/注册 → `merged` + `promoted_to`  
    - 建议明确「不改正文」→ 仅 `status: distilled`  
 5. 写 `actions.md`（每卡：判决、改动路径）  
-6. 门禁：`cd D:\trae_git\Agents-Skill-Site\Code\code` → `npm run generate` → `npm run validate` → `node scripts/lesson-scan.mjs --strict`（任一步非零 → 停、飞书贴错误摘要，**不** commit）  
-7. `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\promote-commit.cjs --cards <逗号分隔卡id>`  
-8. 飞书回报：每卡摘要 + `commit=<hash>` + **请人 `git push origin develop`**（你禁止 push）
+6. 门禁：`cd E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\code` → `npm run generate` → `npm run validate` → `node scripts/lesson-scan.mjs --strict`（任一步非零 → 停、飞书贴错误摘要，**不** commit）  
+7. `node E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\orchestration\openclaw\promote-commit.cjs --cards <逗号分隔卡id>`  
+8. 飞书回报：每卡摘要 + `commit=<hash>` + **请人 `git push origin develop`**（你禁止 push；本机已 commit 到 develop）
 
 路径随本机改写（Mac/其它盘符）；脚本与契约路径以仓内为准。
 

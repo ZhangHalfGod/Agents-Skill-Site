@@ -16,6 +16,7 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 
 ## 可执行清单
 
+- [ ] 编排流水线（H1–H4）高频坑：见 [编排流水线高频坑](./docs/orchestration-pitfalls.md)——交付物/信封双通道、路由判据以实测为准、PS 子脚本成败判定矩阵、feishu token 完整性、生成器双写等
 - [ ] 先 `openclaw health` + `openclaw doctor` 拿整体状态（勿凭猜）
 - [ ] cron error：按 [三步排查法](./docs/cron-troubleshooting.md) 定位，先看 `lastError` 再动手
 - [ ] Gateway 掉线（18789 无监听）：`openclaw gateway run --force` 拉起；反复掉线评估 `openclaw gateway install` 服务化
@@ -37,6 +38,10 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 - 改 env 类修复**必须重启 gateway** 才生效（只继承启动时刻环境；Windows 裸跑用 `gateway run --force`）；profile/store 类修复可能热加载，先验后重启
 - 发现面 / OpenAPI 契约生成**只认单一真源**（如 registry LAYERS），PATH_FALLBACKS 仅兜底安全网；新增/变更路由必须同步注册真源，parameters 对齐真实 handler（2026-07-31 实证）
 - 文档跳 agent **禁止自行调 feishu 工具**（双写/发布是编排者职责）；信封校验不合格 → 同跳重派附拒收原因，同跳 2 次不合格 → 飞书上报人工
+- **路由/接口实现判据以实测为准**：静态 grep 字面量会漏常量间接挂载（`toMountPath(API_PATHS.API_DOCS)` 场景假阴性「404」）；先起服务 curl，grep 只作线索（2026-08-02 实证）
+- **lesson 修正版显式标注「推翻 xx 结论」**：只写正确结论不够，错误结论会跨 run 复现；Goal 组装时对历史结论做事实复核，不以 agent 转述为准
+- **PS 调子脚本成败不能只信 `$LASTEXITCODE`**：子脚本 ParserError 时残留上次值 0 → 误 PASS；用 try/catch 或校验输出非空/成功标记（判定矩阵见 orchestration-pitfalls）
+- **feishu_doc 用完整 document_id 原样复制**：截断 token（含 `…`/空格）直接传 → 400，已 3 次手滑
 
 ## 认证三层解剖（401 排障顺序）
 
@@ -55,6 +60,7 @@ bm 部署（Gateway + 命名 agent + cron + 飞书渠道）的异常排查与常
 | L2 本页 | `docs/zh/skills/custom/common/openclaw-ops/index.md` | 默认清单 |
 | L3 cron 排查 | [cron error 三步排查法](./docs/cron-troubleshooting.md) | cron error / 投递异常时 |
 | L3 插件工具排查 | [插件工具五层门禁](./docs/plugin-tool-gates.md) | agent 自述工具"未注册"时 |
+| L3 编排坑位 | [编排流水线高频坑](./docs/orchestration-pitfalls.md) | H1–H4 编排/信封/编码/生成器类问题 |
 
 ## 关联角色（矩阵反向）
 

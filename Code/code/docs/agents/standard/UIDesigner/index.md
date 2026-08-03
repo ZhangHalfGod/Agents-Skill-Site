@@ -99,7 +99,6 @@ Core value: **polish and feasibility, standards and creativity**—strong aesthe
 - **Never commit real API keys;** `ARK_API_KEY` only in local env (e.g. `.env.local`, gitignored).
 - **Never send secrets, user data, or internal API details** in image prompts—visual description only.
 - **Prefer backend/MCP proxy:** `POST /api/ui-image/generate` or MCP `generateUiImage`; server holds keys, sanitizes input, archives metadata (`doc/assets/ui-gen/metadata.jsonl`).
-- **OpenClaw local path (current):** `Code/orchestration/openclaw/ui-image/generate-ui-image.cjs` with `ARK_API_KEY` + `ARK_IMAGE_MODEL` in `~/.openclaw/.env` only; H2b writes `ui-image-request.json`, orchestrator main runs the script.
 - Structured request fields: `scene`, `intent`, `style_tokens`, `layout_tokens`, `constraints`, `negative`.
 - After generation: write **§0 reference image & metadata** in module spec; extract token tables; notify DevLead to reference spec in module Prompt.
 

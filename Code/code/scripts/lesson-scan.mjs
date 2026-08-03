@@ -214,7 +214,7 @@ function renderDigest(lessons) {
   })
   lines.push(
     '',
-    '终审：飞书回复「同意升格」整包执行合入并本机 commit develop（不 push）；或逐条在仓内改。',
+    '终审：飞书回复「同意升格」或「同意蒸馏」整包执行合入并本机 commit develop（不 push）；或逐条在仓内改。',
     '完整扫描：`npm run lessons:scan`（Code\\code 目录）· 契约：Doc/phase4/09-feishu-promote-pipeline.md',
   )
   return lines.join('\n')
