@@ -1,0 +1,34 @@
+# mcp-resolve-h2b.yaml — H2b UIDesigner 角色自查快照
+# 来源：agents-skill-remote（Single-Facade MCP）；禁止写入任何 token
+mcp_resolve:
+  scheme: single-facade-mcp+hop-snapshot
+  from_hop: H2b
+  queried_at: "2026-08-03T13:57:00+08:00"
+  endpoint: "agents-skill-remote__health / get_agent / get_skill / get_source_text"
+  health:
+    ok: true
+    dataSource: "/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+    contentHash: "6029dcd3053d9df9"
+    mode: "local"
+    validatedAt: "2026-08-03T02:26:28.479Z"
+    counts:
+      agents: 8
+      skills: 13
+      rules: 10
+  agents:
+    - id: UIDesigner
+      index: 7
+      source: docs/zh/agents/standard/UIDesigner/index.md
+      contentHash: "b824ef750b187e94"
+  skills:
+    - id: frontend-design
+      index: 9
+      source: docs/zh/skills/external/frontend-design/index.md
+      contentHash: "8ed83cb1a1de8571"
+    - id: doc-coauthoring
+      index: 7
+      source: docs/zh/skills/external/doc-coauthoring/index.md
+      contentHash: "0757b9b20c305c45"
+  bind_note: |
+    正文已由 get_source_text 拉取并摘入 playbook-pack-h2b.md。
+    Cursor 侧禁止再调 MCP；只消费 Goal 内 Playbook Pack。

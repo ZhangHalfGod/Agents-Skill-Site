@@ -1,0 +1,45 @@
+# DeepSeek 官方公开价（USD / 1M tokens）— 无密钥
+# 来源核对：DeepSeek API Pricing（2026-07 档）；落地以官网为准，改价只改本文件
+# https://api-docs.deepseek.com/quick_start/pricing （或官网 Pricing 页）
+
+schema_version: 1
+as_of: "2026-08-03"
+currency: USD
+
+models:
+  - model_id: deepseek/deepseek-v4-pro
+    billing_mode: token
+    input_per_1m: 0.435          # cache miss
+    cached_input_per_1m: 0.003625
+    output_per_1m: 0.87
+    currency: USD
+
+  - model_id: deepseek/deepseek-v4-flash
+    billing_mode: token
+    input_per_1m: 0.14
+    cached_input_per_1m: 0.0028
+    output_per_1m: 0.28
+    currency: USD
+
+  # 别名（OpenClaw sessions.json 有时只写短 id）
+  - model_id: deepseek-v4-pro
+    billing_mode: token
+    input_per_1m: 0.435
+    cached_input_per_1m: 0.003625
+    output_per_1m: 0.87
+    currency: USD
+
+  - model_id: deepseek-v4-flash
+    billing_mode: token
+    input_per_1m: 0.14
+    cached_input_per_1m: 0.0028
+    output_per_1m: 0.28
+    currency: USD
+
+  - model_id: cursor/agent
+    billing_mode: subscription
+    input_per_1m: null
+    cached_input_per_1m: null
+    output_per_1m: null
+    currency: USD
+    note: "包月套餐：cost.amount=0，仍记 tokens 作用量"

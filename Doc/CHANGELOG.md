@@ -1,5 +1,18 @@
 # CHANGELOG — All_URI
 
+## 2026-08-03 — OpenClaw：UI 文生图脚本（火山方舟 ARK）
+
+- **脚本**：`Code/orchestration/openclaw/ui-image/generate-ui-image.cjs`（Key 仅 `~/.openclaw/.env`：`ARK_API_KEY` + `ARK_IMAGE_MODEL=ep-…`）
+- **挂接**：SOUL exec 白名单含该脚本；H2b 写 `ui-image-request.json`，main 出图后写回规范 §0
+- **说明**：同目录 `README.md`；UIDesigner §9 指向本机脚本路径
+
+## 2026-08-03 — phase4：成本台账采集与官方单价计价
+
+- **单价**：`Code/orchestration/openclaw/cost/pricing.yaml`（DeepSeek V4 Flash/Pro 官网公开价 USD；含 cache hit）
+- **脚本**：`collect-openclaw-usage`（trajectory `model.completed`）· `collect-cursor-usage` · `append-cost-hop` · `summarize-cost`
+- **挂接**：`invoke-openclaw-agent.cjs --cost-ledger <run-dir> --hop Hn`；SOUL 草稿每跳/H3/M2 成本义务
+- **契约**：`Doc/phase4/08-cost-ledger-schema.md` 标为实现
+
 ## 2026-08-03 — phase4：飞书「同意升格」整包流水线（commit develop，禁 push）
 
 - **契约**：`Doc/phase4/09-feishu-promote-pipeline.md`；S0 决策日志 2026-08-03-01

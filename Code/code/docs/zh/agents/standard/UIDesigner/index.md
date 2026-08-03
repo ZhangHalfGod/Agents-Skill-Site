@@ -207,8 +207,12 @@ UIDesigner 将“出图请求”结构化为以下字段（建议作为一次性
 
 在本项目中已经落地为：
 
-- **REST**：`POST /api/ui-image/generate`
-- **MCP tool**：`generateUiImage`（通过 `POST /tools/call`）
+- **OpenClaw 本机脚本（推荐当前路径）**：`Code/orchestration/openclaw/ui-image/generate-ui-image.cjs`  
+  - Key：`~/.openclaw/.env` 中 `ARK_API_KEY` + `ARK_IMAGE_MODEL`（接入点 `ep-…`）  
+  - H2b 只写 `ui-image-request.json`；由编排者 main 调脚本落盘 `doc/assets/ui-gen/`  
+  - 说明见同目录 `README.md`
+- **REST**（站点/代理可选）：`POST /api/ui-image/generate`
+- **MCP tool**（可选）：`generateUiImage`（通过 `POST /tools/call`）
 
 ### 9.5 本项目调用方式与注意事项（可直接复制执行）
 

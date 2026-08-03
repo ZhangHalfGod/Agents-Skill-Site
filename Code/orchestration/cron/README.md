@@ -6,8 +6,11 @@
 
 - **形态**：cron agent 消息任务（形态 A，选型见 `Doc/phase4/03-openclaw-route-table.md` §6.4）
 - **调度**：每周一 09:00 Asia/Shanghai（`0 9 * * 1`）
-- **agent**：`main`（isolated session）；**投递**：announce → feishu 既有简报群（复用 brief-* 任务通道）
+- **agent**：`main`（isolated session）；**投递**：announce → feishu **编程群**
 - **消息文本**：[`weekly-lesson-digest.message.md`](weekly-lesson-digest.message.md)（改文案改这个文件，然后 edit job）
+- **群分流（bm，2026-08-03 纠正）**：
+  - `weekly-lesson-digest` → `oc_3d3d446d39b8d2d0292c0d31f428bc23`（**编程群**）
+  - `brief-*` 新闻/简报 → `oc_aa27aa0eca3dc7caf03c63a51fdd5a7b`（**资讯群**）— 编程群不要新闻定时
 
 ### 注册（bm 已执行 2026-07-29）
 
@@ -16,10 +19,16 @@
 $msg = Get-Content "D:\trae_git\Agents-Skill-Site\Code\orchestration\cron\weekly-lesson-digest.message.md" -Raw -Encoding UTF8
 openclaw cron add weekly-lesson-digest --cron "0 9 * * 1" --tz Asia/Shanghai `
   --agent main --session isolated --message $msg --thinking off --timeout-seconds 600 `
-  --announce --channel feishu --to "<feishu 群 target，同 brief-* 任务>" --exact
+  --announce --channel feishu --to "oc_3d3d446d39b8d2d0292c0d31f428bc23" --exact
 ```
 
-（bm 实际注册 id = `2e5ff3db-91f4-4fff-a8e5-bd0148b9689a`，2026-08-03 09:00 首跑。）
+brief 改投资讯群（示例）：
+
+```powershell
+openclaw cron edit <brief-job-uuid> --to oc_aa27aa0eca3dc7caf03c63a51fdd5a7b --channel feishu --announce
+```
+
+（bm 实际注册 id = `2e5ff3db-91f4-4fff-a8e5-bd0148b9689a`。）
 
 ### 运维
 

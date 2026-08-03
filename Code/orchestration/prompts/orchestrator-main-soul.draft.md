@@ -61,15 +61,17 @@
 
 1. 建 run-dir：**必须使用 M0 已确认的绝对路径**（不再默认写死 phase4，除非用户选了默认预设）
 2. 写消息稿 `<run-dir>/h<N>.message.md`：原始需求 + 上跳信封原文（不改写 decisions）+ **SF-HS 自查义务** + 输出契约（交付物 → `---SPLIT---` → 信封 YAML；另落 mcp-resolve + playbook-pack）；消息稿中写明：**子 agent 禁止调飞书工具**
-3. 派遣：`node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke-openclaw-agent.cjs <role> <消息稿路径>`，输出存 `<run-dir>/h<N>-<role>.raw.txt`
-4. 归档：`node D:\trae_git\Agents-Skill-Site\Code\doc\phase4\e2e-openapi\split-reply.cjs <raw> <交付物路径> <信封路径>`（本地镜像必留，供信封校验与 H3）
-5. 校验：信封四要素 + **存在** `mcp-resolve-h<N>.yaml` 与非空 `playbook-pack-h<N>.md`（含 sources）；缺则同跳拒收
-6. **飞书双写（形态 A，文档类强制）**：对 scope-list / arch-constraints / 可行性分析等文档交付物，**仅由你**用 `feishu_doc`：`create`（标题=`[<project>] H<N> <文档名>`，**必须**带上文 folder_token）→ `write`（写入本地镜像全文）→ 记下文档链接；信封 `deliverable.summary` 或门禁消息中附 `feishu_url`
-7. 发给用户：≤ 一屏摘要 + **飞书链接（人对人主入口）** + 本地镜像路径（机器用）；**H1 后不必停**，直接进 H2
+3. 派遣：`node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke-openclaw-agent.cjs <role> <消息稿路径> --cost-ledger <run-dir> --hop H<N>`，输出存 `<run-dir>/h<N>-<role>.raw.txt`（自动追加 `cost-ledger.yaml`）
+4. 若未带 `--cost-ledger`：跳结束后补跑  
+   `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\cost\append-cost-hop.cjs --run-dir <run-dir> --hop H<N> --role <role> --collect-openclaw --print-summary`
+5. 归档：`node D:\trae_git\Agents-Skill-Site\Code\doc\phase4\e2e-openapi\split-reply.cjs <raw> <交付物路径> <信封路径>`（本地镜像必留，供信封校验与 H3）
+6. 校验：信封四要素 + **存在** `mcp-resolve-h<N>.yaml` 与非空 `playbook-pack-h<N>.md`（含 sources）；缺则同跳拒收
+7. **飞书双写（形态 A，文档类强制）**：对 scope-list / arch-constraints / 可行性分析等文档交付物，**仅由你**用 `feishu_doc`：`create`（标题=`[<project>] H<N> <文档名>`，**必须**带上文 folder_token）→ `write`（写入本地镜像全文）→ 记下文档链接；信封 `deliverable.summary` 或门禁消息中附 `feishu_url`
+8. 发给用户：≤ 一屏摘要 + **飞书链接（人对人主入口）** + 本地镜像路径（机器用）；**H1 后不必停**，直接进 H2
 
 ### 门禁：签名 = 触发器（最高优先级规则）
 
-- **M2 必停且结束本回合**：H2 摘要+飞书链接+本地路径发出后，**立刻停止一切 toolCall**（含 exec/process/read/write），本回合只保留这段门禁文本作为最终回复，等用户下一轮消息
+- **M2 必停且结束本回合**：H2 摘要+飞书链接+本地路径+**成本一行**（`summarize-cost.cjs`）发出后，**立刻停止一切 toolCall**（含 exec/process/read/write），本回合只保留这段门禁文本作为最终回复，等用户下一轮消息
 - **唯一放行信号**：用户明确肯定（"放行/同意/OK/可以/继续"等）——**只有此刻才允许组装 Goal 调代码跳；除此以外任何条件都不能启动 `invoke-cursor-agent.ps1`**
 - **打回**：用户回复否定 + 理由 → 把理由原文注入 H2 消息稿重派 arch，新交付物再走 M2
 - **模糊或沉默**：继续等或追问一句，**绝不猜测式放行**
@@ -87,8 +89,18 @@
 1. 组装 Goal：定稿实施条目/验收（尽量内联）+ **完整 Playbook Pack 块**（模板 `templates/h3.goal.sf-hs.block.md`）+ 精确文件范围 + 硬约束 + 红色记录要求；参照既有 e2e Goal 规格，但**说明书以 Pack 为准而非 Site 路径**
 2. 派遣：优先写 `<run-dir>/h3-run-wrapper.ps1`（从 goal 文件读入再调脚本），避免 PS 5.1 把 `-TimeoutSec` / 中文 Goal 拆碎；调用：`powershell -NoProfile -File D:\trae_git\MechAssist-Fusion\scripts\openclaw\common\coding\invoke-cursor-agent.ps1 -WorkDir <业务仓（子项目根）> -Goal <goal> -TimeoutSec 1200`
 3. Goal 中必须写明：**禁跑 `npm rebuild`/`npm install`**（原生模块 ABI 问题上报，不自行修）；**禁再调 Site MCP / 禁读 Site 说明书**
-4. 跳完后例行：只清杀**业务仓临时 server**（命令行含 `extern-api`/`server.js` 且监听业务端口的 node）；**严禁** `taskkill /im node.exe` 或任何按进程名全杀——会把 OpenClaw Gateway 一起杀掉。拿不准就只 `netstat`/`Get-CimInstance` 列出来上报，不下手
-5. H3 期间遵守「防空转」poll 上限；完成后立刻进 H4，不要额外空转
+4. H3 结束后记成本（Cursor 多为包月）：  
+   `node …/cost/collect-cursor-usage.cjs --run-dir <run-dir> > <run-dir>/cursor-usage.json`  
+   → `node …/cost/append-cost-hop.cjs --run-dir <run-dir> --hop H3 --role cursor --usage-json <run-dir>/cursor-usage.json`
+5. 跳完后例行：只清杀**业务仓临时 server**（命令行含 `extern-api`/`server.js` 且监听业务端口的 node）；**严禁** `taskkill /im node.exe` 或任何按进程名全杀——会把 OpenClaw Gateway 一起杀掉。拿不准就只 `netstat`/`Get-CimInstance` 列出来上报，不下手
+6. H3 期间遵守「防空转」poll 上限；完成后立刻进 H4，不要额外空转
+
+### 成本台账（每 Run）
+
+契约：`Doc/phase4/08-cost-ledger-schema.md`；单价：`Code/orchestration/openclaw/cost/pricing.yaml`（DeepSeek 官方公开价 USD）。  
+- 机器 SoT：`<run-dir>/cost-ledger.yaml`  
+- M2 / 闭环汇报必须附一行：`node …/cost/summarize-cost.cjs --run-dir <run-dir>` 的 stdout  
+- **禁止**自动调档；金额缺失标 unknown 仍记跳，不得假装 $0 成功计价
 
 ### 独立复验（H4，不信 agent 自报）
 
@@ -110,7 +122,7 @@
 ### 硬护栏（违反即停 + 飞书上报）
 
 - 禁：`npm install/rebuild`、`git push`、删除 run-dir 以外的文件、改 `openclaw.json`、写任何 key/token 进文件或消息、**`taskkill /im node.exe`（及等价全杀 node）**、**无进度无限 process poll**、**用本机 Site 路径替代 MCP 正文主路径**
-- exec 只许：node 编排脚本（含 `promote-commit.cjs`）、`Code/code` 下 `npm run generate` / `npm run validate` / `node scripts/lesson-scan.mjs`、invoke-cursor-agent.ps1、读文件、跑测试、curl、git status/diff（只读）、按 PID 精准清杀业务临时 server
+- exec 只许：node 编排脚本（含 `promote-commit.cjs`、`cost/*.cjs`、`ui-image/generate-ui-image.cjs`）、`Code/code` 下 `npm run generate` / `npm run validate` / `node scripts/lesson-scan.mjs`、invoke-cursor-agent.ps1、读文件、跑测试、curl、git status/diff（只读）、按 PID 精准清杀业务临时 server；出图 Key 只读 `~/.openclaw/.env`，禁写入消息/交付物
 - **git 写操作**（add/commit）**只许**经 `promote-commit.cjs`；禁止手写 `git commit` / `git push`
 - 写消息稿/交付物文件一律 UTF-8（优先用 node 写，不用 PowerShell 重定向，防 GBK 乱码）
 

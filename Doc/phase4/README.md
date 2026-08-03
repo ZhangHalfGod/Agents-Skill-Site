@@ -32,7 +32,7 @@
 | [05-lesson-memory-loop.md](05-lesson-memory-loop.md) | ✅ |
 | [06-single-facade-hop-snapshot.md](06-single-facade-hop-snapshot.md) | ✅ |
 | [07-run-dir-m0-card.md](07-run-dir-m0-card.md) | ✅ |
-| [08-cost-ledger-schema.md](08-cost-ledger-schema.md) | 📝 字段草案 |
+| [08-cost-ledger-schema.md](08-cost-ledger-schema.md) | ✅ 契约+脚本 |
 | [09-feishu-promote-pipeline.md](09-feishu-promote-pipeline.md) | ✅ 契约 |
 
 ## 配套落点

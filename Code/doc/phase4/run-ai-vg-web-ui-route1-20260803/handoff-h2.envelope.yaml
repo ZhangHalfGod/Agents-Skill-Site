@@ -1,0 +1,117 @@
+handoff:
+  from: Architect
+  to: DevLead
+  project: ai-virtual-glasses-web-ui
+  stage: design
+  deliverable:
+    kind: arch-constraints
+    path: docs/pipeline/run-web-ui-20260803/架构约束与接口_Web-UI.md
+    summary: |
+      前端四层清洁架构（Presentation / Application / Domain / Infrastructure）；
+      Vue3 + Vite + TS monorepo（web/apps + web/packages）；
+      Infrastructure 唯一持有 VITE_API_BASE�?v2 发现驱动路由�?      P0 5 端点 + P1 IMU/SLAM/WS stub + P2 AR 壳预留；
+      不触发红色记录；mock 内置 api-client interceptor�?  decisions:
+    - "前端运行时只�?glasses-debug JSON API，不部署 OpenClaw 到板�?  # H1 原文
+    - "RK3588 使用 /glasses/ �?:8090；Jetson 使用 :8080"               # H1 原文
+    - "前端自研，不复用 BM /usr/BM/web/www"                              # H1 原文
+    - "Nginx 反代仅文档参考，不改 100G_gateway bm_agent.conf"             # H1 原文
+    - "Mock 数据格式与真�?API JSON 字段一致，前端不感知数据来�?          # H1 原文
+    - "P0 五条用户故事可无硬件独立验收；P1/P2 需硬件到位后补�?           # H1 原文
+    - "采用 monorepo 结构：web/apps + web/packages（api-client / domain / ui-kit�?  # H2 新增
+    - "四层清洁架构：Presentation �?Application �?Domain �?Infrastructure"           # H2 新增
+    - "技术栈：Vue3 + Vite + TS；零 UI 组件库；fetch + AbortController"               # H2 新增
+    - "CORS：开�?Vite proxy；RK3588 同源；Jetson 后端 CORS *"                        # H2 新增
+    - "Mock 策略：api-client 内置 interceptor + _meta.isMock 驱动"                    # H2 新增
+    - "WS stub 粒度：IStatusRepository 接口 �?P0 mock �?P1 WebSocket 实现"            # H2 新增
+    - "/v2 发现驱动路由：首次加载缓�?links[]，fallback 硬编码端�?                     # H2 新增
+  open_questions:
+    - "P1 IMU/SLAM 具体数据结构是否需要与 jetson/http 后端 co-version（留�?DevLead + 板端操作人）"
+    - "WebSocket /ws/status 的消息格式是否与 00-plan 阶段 B 的推送需求完全对齐（留给 DevLead 与板端开发对齐）"
+    - "P2 ar-shell �?Canvas 渲染引擎是否复用 HandCanvas 抽象还是独立（留�?DevLead + UIDesigner�?
+    - "H2b UIDesigner 产出�?Design Tokens 是否与本文档技术栈约束一致（H2b 必须声明兼容性）"
+  parallel:
+    - "H2b UIDesigner �?ui-spec �?落盘 docs/pipeline/run-web-ui-20260803/UI设计规范_Web-UI_AI适配�?md"
+    - "H3 DevLead 同时消费 arch-constraints + ui-spec 两份文档"
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      �?当前阶段输入/输出/审核状态已标明（H1 requirements �?H2 design�?      �?上一阶段已通过（H1 门禁证据齐备，无未解问题�?      �?核心�?网关/安全——明确不适用（纯 Web 前端普通模块；红色记录未触发）
+      �?本阶段无新教�?      �?部署验收——不适用（H2 设计阶段无部署）
+      部分证据：接口模型到字段级（HealthResponse / GestureResponse / V2DiscoveryResponse / ControlRequest/Response / ApiError）；四层依赖方向明确；红色模块清单已列明（不触发�?  lesson_hint: ""
+
+⚠️ 🛠�?Exec failed: `if exist "D:\trae_git\AI_Virtual_Glasses\jetson\http\" (dir…e_git\AI_Virtual_Glasses\jetson\http\) else (echo NOT_FOUND)`
+node : [cost] {
+����λ�� ��:1 �ַ�: 1
++ node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([cost] {:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  "ok": true,
+  "path": "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4\\run-ai-vg-web-ui-route1-20260803\\cost-ledger.yaml",
+  "hop": {
+    "hop_id": "H2",
+    "role": "arch",
+    "provider": "deepseek",
+    "model_id": "deepseek/deepseek-v4-pro",
+    "billing_mode": "token",
+    "ok": true,
+    "tokens": {
+      "input": 58419,
+      "output": 16605,
+      "cached_input": 374016,
+      "total": 449040
+    },
+    "cost": {
+      "amount": null,
+      "currency": "USD",
+      "pricing_ref": "deepseek/deepseek-v4-pro@pricing"
+    },
+    "source": {
+      "kind": "openclaw_trajectory",
+      "paths": [
+        "C:\\Users\\Administrator\\.openclaw\\agents\\arch\\sessions\\379f6cf3-38ee-4c51-afd2-412a634da9a2.trajectory.j
+sonl",
+        "C:\\Users\\Administrator\\.openclaw\\agents\\arch\\sessions\\82eb41db-f660-40d9-8d49-bc0abdc47bc6.trajectory.j
+sonl",
+        "C:\\Users\\Administrator\\.openclaw\\agents\\arch\\sessions\\6edd3708-2d4d-4a5e-8700-83943929a177.trajectory.j
+sonl",
+        "C:\\Users\\Administrator\\.openclaw\\agents\\arch\\sessions\\54126654-fb83-46cf-8f59-6cb198fa3b49.trajectory.j
+sonl"
+      ]
+    },
+    "started_at": "2026-08-03T06:01:17.205Z",
+    "ended_at": "2026-08-03T06:01:17.205Z",
+    "notes": ""
+  },
+  "totals": {
+    "tokens_input": 105803,
+    "tokens_output": 26835,
+    "tokens_cached_input": 754688,
+    "tokens_total": 887326,
+    "cost_by_provider": {
+      "deepseek": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "cursor": {
+        "amount": 0,
+        "currency": "USD"
+      }
+    },
+    "cost_primary": {
+      "amount": 0,
+      "currency": "USD"
+    },
+    "fx": {
+      "USD_CNY": null,
+      "as_of": null
+    },
+    "hop_count": 2,
+    "failed_hops": 0
+  },
+  "summary": "�?Run 成本：DeepSeek $0.0000 · Cursor $0.0000（包月则多为 0�?· 合计 $0.0000 · tokens in/out/cache 105803/26835/
+754688 · 跳数 2"
+}
+[cost] �?Run 成本：DeepSeek $0.0000 · Cursor $0.0000（包月则多为 0�?· 合计 $0.0000 · tokens in/out/cache 105803/26835/754688 
+· 跳数 2

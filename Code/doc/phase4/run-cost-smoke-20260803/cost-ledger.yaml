@@ -1,0 +1,77 @@
+schema_version: 1
+run_id: run-cost-smoke-20260803
+project: Agents-Skill-Site
+currency_primary: USD
+created_at: "2026-08-03T02:47:23.425Z"
+updated_at: "2026-08-03T02:48:17.746Z"
+status: open
+hops:
+  - hop_id: H-promote
+    role: main
+    provider: deepseek
+    model_id: deepseek/deepseek-v4-flash
+    billing_mode: token
+    ok: true
+    tokens: 
+      input: 12704
+      output: 3369
+      cached_input: 295296
+      total: 311369
+    cost: 
+      amount: 0.003549
+      currency: USD
+      pricing_ref: deepseek/deepseek-v4-flash@pricing
+    source: 
+      kind: openclaw_trajectory
+      paths:
+        - "C:\\\\Users\\\\Administrator\\\\.openclaw\\\\agents\\\\main\\\\sessions\\\\a438a29f-b4f2-404e-86fd-d045396314df.trajectory.jsonl"
+    started_at: "2026-08-03T02:21:58.733Z"
+    ended_at: "2026-08-03T02:21:58.733Z"
+    notes: ""
+  - hop_id: H3
+    role: cursor
+    provider: cursor
+    model_id: cursor/agent
+    billing_mode: subscription
+    ok: true
+    tokens: 
+      input: 0
+      output: 0
+      cached_input: 0
+      total: 0
+    cost: 
+      amount: 0
+      currency: USD
+      pricing_ref: cursor/agent@pricing
+    source: 
+      kind: cursor_cli
+      paths:
+        - "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4\\run-cost-smoke-20260803\\cursor-usage.json"
+    started_at: null
+    ended_at: null
+    notes: ""
+quality:
+  retry_count: 0
+  h3_pass: false
+  human_override: false
+totals:
+  tokens_input: 12704
+  tokens_output: 3369
+  tokens_cached_input: 295296
+  tokens_total: 311369
+  cost_by_provider:
+    deepseek:
+      amount: 0.003549
+      currency: USD
+    cursor:
+      amount: 0
+      currency: USD
+  cost_primary:
+    amount: 0.003549
+    currency: USD
+  fx:
+    USD_CNY: null
+    as_of: null
+  hop_count: 2
+  failed_hops: 0
+recommendations: []

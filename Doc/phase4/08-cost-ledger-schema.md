@@ -1,9 +1,9 @@
 # 成本台账字段草案（现网 DeepSeek / Cursor）
 
-> **日期**：2026-07-31  
-> **状态**：字段草案（未实现采集脚本）  
+> **日期**：2026-07-31 · **实现**：2026-08-03  
+> **状态**：字段契约 + 采集/计价脚本已落地（`Code/orchestration/openclaw/cost/`）  
 > **范围**：bm Windows · OpenClaw DeepSeek 角色跳 + Cursor Agent H3  
-> **非目标**：本版不写自动调档逻辑；只定「记什么、从哪取、怎么汇总」
+> **非目标**：本版不写自动调档逻辑
 
 ## 1. 现网模型绑定（草案锚定）
 
@@ -17,11 +17,13 @@
 
 价格以 **运营商公开价或合同价** 填入 `pricing.yaml`；下表为**占位**，落地前必须改成实价（单位：USD / 1M tokens，或人民币注明）：
 
-| model_id | input_per_1m | output_per_1m | currency | note |
-|----------|-------------:|--------------:|----------|------|
-| `deepseek/deepseek-v4-pro` | TBD | TBD | CNY | 填 DeepSeek 官方/渠道价 |
-| `deepseek/deepseek-v4-flash` | TBD | TBD | CNY | 填 DeepSeek 官方/渠道价 |
-| `cursor/agent` | TBD 或 `subscription` | — | USD/CNY | 若包月则记 `billing_mode=subscription`，token 仍记用量便于换算 |
+| model_id | input_per_1m (miss) | cached_input_per_1m | output_per_1m | currency |
+|----------|--------------------:|--------------------:|--------------:|----------|
+| `deepseek/deepseek-v4-pro` | 0.435 | 0.003625 | 0.87 | USD |
+| `deepseek/deepseek-v4-flash` | 0.14 | 0.0028 | 0.28 | USD |
+| `cursor/agent` | — | — | — | USD（subscription，amount=0） |
+
+实价文件：[`Code/orchestration/openclaw/cost/pricing.yaml`](../../Code/orchestration/openclaw/cost/pricing.yaml)（以 DeepSeek 官网公开价为准，改价只改该文件）。
 
 ## 2. 落点文件（建议）
 
@@ -38,8 +40,15 @@
 共享单价表（仓内，无密钥）：
 
 ```text
-Code/orchestration/openclaw/cost/pricing.example.yaml
+Code/orchestration/openclaw/cost/pricing.yaml          # 现网采用
+Code/orchestration/openclaw/cost/pricing.example.yaml  # 示例副本
+Code/orchestration/openclaw/cost/append-cost-hop.cjs
+Code/orchestration/openclaw/cost/collect-openclaw-usage.cjs
+Code/orchestration/openclaw/cost/collect-cursor-usage.cjs
+Code/orchestration/openclaw/cost/summarize-cost.cjs
 ```
+
+OpenClaw 用量源：`~/.openclaw/agents/<role>/sessions/*.trajectory.jsonl` 中 `type=model.completed` → `data.usage.{input,output,cacheRead}`。
 
 ## 3. 顶层 schema（`cost-ledger.yaml`）
 
@@ -185,11 +194,12 @@ recommendations:
 ## 9. 计价公式（token 模式）
 
 ```text
-cost = (tokens.input  / 1e6) * input_per_1m
-     + (tokens.output / 1e6) * output_per_1m
+cost = (tokens.input         / 1e6) * input_per_1m          # cache miss
+     + (tokens.cached_input  / 1e6) * cached_input_per_1m   # cache hit（trajectory: cacheRead）
+     + (tokens.output        / 1e6) * output_per_1m
 ```
 
-- 仅有 `tokens.total` 时：按「保守」用 `output_per_1m` 估，或拒绝自动计价并标 `needs_review`。
+- 仅有 `tokens.total` 时：拒绝自动计价（amount=null / billing_mode=unknown）。
 - `subscription`：`cost.amount=0`，用量仍累加到 `totals.tokens_*`。
 
 ## 10. 与编排闭环的挂点（实现时）
@@ -202,13 +212,14 @@ cost = (tokens.input  / 1e6) * input_per_1m
 
 **不改**：SF-HS、Lesson 路径、M0 卡；仅在 run-dir 增文件。
 
-## 11. 验收（本草案）
+## 11. 验收
 
 - [x] 字段覆盖现网 DeepSeek pro/flash + Cursor H3
 - [x] 区分 token / subscription
 - [x] 质量与建议分栏，禁止自动调档
-- [ ] 单价表填实价
-- [ ] 采集脚本从 OpenClaw / Cursor 日志回填（后续实现）
+- [x] 单价表填 DeepSeek 官方公开价（USD）
+- [x] `collect-openclaw-usage` / `append-cost-hop` / invoke `--cost-ledger`
+- [ ] 真实编排 Run 全链路飞书贴出 summarize 一行（人工冒烟）
 
 ## 12. 示例骨架（可直接复制到 run-dir）
 

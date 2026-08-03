@@ -121,7 +121,7 @@ openclaw mcp list
 ### 3.6 编排者 SOUL（流水线人格）
 
 1. 打开仓内草稿：[`Code/orchestration/prompts/orchestrator-main-soul.draft.md`](../../Code/orchestration/prompts/orchestrator-main-soul.draft.md)  
-2. **追加**到本机 `~/.openclaw/workspace/SOUL.md`（或部署侧约定的 main workspace），不要无脑覆盖日常人格段。  
+2. **追加**到本机 `~/.openclaw/workspace/SOUL.md`（或部署侧约定的 main workspace），不要无脑覆盖日常人格段。仓内草稿升版（含 **升格流水线模式** /「同意升格」）时须把对应段同步进线上 SOUL，否则飞书触发句不生效——见 [`Doc/phase4/09-feishu-promote-pipeline.md`](../phase4/09-feishu-promote-pipeline.md)。  
 3. **全文替换**草稿中的 Windows 绝对路径为本机路径，例如：  
    - `D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\...`  
    - `D:\trae_git\MechAssist-Fusion\scripts\openclaw\...`  

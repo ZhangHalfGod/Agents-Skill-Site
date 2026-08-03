@@ -40,13 +40,19 @@ node Code/orchestration/openclaw/build-run-dir-card.cjs --shortname demo --print
 node Code/orchestration/openclaw/resolve-run-dir.cjs --shortname demo --choice default --mkdir
 ```
 
-## 4. 安全
+## 4. 预设策略（2026-08-03）
+
+- **卡片按钮**：暂时只开放 `phase4`（`Code/doc/phase4/run-<短名>-<日期>`）  
+- **已去掉** `MechAssist doc` 等其它根目录按钮；需要时再作为扩展加回 `presets`  
+- **业务仓痕迹**：首条内嵌或另发 `run_dir=<绝对路径>`（须在 `allowRoots` 下，如 `D:\trae_git\AI_Virtual_Glasses\docs\pipeline\...`）
+
+## 5. 安全
 
 - 最终路径必须在 `run-dir-presets.yaml` 的 `allowRoots` 下  
 - 禁止 `..`  
 - Token / 密钥不得写入 run-dir 文件名或卡片
 
-## 5. 与「真·文件选择器」
+## 6. 与「真·文件选择器」
 
 飞书**不能**打开本机资源管理器；自定义路径仍靠粘贴 `run_dir=`。  
 按钮解决的是**预设一键**，不是任意浏览磁盘。

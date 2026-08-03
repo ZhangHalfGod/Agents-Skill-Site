@@ -1,6 +1,10 @@
 # run-dir 预设（M0 飞书交互卡）
 # 修改后无需重启 Gateway；下次【新项目需求】即生效
 # 安全：解析后的绝对路径必须落在 allowRoots 之下
+#
+# 策略（2026-08-03）：按钮预设暂时只开放「默认 phase4」。
+# 业务仓痕迹（如 AI_Virtual_Glasses）用首条内嵌 / 另发 run_dir=<绝对路径>；
+# 其它根目录预设作为后续扩展再加回 presets（勿默认塞进卡片）。
 
 defaultPreset: phase4
 
@@ -14,6 +18,8 @@ presets:
     label: "默认 phase4"
     # 最终目录 = root / run-<shortName>-<YYYYMMDD>
     root: "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4"
-  fusion-doc:
-    label: "MechAssist doc"
-    root: "D:\\trae_git\\MechAssist-Fusion\\doc"
+
+# --- 后续扩展示例（当前勿启用：取消注释会重新出现在 M0 卡）---
+#  fusion-doc:
+#    label: "MechAssist doc"
+#    root: "D:\\trae_git\\MechAssist-Fusion\\doc"

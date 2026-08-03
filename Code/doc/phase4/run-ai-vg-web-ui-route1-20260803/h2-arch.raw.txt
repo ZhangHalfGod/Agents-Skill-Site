@@ -1,0 +1,86 @@
+好的，Architect 启动。先执行 SF-HS 自查链路，同时并行拉取必读文档。
+索引健康 ✅。现在拉取 agent/skill 正文 + 必读文档。
+必读文档已加载完成。现在拉取参考架构和契约文档。
+还需拉取 ai-code-boundary 技能和参考架构文档。
+所有文档已读取完毕。现在创建产出物。先确保目录存在，然后落盘 playbook-pack-h2.md + mcp-resolve-h2.yaml，最后生成主交付物。
+治量仓快照已落盘。现在生成主交付物——《架构约束与接口_Web-UI.md》。
+交付物已落盘。验证文件完整性。
+文件验证通过（599 行 / 33KB）。以下为完整交付物摘要和 handoff 信封。
+
+---
+
+# 架构约束与接口_Web-UI.md — 交付摘要
+
+## 核心决策
+
+| 决策 | 结论 |
+|------|------|
+| **Monorepo** | 采用 `web/apps` + `web/packages`（api-client / domain / ui-kit），P2 ar-shell 零重构 |
+| **四层架构** | Presentation → Application → Domain ← Infrastructure；Infrastructure 唯一持有 `VITE_API_BASE` |
+| **技术栈** | Vue3 + Vite + TS + Pinia（可选）；零 UI 组件库；fetch + AbortController |
+| **/v2 发现驱动路由** | 首次加载 GET /v2，links[] 缓存，无硬编码端点 URL |
+| **CORS** | 开发 Vite proxy 足够；RK3588 同源；Jetson 后端加 `*` |
+| **Mock 策略** | api-client 内置 interceptor + `_meta.isMock` 字段驱动 MockBadge |
+| **WS stub** | `IStatusRepository` 接口 → P0 MockStatusRepository → P1 WsStatusRepository |
+| **红色记录** | 不触发——纯前端普通模块 |
+
+## 产出物清单
+
+| 文件 | 路径 |
+|------|------|
+| ✅ 架构约束 | `D:\trae_git\AI_Virtual_Glasses\docs\pipeline\run-web-ui-20260803\架构约束与接口_Web-UI.md` |
+| ✅ MCP 快照 | `D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-ai-vg-web-ui-route1-20260803\mcp-resolve-h2.yaml` |
+| ✅ Playbook Pack | `D:\trae_git\Agents-Skill-Site\Code\doc\phase4\run-ai-vg-web-ui-route1-20260803\playbook-pack-h2.md` |
+
+---
+
+---SPLIT---
+
+```yaml
+handoff:
+  from: Architect
+  to: DevLead
+  project: ai-virtual-glasses-web-ui
+  stage: design
+  deliverable:
+    kind: arch-constraints
+    path: docs/pipeline/run-web-ui-20260803/架构约束与接口_Web-UI.md
+    summary: |
+      前端四层清洁架构（Presentation / Application / Domain / Infrastructure）；
+      Vue3 + Vite + TS monorepo（web/apps + web/packages）；
+      Infrastructure 唯一持有 VITE_API_BASE，/v2 发现驱动路由；
+      P0 5 端点 + P1 IMU/SLAM/WS stub + P2 AR 壳预留；
+      不触发红色记录；mock 内置 api-client interceptor。
+  decisions:
+    - "前端运行时只调 glasses-debug JSON API，不部署 OpenClaw 到板端"  # H1 原文
+    - "RK3588 使用 /glasses/ 或 :8090；Jetson 使用 :8080"               # H1 原文
+    - "前端自研，不复用 BM /usr/BM/web/www"                              # H1 原文
+    - "Nginx 反代仅文档参考，不改 100G_gateway bm_agent.conf"             # H1 原文
+    - "Mock 数据格式与真实 API JSON 字段一致，前端不感知数据来源"          # H1 原文
+    - "P0 五条用户故事可无硬件独立验收；P1/P2 需硬件到位后补验"           # H1 原文
+    - "采用 monorepo 结构：web/apps + web/packages（api-client / domain / ui-kit）"  # H2 新增
+    - "四层清洁架构：Presentation → Application → Domain ← Infrastructure"           # H2 新增
+    - "技术栈：Vue3 + Vite + TS；零 UI 组件库；fetch + AbortController"               # H2 新增
+    - "CORS：开发 Vite proxy；RK3588 同源；Jetson 后端 CORS *"                        # H2 新增
+    - "Mock 策略：api-client 内置 interceptor + _meta.isMock 驱动"                    # H2 新增
+    - "WS stub 粒度：IStatusRepository 接口 → P0 mock → P1 WebSocket 实现"            # H2 新增
+    - "/v2 发现驱动路由：首次加载缓存 links[]，fallback 硬编码端点"                     # H2 新增
+  open_questions:
+    - "P1 IMU/SLAM 具体数据结构是否需要与 jetson/http 后端 co-version（留给 DevLead + 板端操作人）"
+    - "WebSocket /ws/status 的消息格式是否与 00-plan 阶段 B 的推送需求完全对齐（留给 DevLead 与板端开发对齐）"
+    - "P2 ar-shell 的 Canvas 渲染引擎是否复用 HandCanvas 抽象还是独立（留给 DevLead + UIDesigner）"
+    - "H2b UIDesigner 产出的 Design Tokens 是否与本文档技术栈约束一致（H2b 必须声明兼容性）"
+  parallel:
+    - "H2b UIDesigner → ui-spec → 落盘 docs/pipeline/run-web-ui-20260803/UI设计规范_Web-UI_AI适配版.md"
+    - "H3 DevLead 同时消费 arch-constraints + ui-spec 两份文档"
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      ✅ 当前阶段输入/输出/审核状态已标明（H1 requirements → H2 design）
+      ✅ 上一阶段已通过（H1 门禁证据齐备，无未解问题）
+      ✅ 核心层/网关/安全——明确不适用（纯 Web 前端普通模块；红色记录未触发）
+      ✅ 本阶段无新教训
+      ⬜ 部署验收——不适用（H2 设计阶段无部署）
+      部分证据：接口模型到字段级（HealthResponse / GestureResponse / V2DiscoveryResponse / ControlRequest/Response / ApiError）；四层依赖方向明确；红色模块清单已列明（不触发）
+  lesson_hint: ""
+```

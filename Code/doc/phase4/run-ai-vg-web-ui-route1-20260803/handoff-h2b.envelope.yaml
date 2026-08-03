@@ -1,0 +1,105 @@
+handoff:
+  from: UIDesigner
+  to: DevLead
+  project: ai-virtual-glasses-web-ui
+  stage: design
+  deliverable:
+    kind: ui-spec
+    path: docs/pipeline/run-web-ui-20260803/UI设计规范_Web-UI_AI适配�?md
+    summary: |
+      P0 debug-console UI 规范：深色画�?#05070a�?0a1018)+浅色内容岛读 JSON�?      单页 4 Tab IA（概�?手势/API发现/控制）；6 组件 × 5 状态矩阵；
+      Design Tokens 表（�?字号/间距/圆角/阴影，CSS 变量交付）；
+      轮询/退避、pinch 高亮、POST control 反馈、MockBadge 联动�?      还原度走�?6 维度；�? 出图参考占位（scene=DebugConsole�?      ui-image-request.json 已落盘，�?main 白名单脚本出图后回填 image_path）�?      �?H2 接口模型字段级对�?01-http-debug-surface §1/§5 + H1 §六映射表�?  decisions:
+    - "深色主路径：body 不强制浅底，画布微渐变；浅色内容岛仅用于 JSON/表单可读性，外轮廓同套圆�?描边/阴影"
+    - "信息架构：单�?4 Tab（概�?手势/API发现/控制），默认 Tab 状态切换，hash 锚点映射双兼容（�?arch 复核 A1�?
+    - "Mock 判定优先级：响应�?mock 字段 �?X-Mock �?�?VITE_MOCK=1 兜底；任一�?mock �?MockBadge（fixed 橙）常驻"
+    - "轮询：health 5s / gesture 1s / imu 200ms(P1)，document.hidden 暂停，失败指数退�?5�?0�?0s"
+    - "HandCanvas 无相机画面，�?21 �?landmarks 抽象骨架；pinch=true 绿色 PINCH + 骨架描边高亮 + 拇指食指关键点放�?
+    - "ControlPanel：Apply 防连�?3s 超时；响应区展示状态码+JSON；成功绿/失败红（不泄露内部细节）；恢复默认自�?Apply 一次（待复�?A5�?
+    - "Design Tokens �?CSS 自定义属性交付，框架中立；技术栈�?H2 arch-constraints 为准；UI 组件�?base URL 硬编�?
+    - "不引�?webfont�?1MB gzip 预算），系统�?+ 等宽 fallback（待复核 A3�?
+  open_questions:
+    - "A1 路由粒度：Tab 状态切�?vs hash 路由 —�?�?Architect H2 定夺（本规范双兼容）"
+    - "A2 mock 标记字段位置：响应体 vs X-Mock 头（与后端契约确认）"
+    - "A5 恢复默认是否自动 Apply（影响后�?control 契约�?
+    - "P1 SlamPanel/WS stub 组件细节�?H2 契约产出后补�?
+  gate:
+    checklist: stage-gate-flow
+    evidence: |
+      �?本跳输入/输出已标明（H1 scope-list + 01-http-debug-surface �?ui-spec�?      �?�?H2 接口模型不冲突：字段级对�?01-http-debug-surface §1/§5 + H1 §六端点映射表（H2 未产出，跨层项显式标「待 arch 复核」）
+      �?核心�?网关/安全——明确不适用（纯前端展示层；�?key/token 写入任何文件�?      �?本跳 Lesson 已记录（§9.3：H2 并行未完成时对齐 H1+http-debug-surface 并标注待复核�?      �?部署验收——不适用（本跳无部署�?      部分证据：出图产物未生成（路�? �?main 白名单脚本执行，§0 image_path 待回填）
+  lesson_hint: ""
+
+
+---
+
+node : [cost] {
+����λ�� ��:1 �ַ�: 1
++ node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([cost] {:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  "ok": true,
+  "path": "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4\\run-ai-vg-web-ui-route1-20260803\\cost-ledger.yaml",
+  "hop": {
+    "hop_id": "H2b",
+    "role": "ui",
+    "provider": "deepseek",
+    "model_id": "deepseek/deepseek-v4-flash",
+    "billing_mode": "token",
+    "ok": true,
+    "tokens": {
+      "input": 56110,
+      "output": 31785,
+      "cached_input": 440448,
+      "total": 528343
+    },
+    "cost": {
+      "amount": 0.017988,
+      "currency": "USD",
+      "pricing_ref": "deepseek/deepseek-v4-flash@pricing"
+    },
+    "source": {
+      "kind": "openclaw_trajectory",
+      "paths": [
+        "C:\\Users\\Administrator\\.openclaw\\agents\\ui\\sessions\\2ac84dd2-9233-4d17-8fee-0aab0a2cd6df.trajectory.jso
+nl"
+      ]
+    },
+    "started_at": "2026-08-03T06:02:33.573Z",
+    "ended_at": "2026-08-03T06:02:33.573Z",
+    "notes": ""
+  },
+  "totals": {
+    "tokens_input": 161913,
+    "tokens_output": 58620,
+    "tokens_cached_input": 1195136,
+    "tokens_total": 1415669,
+    "cost_by_provider": {
+      "deepseek": {
+        "amount": 0.017988,
+        "currency": "USD"
+      },
+      "cursor": {
+        "amount": 0,
+        "currency": "USD"
+      }
+    },
+    "cost_primary": {
+      "amount": 0.017988,
+      "currency": "USD"
+    },
+    "fx": {
+      "USD_CNY": null,
+      "as_of": null
+    },
+    "hop_count": 3,
+    "failed_hops": 0
+  },
+  "summary": "�?Run 成本：DeepSeek $0.0180 · Cursor $0.0000（包月则多为 0�?· 合计 $0.0180 · tokens in/out/cache 161913/58620/
+1195136 · 跳数 3"
+}
+[cost] �?Run 成本：DeepSeek $0.0180 · Cursor $0.0000（包月则多为 0�?· 合计 $0.0180 · tokens in/out/cache 161913/58620/1195136
+ · 跳数 3
+**执行摘要**：MCP 自查 ✅（health 绿，UIDesigner + frontend-design + doc-coauthoring 正文已摘�?playbook-pack-h2b.md，快照已�?mcp-resolve-h2b.yaml，均�?token）；H2 未完�?�?按预案以 H1 + `01-http-debug-surface.md` 对齐并标�?5 项「待 arch 复核」；主交付物 + 出图请求（scene=DebugConsole，prompt 纯视觉描述）�?4 个文件全部落盘校验通过�?

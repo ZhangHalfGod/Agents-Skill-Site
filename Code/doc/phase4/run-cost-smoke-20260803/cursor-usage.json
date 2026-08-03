@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "provider": "cursor",
+  "model_id": "cursor/agent",
+  "billing_mode": "subscription",
+  "tokens": {
+    "input": 0,
+    "output": 0,
+    "cached_input": 0,
+    "total": 0
+  },
+  "usage_found": false,
+  "source": {
+    "kind": "cursor_cli",
+    "paths": [
+      "D:\\trae_git\\Agents-Skill-Site\\Code\\doc\\phase4\\run-cost-smoke-20260803\\cursor-usage.json"
+    ]
+  },
+  "notes": "no token fields; subscription mode amount=0"
+}
