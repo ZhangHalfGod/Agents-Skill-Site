@@ -1,5 +1,13 @@
 # CHANGELOG — All_URI
 
+## 2026-08-03 — phase4：飞书「同意升格」整包流水线（commit develop，禁 push）
+
+- **契约**：`Doc/phase4/09-feishu-promote-pipeline.md`；S0 决策日志 2026-08-03-01
+- **触发**：飞书 `同意升格` / `执行本周升格` / `执行升格`（与 H3「放行/同意」互斥）
+- **脚本**：`Code/orchestration/openclaw/promote-commit.cjs`（develop-only、路径白名单、永不 push）
+- **SOUL**：草稿增加「升格流水线模式」——须同步 `~/.openclaw/workspace/SOUL.md`
+- **digest**：`lesson-scan --format digest` 末行提示终审触发句
+
 ## 2026-07-31 — docs：本机 OpenClaw 运行时部署清单（大脑 + 手脚）
 
 - **入口**：根 `README.md` / `README.zh-CN.md` → [`Doc/guides/local-openclaw-runtime-deploy.md`](guides/local-openclaw-runtime-deploy.md)

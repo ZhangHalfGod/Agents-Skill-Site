@@ -13,6 +13,7 @@ orchestration/
     agents.example.yaml            ← 命名 agent + 模型分层（含分档实例化与改模型正路注释）
     mcp.servers.example.yaml       ← MCP 服务挂接样例（对应 Doc/phase4/04）
     setup-agents.ps1               ← 花名册一键重建/对齐脚本（幂等，无密钥；详见头注释）
+    promote-commit.cjs             ← 飞书升格：develop-only commit，永不 push（见 Doc/phase4/09）
   envelopes/
     handoff.example.yaml           ← 交接信封实例（H1：PM → Architect）
   prompts/
@@ -25,6 +26,10 @@ orchestration/
 完整清单（含飞书 / MCP / SOUL / Gateway / Cursor H3，供 AI 按文档执行）：
 
 **[`Doc/guides/local-openclaw-runtime-deploy.md`](../../Doc/guides/local-openclaw-runtime-deploy.md)**
+
+## 飞书「同意升格」
+
+契约 [`Doc/phase4/09-feishu-promote-pipeline.md`](../../Doc/phase4/09-feishu-promote-pipeline.md)；脚本 `openclaw/promote-commit.cjs`；**须把 SOUL 升格段同步到** `~/.openclaw/workspace/SOUL.md`（本仓只交草稿 `prompts/orchestrator-main-soul.draft.md`）。
 
 ## 使用顺序（试点 B3）
 

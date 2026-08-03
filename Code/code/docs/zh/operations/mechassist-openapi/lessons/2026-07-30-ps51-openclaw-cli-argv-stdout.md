@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P2
-status: raw
+status: merged
 scope: common
 seen_in_projects: [mechassist-openapi]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/powershell-utf8/index.md
 related_agents: [OpsEngineer]
 related_skills: [powershell-utf8, openclaw-ops]
 ---
@@ -50,7 +50,7 @@ related_skills: [powershell-utf8, openclaw-ops]
 - 乱码原件与抢救产物：`Code/doc/phase4/e2e-openapi/h1-pm.raw.txt`（乱）vs `h1-pm.clean.txt`（jsonl 提取）
 - H2 报错原文：`Code/doc/phase4/e2e-openapi/h2-arch.raw.txt` 首跑残留（"Too many arguments"）
 
-## 蒸馏笔记（status=distilled 后填）
+## 蒸馏笔记（status=merged 后填）
 
-- 升格目标路径：
-- 变更摘要：
+- 升格目标路径：docs/zh/skills/custom/common/powershell-utf8/index.md
+- 变更摘要：powershell-utf8 增两条 checklist：PS5.1 调 native CLI 不转义内嵌双引号（argv 拆分，走 node wrapper）；stdout UTF-8 被 GBK 解码乱码（OutputEncoding 只修 stdout 方向，jsonl 提取干净全文）

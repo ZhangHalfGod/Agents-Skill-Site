@@ -6,10 +6,10 @@ audience: skill
 audience_guess: skill
 target_id: ""
 priority: P1
-status: raw
+status: merged
 scope: common
 seen_in_projects: [mechassist-openapi]
-promoted_to: ""
+promoted_to: docs/zh/skills/custom/common/openclaw-ops/index.md
 related_agents: [DevLead, OpsEngineer]
 related_skills: [openclaw-ops]
 ---
@@ -47,7 +47,7 @@ related_skills: [openclaw-ops]
 - 复核过程记录：本 session 2026-07-30（服务启动报 NODE_MODULE_VERSION 137→127 不匹配；Get-Process 枚举到 pid 持有模块，CommandLine = cursor-agent node 起 server/server.js）
 - 修复后系统 node 22 全量测试 43 pass / 1 fail（唯一 fail 为存量 vitest 冲突，与本跳无关）
 
-## 蒸馏笔记（status=distilled 后填）
+## 蒸馏笔记（status=merged 后填）
 
-- 升格目标路径：
-- 变更摘要：
+- 升格目标路径：docs/zh/skills/custom/common/openclaw-ops/index.md
+- 变更摘要：openclaw-ops 可执行清单增两条：代码跳收尾查残留 server 进程（cursor-agent node 特征，按 PID 清杀）；无头 Cursor CLI 禁跑 npm rebuild/install（ABI 翻转）

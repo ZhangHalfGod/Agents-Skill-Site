@@ -212,7 +212,11 @@ function renderDigest(lessons) {
     lines.push(`   卡 \`${l.id}\`（${l.priority || 'P?'} · ${l.status} · scope=${l.scope || '?'} · ${l.project}）`)
     lines.push(`   建议升格至 \`${suggestTarget(l)}\`（原因：${reason}）`)
   })
-  lines.push('', '终审入口 → 打开对应 Lesson 卡终审 scope/status；完整扫描：`npm run lessons:scan`（Code\\code 目录）')
+  lines.push(
+    '',
+    '终审：飞书回复「同意升格」整包执行合入并本机 commit develop（不 push）；或逐条在仓内改。',
+    '完整扫描：`npm run lessons:scan`（Code\\code 目录）· 契约：Doc/phase4/09-feishu-promote-pipeline.md',
+  )
   return lines.join('\n')
 }
 

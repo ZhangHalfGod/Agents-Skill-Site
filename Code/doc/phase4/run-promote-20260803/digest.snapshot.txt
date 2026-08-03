@@ -1,0 +1,20 @@
+【每周升格建议】2026-08-03
+
+1. 《无头 Cursor CLI 里跑 npm rebuild 会按"它自带的 node"翻转原生模块 ABI + 残留验收服务占锁》
+   卡 `2026-07-30-cursor-cli-node-abi-rebuild`（P1 · raw · scope=common · mechassist-openapi）
+   建议升格至 `docs/zh/skills/custom/common/openclaw-ops/`（原因：scope=common）
+2. 《OpenClaw 认证三层解剖——401 先分清是"谁的路径"，key 必须持久化 + 双写》
+   卡 `2026-07-30-openclaw-auth-three-layers`（P1 · raw · scope=common · mechassist-openapi）
+   建议升格至 `docs/zh/skills/custom/common/openclaw-ops/`（原因：scope=common）
+3. 《PS 5.1 调 openclaw CLI 双向皆坑——argv 引号拆分 + stdout 乱码，node wrapper 双杀》
+   卡 `2026-07-30-ps51-openclaw-cli-argv-stdout`（P2 · raw · scope=common · mechassist-openapi）
+   建议升格至 `docs/zh/skills/custom/common/powershell-utf8/`（原因：scope=common）
+4. 《PATH_FALLBACKS 双源长期滞后于真实 handler——LAYERS 单一真源原则》
+   卡 `2026-07-31-layers-single-source-of-truth`（P1 · raw · scope=common · mechassist-openapi）
+   建议升格至 `docs/zh/skills/custom/common/openclaw-ops/`（原因：scope=common）
+5. 《agent 自述"feishu_doc 未注册"别信表象——插件工具可见性是五层独立门禁，逐层验》
+   卡 `2026-07-30-feishu-doc-five-layer-gates`（P2 · raw · scope=common · openclaw-orchestration-pilot）
+   建议升格至 `docs/zh/skills/custom/common/openclaw-ops/`（原因：scope=common）
+
+终审：飞书回复「同意升格」整包执行合入并本机 commit develop（不 push）；或逐条在仓内改。
+完整扫描：`npm run lessons:scan`（Code\code 目录）· 契约：Doc/phase4/09-feishu-promote-pipeline.md
