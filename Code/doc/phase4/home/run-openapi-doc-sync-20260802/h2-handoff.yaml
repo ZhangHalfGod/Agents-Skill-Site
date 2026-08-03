@@ -1,0 +1,49 @@
+from: arch
+to: dev
+project: openapi-doc-sync
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-openapi-doc-sync-20260802/h2-arch-constraints.md
+  summary: |
+    架构复核确认：OpenAPI 3.0.3 生成→路由→挂载链路已完整实现（28 paths, /api/openapi.json + /api/openapi.yaml），
+    但 registry.js system/docs 误标 /api/docs 为 implemented。
+    裁定文档须严格区分「OpenAPI 规范端点（已实现）」与「Swagger UI 前端 /api/docs（未实现）」，
+    交付精确修改指令（2 处 .md）+ 禁用清单 + 8 条验收口径，零代码改动。
+
+decisions:
+  - D1_确认: 只改 .md 文档，不改 server/ 下任何代码、生成器、路由、测试（下游不可推翻）
+  - D2_确认: M1（README.md:96）将"规划中，未实现"改为列出 /api/openapi.json 与 /api/openapi.yaml 端点（下游不可推翻）
+  - D3_确认: M2（doc/重构api架构/README.md:53）将"后续规划（未实现）"改为"已实现"，标注生成器与路由位置（下游不可推翻）
+  - D4_确认: server/test/__snapshots__/openapi.snapshot.json 中 x-note 描述的是 voice routes 而非 OpenAPI 规范，不在此范围（下游不可推翻）
+  - D5_确认: 本次无核心/网关/安全模块代码生成，《核心模块AI生成红色记录》不适用（下游不可推翻）
+  - Q1_裁定: 接受 Q1 建议，文档须区分「OpenAPI 规范（已实现）」与「/api/docs Swagger UI 前端（未实现）」，禁用笼统表述（下游不可推翻）
+  - Q2_裁定: Q2 成立，README 不得将 /api/docs 描述为已实现；须替换为实际端点 /api/openapi.json 与 /api/openapi.yaml，/api/docs 须加注「前端尚未实现」（下游不可推翻）
+  - registry_处置: registry.js implemented 误标本次不修（按 D1），纳入 lesson_hint 交由后续迭代（下游不可推翻）
+
+open_questions: []
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - path: Code/doc/phase4/home/run-openapi-doc-sync-20260802/h1-handoff.yaml
+      finding: "H1 信封已读取；确认 D1-D5 裁定、Q1/Q2 开放问题、gate.evidence 全部移交"
+    - path: Code/doc/phase4/home/run-openapi-doc-sync-20260802/h2-arch-constraints.md
+      finding: "H2 架构约束全文（8278 字节）已确认完整；含架构结论、接口数据流、Q1/Q2 裁定、4.1-4.4 实施约束、5 验收口径、风险回滚"
+    - path: extern-api/server/routes/openapiRoutes.js
+      finding: "已实现 GET /api/openapi.json 与 GET /api/openapi.yaml（H1 gate 已确认，H2 复核通过）"
+    - path: extern-api/server/catalog/openapiGenerator.js
+      finding: "完整 OpenAPI 3.0.3 生成器 295 行（H1 gate 已确认，H2 复核通过）"
+    - path: extern-api/server/index.js
+      finding: "app.use 已挂载 openapiRoutes 到 /api 前缀（H1 gate 已确认，H2 复核通过）"
+    - path: extern-api/server/catalog/registry.js
+      finding: "system/docs 模块标记 implemented: true 但 /api/docs 无路由实现——架构认定为误标（H2 发现）"
+    - summary: "架构判定：生成→路由→挂载链路完整；registry implemented 字段不可信；Q1/Q2 均裁定成立；实施约束精确到行号与具体修改文本"
+
+lesson_hint: |
+  registry.js 中 system/docs 标记 implemented: true（API_PATHS.API_DOCS = '/api/docs'），
+  但 server/routes/ 下无任何 /api/docs 路由实现。
+  registry 的 implemented 字段与真实路由存在不一致——建议在本次项目 operations 下写 Lesson Card：
+  「registry.js implemented 字段不可作为路由实现判据，须以 server/routes/ 实际文件为准；
+  后续应建立 registry-to-route 自动校验（CI 脚本）」。

@@ -1,0 +1,36 @@
+from: dev
+to: main (orchestrator)
+project: workdir-whitelist
+stage: H3b
+deliverable:
+  kind: implementation-report
+  path: Code/orchestration/openclaw/invoke-cursor-agent.ps1
+  summary: >
+    在 Test-Path 之后、.env 之前插入 WorkDir 白名单；补 GetFullPath 归一化；
+    6 仓 roots + WORKDIR_WHITELIST 扩展；非法路径中文 FAIL + exit 1。
+    自检：拒绝冒烟 EXIT=1 未启 agent；白名单内 ALLOW；UTF-8 BOM 保留。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M2: 插入位置正确（Test-Path 后 / .env 前）— PASS"
+    - "M2: 补 GetFullPath 归一化 — PASS"
+    - "红色① 6 仓路径与业务仓一致 — PASS"
+    - "红色② 先归一化再比较 — PASS"
+    - "红色③ -notin 精确比较 — PASS"
+    - "红色④ FAIL 中文文案 + exit 1 — PASS（控制台可能乱码，文件内 UTF-8 正确）"
+    - "红色⑤ FAIL 后不进入 agent 启动 — PASS（拒绝冒烟立即退出）"
+evidence:
+  - "grep: L26 whitelist 注释；L27/L40/L41 GetFullPath；L42 -notin；L43 FAIL 中文"
+  - "reject smoke: WorkDir=...\\Trae_Study → FAIL + EXIT=1"
+  - "allow logic: Agents-Skill-Site → ALLOW"
+  - "BOM=EF-BB-BF"
+lesson_hint: ""
+
+
+**改动清单**（`git status --short`，本 Goal 仅触及下行；其余为会话前既有脏树）：
+
+
+?? Code/orchestration/openclaw/invoke-cursor-agent.ps1
+
+[h3-run-wrapper] exit=0 elapsedSec=64.8

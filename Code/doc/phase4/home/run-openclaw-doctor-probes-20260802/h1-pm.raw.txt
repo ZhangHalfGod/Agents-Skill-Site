@@ -1,0 +1,168 @@
+三个文件全部落盘。输出完整交付。
+
+---
+
+# AI代码生成范围清单（H1 — ProductManager）
+
+**项目**：openclaw-doctor-probes  
+**短名**：openclaw-doctor-probes  
+**阶段**：H1（需求拆解 & 范围界定）  
+**日期**：2026-08-02  
+**产出者**：ProductManager（agent=pm）  
+**业务仓**：MechAssist-Fusion（分支 feature/Home_window）  
+**run_dir**：`Code/doc/phase4/home/run-openclaw-doctor-probes-20260802`
+
+---
+
+## 1. 目标
+
+扩展 `doctor.ps1`，在现有 OpenClaw 基础诊断后，按 profile 汇总 weather/tts/routing 探测结果，以 PASS/WARN/FAIL 分项表输出。任一 FAIL 时非零退出。
+
+### 成功画像
+
+| 维度 | 标准 |
+|------|------|
+| 单命令输出分项表 | `doctor.ps1 -Profile bm|home` → 基础诊断下方输出 3 行 PASS/WARN/FAIL 表 |
+| 失败非零退出 | 任一 probe FAIL → exit 1 |
+| 向后兼容 | 不传 `-Profile` 时跳过 probe，与原版一致 |
+
+---
+
+## 2. 范围条目
+
+### 2.1 原位探查结论
+
+#### doctor.ps1 现状
+
+- 执行：`openclaw --version` → `openclaw doctor` → `openclaw gateway status` → 打印提示
+- **不调用任何 probe 脚本**，**无 PASS/WARN/FAIL 输出**，退出码取决于 openclaw CLI
+
+#### 三个 probe 脚本契约
+
+| 脚本 | 依赖 | 退出码 | 备注 |
+|------|------|--------|------|
+| `weather/probe-weather.ps1` | wttr.in HTTPS | 0=OK, 1=FAIL | 有 `-City`/`-TimeoutSec` 参数 |
+| `tts/probe-tts.ps1` | :9880 HTTP | 0=OK, 1=FAIL | 有 `-BaseUrl`/`-Text`/`-ApiKey` |
+| `routing/probe-routing.ps1` | Test-OpenClawRoute + invoke-route | **恒 0** | Mac 离线也 exit 0——需解析输出判定 |
+
+#### Profile 结构（bm/home 的 profile.json）
+
+| Profile | weatherBackend | ttsEngine | capabilities |
+|---------|---------------|-----------|-------------|
+| bm | wttr.in | system-speech | weather,tts,routing,coding,model-switch |
+| home | mcp-gaode | cosyvoice | 同上 |
+
+`apply-profile.ps1` 按 `capabilities` 数组决定启用哪些能力，doctor 复用此逻辑。
+
+#### Doctor 调用方——安全无破坏
+
+| 位置 | 引用方式 | 影响 |
+|------|---------|------|
+| `install-windows.ps1` L28 | 提示"Optional: openclaw doctor" | 无 |
+| `README.md` L14 | 目录标注 | 无 |
+| `docs/README.md` L3 | 描述 doctor 功能 | P2 更新 |
+
+无程序化调用 doctor，改动安全。
+
+### 2.2 修改条目（P0）
+
+| # | 文件 | 修改动作 |
+|---|------|---------|
+| M1 | `doctor.ps1` | 新增 `-Profile` 参数（`[ValidateSet("bm","home")]`）；保留前段；末尾新增 probe 汇总段：读取 profile.json → 调 weather/tts/routing probe → 捕获退出码 → 输出 PASS/WARN/FAIL 表 → 任一 FAIL 则 exit 1 |
+| M2 | 同上 | PASS/WARN/FAIL 判定：probe exit 0 → PASS；exit ≠ 0 → FAIL；routing probe 恒 0 → 解析输出含"离线"→ WARN |
+
+### 2.3 建议输出格式
+
+```
+=== probe summary (profile: bm) ===
+weather  PASS   wttr.in: Guangzhou 28°C
+tts      PASS   :9880 system-speech
+routing  WARN   mac node offline (expected)
+
+Result: 2 PASS, 1 WARN, 0 FAIL
+```
+
+### 2.4 不修改
+
+三个 probe 脚本（不改）、apply-profile.ps1、install-windows.ps1、git push
+
+---
+
+## 3. 验收口径
+
+| 用户验收条件 | Given-When-Then | 条目 |
+|------------|-----------------|------|
+| "单命令输出分项表" | `doctor.ps1 -Profile bm` → 3 行 PASS/WARN/FAIL 汇总 | M1 |
+| "失败非零退出" | TTS probe exit 1 → doctor exit 1 | M1, M2 |
+| 不传 Profile 兼容旧行为 | `doctor.ps1` 无参数 → 不跑 probe | M1 |
+
+---
+
+## 4. 风险与回滚
+
+网络不可用误报 FAIL → 加超时；routing 恒 exit 0 → 解析输出判 WARN；回滚：git checkout。
+
+---
+
+## 5. 开放问题（提交 H2）
+
+1. **"按 profile 汇总"语义**：`-Profile bm|home` 单选，还是 `-AllProfiles` 遍历？
+2. **WARN 是否触发非零退出**？建议仅 FAIL 触发 exit 1。
+3. **是否调真实 probe（外部 API）**？现有 probe 本身发外部请求；是否加 `-DryRun`？
+4. **routing probe exit 0 恒成立**：doctor 内直接调 `invoke-route.ps1` 捕获真实退出码？
+5. **是否需要 coding（V5）probe**？当前无独立 coding probe 脚本。
+
+---
+
+*本清单由 ProductManager 产出，提交架构师（H2）复核。*
+
+---SPLIT---
+
+```yaml
+from: pm
+to: arch
+project: openclaw-doctor-probes
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-openclaw-doctor-probes-20260802/h1-pm.scope-checklist.md
+  summary: |
+    扩展 doctor.ps1，新增 -Profile bm|home 参数，在现有基础诊断后
+    按 profile 汇总 weather/tts/routing 探测结果，输出 PASS/WARN/FAIL 分项表。
+    任一 probe FAIL → exit 1；不传 Profile → 保持旧行为。
+    不改三个 probe 脚本本身，只改 doctor.ps1 一个文件。
+
+decisions:
+  - "仅改 doctor.ps1 一个文件，不新增文件"
+  - "新增 -Profile 参数（ValidateSet bm|home），可选，不传则跳过 probe"
+  - "读取 profiles/<profile>/profile.json 的 capabilities 决定跑哪些 probe"
+  - "PASS = probe exit 0；FAIL = exit ≠ 0；routing 恒 0 → 解析输出判 WARN"
+  - "任一 FAIL → exit 1"
+  - "不改三个 probe 脚本；不破坏 install-windows.ps1 等调用方"
+
+open_questions:
+  - "按 profile 汇总：-Profile bm|home 单选还是 -AllProfiles 遍历？"
+  - "WARN 是否触发非零退出？建议仅 FAIL 触发"
+  - "是否调真实 probe（发外部 API）？或加 -DryRun 纯结构探测？"
+  - "routing probe 恒 exit 0：doctor 内应直接调 invoke-route.ps1 还是解析 probe 输出？"
+  - "是否需要 coding（V5）probe？当前无独立 coding probe 脚本"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 doctor.ps1: 仅打印 openclaw 诊断 + 提示文字，不跑 probe、无 PASS/WARN/FAIL、无退出码"
+    - "源码确认 probe-weather.ps1: exit 0=OK, 1=FAIL, 参数 -City/-TimeoutSec, 依赖 wttr.in"
+    - "源码确认 probe-tts.ps1: exit 0=OK, 1=FAIL, 参数 -BaseUrl (默认 :9880), 依赖本地 TTS"
+    - "源码确认 probe-routing.ps1: 恒 exit 0 (Mac 离线也 0), 调 Test-OpenClawRoute + invoke-route"
+    - "源码确认 bm/profile.json: weatherBackend=wttr.in, ttsEngine=system-speech, capabilities=[weather,tts,routing,coding,model-switch]"
+    - "源码确认 home/profile.json: weatherBackend=mcp-gaode, ttsEngine=cosyvoice, 同 capabilities"
+    - "源码确认 apply-profile.ps1: 按 capabilities 数组调 configure-*.ps1"
+    - "grep doctor 调用方: install-windows.ps1 L28 (提示), docs/README.md L3 (描述), 无程序化调用"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 2.0KB"
+
+lesson_hint: ""
+```

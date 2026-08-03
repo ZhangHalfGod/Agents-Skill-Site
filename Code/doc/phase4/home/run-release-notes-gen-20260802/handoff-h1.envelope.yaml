@@ -1,0 +1,46 @@
+from: pm
+to: arch
+project: release-notes-gen
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-release-notes-gen-20260802/h1-pm.scope-checklist.md
+  summary: |
+    新增 scripts/release-notes-gen.mjs，从 GET /api/release/manifest（:3002）
+    生成发布清单 Markdown（对齐 发布清单-模板.md 7 节结构）。
+    环境变量参考 release-triplet-check.mjs（EXTERN_API_URL、RELEASE_PROBE 默认 false）。
+    输出文件不含密钥/Token；exit 0 = 成功，字段与 manifest 一致。
+
+decisions:
+  - "新增 scripts/release-notes-gen.mjs（.mjs 对齐现有脚本风格）"
+  - "默认 probe=false（安全无外部请求，MCP 段仅 configured/reachable）"
+  - "7 节 Markdown 输出：自动节标注 (auto)，手动节标注 (placeholder)"
+  - "环境变量 EXTERN_API_URL/RELEASE_OUTPUT_DIR/RELEASE_PROBE，对齐 release-triplet-check.mjs"
+  - "字段缺失时写 '—' 不崩溃"
+  - "不改 release-triplet-check.mjs、不改模板文件、不改业务代码"
+
+open_questions:
+  - "输出结构：完全对齐模板 7 节 vs 轻量摘要版？"
+  - "probe 默认 false 还是 true？建议 false"
+  - "字段缺失：FAIL vs 照写 '—'？建议照写"
+  - "文件命名：按日期 YYYYMMDD 还是 commit SHA？"
+  - "版本三元组发布流程.md 是否引用新脚本？P2 更新"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 release-triplet-check.mjs: fetch manifest + 打印 triplet/MCP + exit 码参考"
+    - "源码确认 releaseContract.js: getExternReleaseManifest() 完整 manifest 结构"
+    - "源码确认 releaseContract.test.js: 断言 releaseTriplet/mcp/mcpMech/gatewayPlanes/releaseValidation 字段"
+    - "源码确认 releaseRoutes.js: GET /api/release/manifest 路由，接受 ?probe 参数"
+    - "源码确认 发布清单-模板.md: 7 节结构（元信息/三元组/前检查/部署/回滚/验证/备注）"
+    - "源码确认 发布清单-20260602-演练.md: 演练样例，填充了三元组/前检查/回滚节"
+    - "源码确认 scripts/ 目录: 已有 .mjs 先例（release-triplet-check.mjs, governance-smoke.mjs）"
+    - "无密钥分析: probe=false 时 mcp 段仅 configured/reachable，不泄露 MCP_*_BASE_URL"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 2.0KB"
+
+lesson_hint: ""

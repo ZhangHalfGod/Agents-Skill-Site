@@ -1,0 +1,38 @@
+# M2 门禁签名 — swagger-ui-lite
+
+- **签名者**：main（编排者）
+- **时间**：2026-08-02T18:05+08:00
+- **项目**：swagger-ui-lite
+- **run-dir**：`E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\home\run-swagger-ui-lite-20260802`
+- **授权**：用户预授权 M2 后自动放行 H3，全自动至 H4 闭环并尝试写 Lesson
+
+## 校验结果
+
+| 检查项 | 状态 |
+|--------|------|
+| H1 信封四要素 | ✅ |
+| H1 mcp-resolve-h1.yaml / playbook-pack-h1.md | ✅（895B / 1.8KB） |
+| H2 信封四要素 | ✅（信封内嵌交付物文件，main 提取归档） |
+| H2 mcp-resolve-h2.yaml / playbook-pack-h2.md | ✅（902B / 2.0KB） |
+| H2 裁定 H1 开放问题（Q1~Q3） | ✅ |
+| 红色记录 | ✅ 已登记（网关层端点新增：openapiRoutes.js /docs/ui + views/swagger-ui.html） |
+| 密钥泄露检查 | ✅ |
+| 飞书双写（H1/H2） | ✅（新建文档，见下） |
+
+## 签名
+
+```
+H1 pm scope-list      ✅ 通过
+H2 arch-constraints   ✅ 通过（含红色记录登记）
+────────────────────────────
+M2 门禁：放行（用户已预授权，自动进入 H3）
+```
+
+## 说明
+
+- 飞书双写（新建，Home 未配置「OpenClaw 产出」folder_token，落默认空间——如实记录）：
+  - H1 范围清单：https://feishu.cn/docx/SrZJdwltJovnCNxC4p5cZ3opnpb
+  - H2 架构约束：https://feishu.cn/docx/YF51dDmtYo3B7kxdIVCcALBMnlq
+- 本地镜像：`h1-pm.scope-checklist.md` / `h2-arch-constraints.md`（信封校验仍读本地）
+- H3 单仓派遣（MechAssist-Fusion）：M1 openapiRoutes.js 新增 /docs/ui 路由（res.sendFile）+ M2 新建 server/views/swagger-ui.html（7 组映射 + 方法徽章 + 失败降级）
+- H4：起服务 → curl /api/docs/ui（200 + text/html + 分组）→ /api/openapi.json 行为不变 → 分组 ≥5 组验证

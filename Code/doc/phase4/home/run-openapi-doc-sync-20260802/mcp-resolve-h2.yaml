@@ -1,0 +1,37 @@
+# MCP resolve record — H2 Architect
+# 禁止写入任何 token / key / secret
+
+endpoint: agents-skill-remote MCP
+health:
+  ok: true
+  contentHash: "6029dcd3053d9df9"
+  validatedAt: "2026-07-30T08:03:24.321Z"
+  dataSource: "/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+  mode: local
+  counts:
+    agents: 8
+    skills: 13
+    rules: 10
+    relatedDocs: 6
+
+agent:
+  id: Architect
+  index: 2
+  title: 架构师（Architect）
+  source: docs/zh/agents/standard/Architect/index.md
+  contentHash: "0c7488c611693662"
+  skills:
+    - stage-gate-flow
+    - ai-code-boundary
+    - traceability-compliance
+
+skills_resolved:
+  - id: stage-gate-flow
+    source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+    contentHash: "03778f2e80391568"
+  - id: ai-code-boundary
+    source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+    contentHash: "f8e641bd8ab22698"
+  - id: traceability-compliance
+    source: docs/zh/skills/custom/common/traceability-compliance/index.md
+    contentHash: "089ef19727c7f233"

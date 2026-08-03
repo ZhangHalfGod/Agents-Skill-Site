@@ -1,0 +1,54 @@
+from: arch
+to: devlead
+project: chat-error-code-mask
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-chat-error-code-mask-20260802/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。核心漏洞确认：stripErr 的 spread 语法保留 error.code。
+    脱敏方案：delete error.code（非替换）+ LEAK_PATTERNS 扩展 QUOTA_/MCP_/ARK_ 前缀。
+    两路径共用 stripErr，一处修改全覆盖。prompt 加固（M3）推荐做。
+    红色记录评估 N/A（service 层数据脱敏工具，非安全认证模块）。
+    H1 三个 open_questions 全部裁定。
+
+decisions:
+  - "脱敏方式：delete safe.code（删除），非替换为通用值"
+  - "LEAK_PATTERNS 扩展：新增 ^QUOTA_/^MCP_/^ARK_ 三条前缀正则"
+  - "两条路径 top-level + nested 共用 stripErr → 一处修改全覆盖"
+  - "M3 推荐执行：chat-system-v1.md 加「不得复述内部错误码」"
+  - "M4（mcpAuditService）不执行：仅处理 errorMessage 不涉 code"
+  - "红色记录：N/A（service 层脱敏工具，非安全认证模块）"
+  - "现有单测 L59 expect(out.error.code).toBe('X') 不变（'X' 不匹配）"
+
+open_questions:
+  - "LLM 仍可能从脱敏后的 error.message 推断 code 含义 → M3 prompt 加固为缓解，非根治"
+  - "若 MCP 工具未来新增其他前缀内部 code（如 SYS_/SRV_/DB_）→ LEAK_PATTERNS 需持续维护"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS 自查
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=manifest.json (local)"
+    - "角色 source 已读取: Architect @ docs/zh/agents/standard/Architect/index.md (contentHash=0c7488c611693662, 3389 chars)"
+    - "技能 source 已读取: stage-gate-flow (contentHash=03778f2e80391568, 1835 chars)"
+    - "技能 source 已读取: ai-code-boundary (contentHash=f8e641bd8ab22698, 1172 chars)"
+    - "mcp-resolve-h2.yaml 已落盘: 903 bytes"
+    - "playbook-pack-h2.md 已落盘: 1787 bytes, 含角色义务/出门清单/硬禁区/sources"
+    # 业务仓复核
+    - "源码确认 stripErr L103-L112: return { ...err, message: safeMsg } → code 原样保留"
+    - "源码确认 LEAK_PATTERNS L12-L19: 含 AMAP_ 不含 QUOTA_/MCP_*/ARK_* 通用前缀"
+    - "源码确认 sanitizeEnvelopeForLlm L98-L127: top-level + nested 两路径均调用 stripErr"
+    - "源码确认 travelQueryBridge.js L76: summarizeMcpEnvelopeForLlm → sanitizeEnvelopeForLlm 调用链"
+    - "源码确认 chat-system-v1.md: 内容完整，无错误码脱敏指令"
+    - "源码确认 mcpAuditService.js L15-L41: sanitizeErrorSummary 仅处理 errorMessage"
+    - "源码确认 errorCodes.js: QUOTA_EXCEEDED 定义（内部码）"
+    # 交付物落盘
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘 run-dir"
+    - "playbook-pack-h2.md 已落盘 run-dir"
+    # 出门清单
+    - "stage-gate-flow 全部勾选通过；红色记录评估为 N/A"
+
+lesson_hint: ""

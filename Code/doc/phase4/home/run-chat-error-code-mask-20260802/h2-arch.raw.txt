@@ -1,0 +1,38 @@
+三文件全部落盘确认 ✅
+
+---
+
+## H2 架构合规复核 — chat-error-code-mask
+
+### 复核结论：通过 ✅
+
+核心漏洞确认：`stripErr`（L103-L112）中 `return { ...err, message: safeMsg }` 的 spread 语法会原样拷贝 `err.code`，即使 `message` 已脱敏，`code` 仍经 `summarizeMcpEnvelopeForLlm` → JSON 注入 LLM prompt → 泄露到用户回复。
+
+### 脱敏方案定稿
+
+| 维度 | 裁定 |
+|------|------|
+| 脱敏方式 | `delete safe.code`（**删除**，不替换） |
+| LEAK_PATTERNS 扩展 | 新增 `^QUOTA_`、`^MCP_`、`^ARK_` 三条前缀正则 |
+| 覆盖路径 | top-level + nested 共用 `stripErr`，一处修改两路受益 |
+| 调用链 | `sanitizeEnvelopeForLlm` 所有调用点无需修改 |
+
+### H1 开放问题裁定
+
+| Q | 裁定 |
+|---|------|
+| Q1: 内部 code 清单？ | 全部加入 → QUOTA_/MCP_/ARK_ 三条前缀 |
+| Q2: LEAK_PATTERNS 扩展 key=value？ | 不需要 → code 独立字段，非嵌套 JSON |
+| Q3: mcpAuditService 同步？ | 不加强 → 仅处理 errorMessage，不涉 code |
+
+### 红色记录
+
+**N/A** — `stripErr` 属 Service 层数据脱敏工具，非网关/安全认证模块。但标注"边界警示"供 H4 关注。
+
+### 修改面
+
+P0=M1a+M1b+M2（1 源文件 + 1 测试，≥4 条单测），P2=M3（prompt 加固推荐做），M4 不做。
+
+### 下一跳
+
+交接信封指向 DevLead（H3），`stripErr` 修改伪代码已精确定稿，单测用例 T1-T4 可直接编码。

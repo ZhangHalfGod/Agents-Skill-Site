@@ -1,0 +1,42 @@
+from: pm
+to: arch
+project: chat-error-code-mask
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-chat-error-code-mask-20260802/h1-pm.scope-checklist.md
+  summary: |
+    修复 sanitizeEnvelopeForLlm 在脱敏 MCP 工具失败包络时只替换 error.message
+    但保留 error.code 的漏洞。修改 stripErr 函数同时检测并删除内部 code（AMAP_/QUOTA_ 等）。
+    补充单测验证 top-level 与 nested result.error.code 脱敏。改动面仅 1 个源文件 + 1 个测试文件。
+
+decisions:
+  - "脱敏方式：delete error.code（复用 isUnsafeForUserDisplay 检测），不替换为通用值"
+  - "覆盖两条路径：top-level error.code + nested result.error.code"
+  - "匹配规则：复用现有 LEAK_PATTERNS（含 AMAP_[A-Z0-9_]+、infocode 等），不新增独立 patterns"
+  - "system prompt 加固（M3）为 P2 可选，不阻塞本期"
+  - "非网关/安全模块新增，不触发红色记录"
+
+open_questions:
+  - "内部 error.code 完整清单？AMAP_* 已在 LEAK_PATTERNS；QUOTA_* / MCP_* / ARK_* 还需哪些前缀？"
+  - "是否需扩展 LEAK_PATTERNS 专门匹配 error.code 格式（key=value）？当前仅匹配裸字符串"
+  - "mcpAuditService.sanitizeErrorSummary 是否同步加强？"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=local manifest"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 mcpToolUserMessages.js L12-L19: LEAK_PATTERNS 含 AMAP_[A-Z0-9_]+ 但仅用于 isUnsafeForUserDisplay"
+    - "源码确认 mcpToolUserMessages.js L98-L115: sanitizeEnvelopeForLlm 的 stripErr 返回 { ...err, message: safeMsg }，error.code 原样保留 ← 核心漏洞"
+    - "源码确认 mcpToolUserMessages.test.js: 无 error.code 脱敏用例 ← 测试缺口"
+    - "源码确认 travelQueryBridge.js L76: summarizeMcpEnvelopeForLlm 调用 sanitizeEnvelopeForLlm 后 JSON.stringify 注入 LLM prompt"
+    - "源码确认 travelQueryBridge.js L200-215: formatTravelToolPayloadForUser 失败路径使用 buildUserVisibleFailureLine，安全"
+    - "源码确认 chatRoutes.js L536: console.error 打印 code 仅为服务端日志"
+    - "源码确认 errorCodes.js: QUOTA_EXCEEDED 等映射中文文案，响应体业务码可接受"
+    - "源码确认 chat-system-v1.md: 系统 prompt 无错误码脱敏指令"
+    - "mcp-resolve-h1.yaml 已落盘: 964 bytes"
+    - "playbook-pack-h1.md 已落盘: 3.0KB"
+
+lesson_hint: ""

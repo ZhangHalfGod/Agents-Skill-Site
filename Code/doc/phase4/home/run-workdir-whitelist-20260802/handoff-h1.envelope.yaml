@@ -1,0 +1,45 @@
+from: pm
+to: arch
+project: workdir-whitelist
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-workdir-whitelist-20260802/h1-pm.scope-checklist.md
+  summary: |
+    给 invoke-cursor-agent.ps1（业务仓 + 编排仓两份副本）增加 WorkDir 白名单校验。
+    白名单默认覆盖本机 Trae_Study 下 6 个 git 仓库，支持 WORKDIR_WHITELIST 环境变量追加。
+    白名单外路径输出中文 FAIL（"工作目录不在白名单中"）+ exit 1，不启动 agent。
+    同步更新 SKILL.md 与相关文档。不改 Cursor 本身、不改网关配置、不扩大业务仓逻辑。
+
+decisions:
+  - "白名单存储：脚本内硬编码数组 + $env:WORKDIR_WHITELIST 追加"
+  - "匹配方式：精确目录比较（-in），双方 GetFullPath 归一化"
+  - "FAIL：中文原因 + exit 1，不调用 Resolve-ChatId/Start-Process"
+  - "两份 invoke-cursor-agent.ps1（业务仓 + 编排仓）均需同步改，默认白名单一致"
+  - "白名单插入点：Test-Path 通过后、agent 启动前的第一个操作"
+  - "属网关层安全校验，触发《核心模块AI生成红色记录》"
+
+open_questions:
+  - "白名单默认包含哪些目录？建议 Trae_Study 下全部 6 个 git 仓库"
+  - "Agents-Skill-Site 编排副本是否同步加白名单？是——编排者 H3 派遣也用它（orchestrator-main-soul.draft.md L91）"
+  - "WORKDIR_WHITELIST 环境变量是追加还是覆盖默认值？建议追加"
+  - "匹配方式：精确目录比较 vs 前缀匹配？建议精确（-in）"
+  - "FAIL 退出码：exit 1（与目录不存在统一）vs 独立 exit 3？"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=local manifest"
+    - "角色 source 已读取: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 invoke-cursor-agent.ps1（业务仓）L18-L22: 仅有 Test-Path 存在性校验，无白名单"
+    - "源码确认 invoke-cursor-agent.ps1（编排仓）L17-L19: 同样仅有 Test-Path，无白名单"
+    - "源码确认 SKILL.md: WorkDir 参数说明，无白名单相关描述"
+    - "源码确认 configure-cursor-code.ps1: 生成 SKILL.md 模板，含 invoke-cursor-agent 路径"
+    - "源码确认 orchestrator-main-soul.draft.md L91: 引用 invoke-cursor-agent.ps1 调用格式"
+    - "本机 git 仓库枚举: Trae_Study 下 6 个（MechAssist-Fusion, Agents-Skill-Site, MCP_Gaode_Map, Life-Coach-AI, AI_People_System, openclaw_trae_cursor）"
+    - "grep 全量：9 个文件引用 invoke-cursor-agent / WorkDir，均需同步评估"
+    - "mcp-resolve-h1.yaml 已落盘: 964 bytes"
+    - "playbook-pack-h1.md 已落盘: 3.6KB"
+
+lesson_hint: ""

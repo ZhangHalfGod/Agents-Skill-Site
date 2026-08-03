@@ -1,0 +1,38 @@
+# M2 门禁签名 — mcp-docs-openapi-align
+
+- **签名者**：main（编排者）
+- **时间**：2026-08-02T16:45+08:00
+- **项目**：mcp-docs-openapi-align
+- **run-dir**：`E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\home\run-mcp-docs-openapi-align-20260802`
+- **授权**：用户预授权 M2 后自动放行 H3，全自动至 H4 闭环并尝试写 Lesson
+
+## 校验结果
+
+| 检查项 | 状态 |
+|--------|------|
+| H1 信封四要素 | ✅ |
+| H1 mcp-resolve-h1.yaml / playbook-pack-h1.md | ✅（964B / 2.8KB） |
+| H2 信封四要素 | ✅（信封内嵌交付物文件，main 提取归档；初稿误引「/api/docs 无路由 404」已按 openapi-doc-sync H4 实测纠正为 200） |
+| H2 mcp-resolve-h2.yaml / playbook-pack-h2.md | ✅（839B / 2.75KB） |
+| H2 裁定 H1 开放问题（Q1~Q4） | ✅ |
+| 红色记录 | N/A（纯文档） |
+| 密钥泄露检查 | ✅ |
+| 飞书双写（H1/H2） | ✅（新建文档，见下；H2 内容按实测纠正后双写） |
+
+## 签名
+
+```
+H1 pm scope-list      ✅ 通过
+H2 arch-constraints   ✅ 通过（含 /api/docs 事实纠正）
+────────────────────────────
+M2 门禁：放行（用户已预授权，自动进入 H3）
+```
+
+## 说明
+
+- 飞书双写（新建，Home 未配置「OpenClaw 产出」folder_token，落默认空间——如实记录）：
+  - H1 范围清单：https://feishu.cn/docx/LUdAdAozPomlG5xHbVbcInWKnGh
+  - H2 架构约束：https://feishu.cn/docx/NWmtdP11SoyhuaxaA3FcUTYOn1b
+- 本地镜像：`h1-pm.scope-checklist.md` / `h2-arch-constraints.md`（信封校验仍读本地）
+- **事实纠正**：H2 初稿引用 openapi-doc-sync 旧结论「/api/docs 无路由→404」；openapi-doc-sync 的 H4 已实测 `/api/docs` 返回 200（chatRoutes.js:828 toMountPath(API_PATHS.API_DOCS)）。H3 按纠正后口径执行，H4 实测四端点均 200
+- H3 单仓派遣：仅改 `doc/方案C/方案C_文档对齐/MCP接入文档.md`（§2.1 +3 行、§7 步骤 7、§8 +2 条、新增 §9）

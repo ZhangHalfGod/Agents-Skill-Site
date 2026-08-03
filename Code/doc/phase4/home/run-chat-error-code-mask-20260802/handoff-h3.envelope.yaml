@@ -1,0 +1,44 @@
+from: dev
+to: main (orchestrator)
+project: chat-error-code-mask
+stage: H3
+deliverable:
+  kind: implementation-report
+  path: extern-api/server/services/mcpToolUserMessages.js, extern-api/server/services/mcpToolUserMessages.test.js, extern-api/server/prompts/chat-system-v1.md
+  summary: >-
+    stripErr 对匹配 LEAK_PATTERNS 的 error.code 执行 delete；LEAK_PATTERNS 追加 QUOTA_/MCP_/ARK_ 前缀；
+    单测 T1-T4 覆盖 top-level/nested/安全码/null；prompt 增加禁止复述内部错误码指令。
+    vitest 10/10 passed。
+decisions:
+  - stripErr 一处修改同时覆盖 top-level 与 nested result.error（不改 sanitizeEnvelopeForLlm 主体）
+  - 不安全 code 仅 delete，不替换为占位值；null/undefined 与不匹配 pattern 的 code 原样保留
+  - prompt 新指令放在模块跳转引导句之后、「其余场景」之前
+gate:
+  checklist: stage-gate-flow
+  items:
+    - M1a: PASS — stripErr 中 safe.code 匹配 isUnsafeForUserDisplay 时 delete safe.code
+    - M1b: PASS — LEAK_PATTERNS 末尾追加 QUOTA_/MCP_/ARK_ 三条，原有 pattern 未动
+    - M2-T1: PASS — top-level AMAP_ERR 删除且 message 已脱敏
+    - M2-T2: PASS — nested QUOTA_EXCEEDED 删除
+    - M2-T3: PASS — VALIDATION_ERROR 保留
+    - M2-T4: PASS — code=null 保留
+    - M3: PASS — chat-system-v1.md 新增禁止复述内部错误码指令
+evidence:
+  - "vitest: Test Files 1 passed; Tests 10 passed (10); Duration 1.25s"
+  - "diffstat: 3 files, +59/-2（仅白名单三文件为本 Goal 改动）"
+  - "自检: delete 语义；无字段迁移；原有 pattern 保留；code:'X' 旧断言仍绿"
+lesson_hint: ""
+
+
+### 改动清单（`git status --short`）
+
+本次 Goal 触及的白名单文件：
+
+
+ M extern-api/server/prompts/chat-system-v1.md
+ M extern-api/server/services/mcpToolUserMessages.js
+ M extern-api/server/services/mcpToolUserMessages.test.js
+
+
+工作区另有无关已改/未跟踪文件（本 Goal 未动）：`debug.txt`、方案 C 文档、`extern-api/README.md`、openclaw scripts、`AI代码测试报告.md` 等。未 commit / push。
+[h3-run-wrapper] exit=0 elapsedSec=60.6

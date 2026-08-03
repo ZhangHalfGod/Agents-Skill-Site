@@ -1,0 +1,31 @@
+# MCP resolve log — H1 pm → openapi-doc-sync
+# DO NOT write tokens or secrets in this file
+# 注：本文件由编排者 main 依据 H1 信封 evidence 补写（人工豁免 · 门禁选项 2，2026-08-02）
+
+endpoint: agents-skill-remote (Single-Facade MCP)
+mode: local
+dataSource: local manifest
+
+health:
+  ok: true
+  contentHash: "6029dcd3053d9df9"
+  validatedAt: "2026-08-02T14:00:00+08:00"
+
+agent:
+  id: ProductManager
+  source: docs/zh/agents/standard/ProductManager/index.md
+  contentHash: "393c53994d1bac10"
+  get_source_text: ok (3238 chars, not truncated)
+
+boundSkills:
+  - id: stage-gate-flow
+    source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+    contentHash: "—"
+  - id: ai-code-boundary
+    source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+    contentHash: "—"
+
+bind_note: |
+  正文已由 pm 子 agent 经 get_source_text 拉取并摘入 playbook-pack-h1.md（含 sources）。
+  本 yaml 为门禁补写件（两次拒收后人工豁免），内容取自 H1 信封 gate.evidence 与
+  playbook-pack-h1.md sources，未含任何 token。Cursor 侧禁止再调 MCP；只消费 Goal 内 Playbook Pack。

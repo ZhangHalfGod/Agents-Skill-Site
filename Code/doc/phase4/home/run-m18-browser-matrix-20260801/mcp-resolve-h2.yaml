@@ -1,0 +1,36 @@
+# MCP 溯源 — H2 (Architect)
+# 由 arch 在 H2 阶段自查后生成，供后续阶段审计
+endpoint: agents-skill-remote
+mode: local
+dataSource: /var/www/agents-skill-site/Code/code/docs/public/manifest.json
+
+mcp_health:
+  ok: true
+  contentHash: "6029dcd3053d9df9"
+  validatedAt: "2026-07-30T08:03:24.321Z"
+  generatedAt: "2026-07-30T08:03:23.768Z"
+
+agent:
+  id: Architect
+  index: 2
+  source: docs/zh/agents/standard/Architect/index.md
+  contentHash: "0c7488c611693662"
+  title: 架构师（Architect）
+  summary: 架构约束、接口与模型、Prompt 架构审核
+
+skills_bound:
+  - id: stage-gate-flow
+    index: 4
+    source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+    contentHash: "03778f2e80391568"
+    boundAgents: [ProductManager, Architect, DevLead, TestEngineer]
+  - id: ai-code-boundary
+    index: 1
+    source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+    contentHash: "f8e641bd8ab22698"
+    boundAgents: [ProductManager, Architect]
+  - id: traceability-compliance
+    index: 2
+    source: docs/zh/skills/custom/common/traceability-compliance/index.md
+    contentHash: "089ef19727c7f233"
+    boundAgents: [Architect, DevLead, TestEngineer, SecurityEngineer, OpsEngineer]

@@ -1,0 +1,38 @@
+三文件全部落盘确认 ✅
+
+---
+
+## H2 架构合规复核 — openclaw-doctor-probes
+
+### 复核结论：通过 ✅
+
+doctor.ps1（55 行）现状确认——无 probe 汇总、尾部手动提示"自行运行 probe"。三 probe 脚本契约验证完成：weather/tts 用 exit 0/1，routing 恒 exit 0 需文本判定。双 profile 结构一致。
+
+### 扩展方案定稿
+
+| 维度 | 裁定 |
+|------|------|
+| -Profile 语义 | 单选 `bm|home`，不传跳过（向后兼容） |
+| 分项表 | 3 行 PASS/WARN/FAIL + detail + 汇总行 |
+| PASS/WARN/FAIL | PASS=exit 0；FAIL=exit≠0；routing WARN=exit 0 且输出含"节点离线" |
+| 退出码 | 仅 FAIL → exit 1；WARN 不计 |
+| routing 处理 | 调 probe-routing.ps1，双维度（exit code + 输出文本），不改 probe 内部 |
+| 不做 | DryRun / coding probe / AllProfiles / 新增文件 |
+
+### H1 五问题裁定
+
+| Q | 裁定 |
+|---|------|
+| Q1: 单选 vs 遍历？ | 单选（bm\|home），不做 AllProfiles |
+| Q2: WARN → 非零？ | 不触发，仅 FAIL → exit 1 |
+| Q3: DryRun？ | 不做 |
+| Q4: routing 恒 0？ | 双维度判定（exit + 输出），不改 probe |
+| Q5: coding probe？ | 不加（无独立 probe，价值低） |
+
+### 修改面
+
+P0=M1+M2（doctor.ps1 一个文件，param 加参数 + 末尾追加 ~50 行），P2=M3+M4（两 README 推荐同步，不阻塞 H4）。红色记录 N/A。
+
+### 下一跳
+
+交接信封指向 DevLead（H3），分项表格式 + 判定矩阵 + 伪代码已精确定稿。

@@ -1,0 +1,1 @@
+GatewayClientRequestError: Error: CLI transcript compaction failed for deepseek/deepseek-v4-pro: Already compacted

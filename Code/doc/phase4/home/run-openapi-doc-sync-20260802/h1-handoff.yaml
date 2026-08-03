@@ -1,0 +1,52 @@
+from: pm
+to: arch
+project: openapi-doc-sync
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-openapi-doc-sync-20260802/h1-pm.scope-checklist.md
+  summary: |
+    仅 2 处文档需修改（README.md:96 ＋ doc/重构api架构/README.md:53），均将 "OpenAPI 未实现/规划中" 更正为 "已实现"。
+    实测确认 GET /api/openapi.json（HTTP 200, 3.0.3, 28 paths）与 GET /api/openapi.yaml（HTTP 200, 452 lines YAML）均正常。
+    零业务代码改动，零新增文件，纯文档对齐。
+
+decisions:
+  - D1: 只改 .md 文档，不改 server/ 下任何代码、生成器、路由、测试
+  - D2: M1（README.md:96）将 "规划中，未实现" 改为列出已实现的 /api/openapi.json 与 /api/openapi.yaml 端点（下游不可推翻）
+  - D3: M2（doc/重构api架构/README.md:53）将 "后续规划（未实现）" 改为 "已实现"，标注生成器与路由位置（下游不可推翻）
+  - D4: server/test/__snapshots__/openapi.snapshot.json 中的 "voice routes 尚未实现" x-note 不在此次范围（描述的是 voice routes 而非 OpenAPI 规范本身）（下游不可推翻）
+  - D5: 本次无核心/网关/安全模块代码生成，《核心模块AI生成红色记录》不适用
+
+open_questions:
+  - Q1: registry.js 中 system/docs 模块标记 implemented: true（API_PATHS.API_DOCS = '/api/docs'），但 server/routes/ 下未发现 /api/docs 路由实现。是否需在文档中区分「OpenAPI 规范 JSON/YAML 已实现」与「Swagger UI 前端 /api/docs 尚未实现」？建议 H2 架构师澄清。
+  - Q2: README.md 中 "GET /api/docs" 这一命名是否应改为指向实际存在的 /api/openapi.json 和 /api/openapi.yaml，而非尚不存在的 /api/docs？建议 H2 决策。
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - path: extern-api/README.md
+      line: 96
+      finding: "结构化文档：`GET /api/docs`（OpenAPI 从 registry 生成：**规划中，未实现**）"
+    - path: extern-api/doc/重构api架构/README.md
+      line: 53
+      finding: "**后续规划（未实现）**：从 `registry.js` 生成 OpenAPI 规范"
+    - path: extern-api/server/routes/openapiRoutes.js
+      finding: "GET /api/openapi.json 与 GET /api/openapi.yaml 均已实现"
+    - path: extern-api/server/catalog/openapiGenerator.js
+      finding: "完整的 OpenAPI 3.0.3 生成器（295 行纯函数）"
+    - path: extern-api/server/test/openapi.test.js
+      finding: "260 行完整测试（结构校验、HTTP 200、快照匹配、YAML）"
+    - path: extern-api/server/index.js
+      finding: "app.use('/api', apiLimiter, openapiRoutes) 已挂载"
+    - probe: GET http://localhost:3099/api/openapi.json
+      result: "HTTP 200, openapi: 3.0.3, title: MechAssist AI Extern API, version: 1.0.0, x-generator: mechassist-openapi, paths: 28"
+    - probe: GET http://localhost:3098/api/openapi.yaml
+      result: "HTTP 200, Content-Type: application/yaml, 452 lines, 3.0.3"
+    - scan: extern-api/ 全量 .md/.txt/.json/.html 关键词扫描
+      result: "仅 2 处 'OpenAPI 未实现/规划中' 矛盾表述，已全部纳入范围"
+
+lesson_hint: |
+  registry.js 中 system/docs 标记 implemented: true 但实际无 /api/docs 路由 ——
+  registry 的 implemented 字段与真实路由存在不一致，建议后续建立 registry-to-route 自动校验机制。
+  可写卡至 operations/mechassist-openapi/lessons/。

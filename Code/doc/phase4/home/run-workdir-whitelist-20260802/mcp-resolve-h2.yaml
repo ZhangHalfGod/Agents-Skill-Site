@@ -1,0 +1,25 @@
+# MCP resolve snapshot — H2 (Architect)
+# 来源：角色自查 agents-skill-remote；禁止写入任何 token
+mcp_resolve:
+  scheme: single-facade-mcp+hop-snapshot
+  from_hop: H2
+  queried_at: "2026-08-02T15:50:00+08:00"
+  endpoint: "http://43.139.246.123:3001/agents-skill-mcp/mcp"
+  health:
+    ok: true
+    dataSource: "/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+    contentHash: "6029dcd3053d9df9"
+  agents:
+    - id: Architect
+      source: docs/zh/agents/standard/Architect/index.md
+      contentHash: "0c7488c611693662"
+  skills:
+    - id: stage-gate-flow
+      source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+      contentHash: "03778f2e80391568"
+    - id: ai-code-boundary
+      source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+      contentHash: "f8e641bd8ab22698"
+  bind_note: |
+    正文已由 get_source_text 拉取并摘入 playbook-pack-h2.md。
+    禁止再调 MCP；只消费 Goal 内 Playbook Pack。

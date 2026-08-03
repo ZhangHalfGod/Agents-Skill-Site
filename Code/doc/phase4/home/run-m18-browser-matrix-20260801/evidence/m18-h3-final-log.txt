@@ -1,0 +1,50 @@
+time=2026-08-01T05:45:33.677Z
+wav=true mp3=true
+
+=== E4/E5 capabilities ===
+http://localhost:3002/api/voice/capabilities -> 200 {"success":true,"data":{"asr":{"mode":"none","available":false},"tts":{"available":true,"provider":"local"}}}
+http://localhost:3000/api/voice/capabilities -> 200 {"success":true,"data":{"asr":{"mode":"none","available":false},"tts":{"available":true,"provider":"local"}}}
+http://localhost:3001/api/voice/capabilities -> 200 {"success":true,"data":{"asr":{"mode":"client","available":true},"tts":{"available":false,"reason":"未配置 DOUBAO_TTS_API_KEY 或 DOUBAO_TTS_APP_ID + DOUBAO_TTS_ACCESS_KEY","provider":"doubao"}}}
+POST /api/voice/tts -> 200 {"success":true,"data":{"audioBase64":"<redacted>","format":"mp3","truncated":false,"gatewayLatencyMs":999,"latencyMs":1003,"saved":{"fileName":"no-conv_no-msg_2026-08-01T05-45-34.mp3","relativePath":"storage/voice-tts/no-conv_no-msg_2026-08-01T05-45-34.mp3"}}}
+
+=== smoke #1 Chrome extern text ===
+chrome textSmoke hasReplyHint=true speakButtons=3
+
+=== chrome TTS click extern ===
+chrome speakBeforeClick=2
+chrome stopVisible=true
+chrome hints=["朗读"]
+chrome net=["200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}"]
+
+=== edge TTS click extern ===
+edge speakBeforeClick=2
+edge stopVisible=true
+edge hints=["朗读"]
+edge net=["200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}","200 http://localhost:3000/api/voice/capabilities :: {\"success\":true,\"data\":{\"asr\":{\"mode\":\"none\",\"available\":false},\"tts\":{\"available\":true,\"provider\":\"local\"}}}"]
+
+=== chrome ASR real-mic + play wav ===
+chrome SpeechRecognition=true
+chrome playAudio=E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\asr-qu-tiananmen.wav exists=true
+chrome t=2s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=4s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=6s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=8s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=10s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=12s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=14s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+chrome t=16s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+
+=== edge ASR real-mic + play wav ===
+edge SpeechRecognition=true
+edge playAudio=E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\asr-qu-tiananmen.wav exists=true
+edge t=2s val="" asr=[] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=4s val="" asr=[] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=6s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=8s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=10s val="" asr=["audiostart"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=12s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=14s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+edge t=16s val="" asr=["audiostart","error:no-speech","end"] hint="方案 C · 联调 / 降级本仓对话页非用户主入口；产品主对话请使用MechAssist-Fusion / extern-api 的 /chat"
+
+=== chrome ASR deny ===
+chrome deny ERR cdpSession.send: Protocol error (Browser.setPermission): Invalid PermissionDescriptor name: audioCapture

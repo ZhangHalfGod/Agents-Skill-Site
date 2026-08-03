@@ -1,0 +1,22 @@
+endpoint: agents-skill-remote
+mode: local
+manifestContentHash: 6029dcd3053d9df9
+resolvedAt: 2026-08-01T12:00+08:00
+resolvedBy: main (orchestrator) for H3 jump snapshot
+entries:
+  - role: Architect
+    source: docs/zh/agents/standard/Architect/index.md
+    contentHash: 0c7488c611693662
+  - role: DevLead
+    source: docs/zh/agents/standard/DevLead/index.md
+    contentHash: 1eafe9e82124f2b5
+  - skill: stage-gate-flow
+    source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+    contentHash: 03778f2e80391568
+  - skill: ai-code-boundary
+    source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+    contentHash: f8e641bd8ab22698
+  - skill: traceability-compliance
+    source: docs/zh/skills/custom/common/traceability-compliance/index.md
+    contentHash: 089ef19727c7f233
+note: 无 token；H3 Cursor 禁止再调 Site MCP，本文件供信封校验与审计。

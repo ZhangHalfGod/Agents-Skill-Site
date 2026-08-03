@@ -1,0 +1,63 @@
+[h3-run-wrapper] WorkDir=E:\zhangchangWork\Work_Space\Trae_Study\MechAssist-Fusion node=C:\Users\Administrator\AppData\Local\cursor-agent\versions\2026.07.23-e383d2b\node.exe
+## H3 交付 — release-notes-gen
+
+新增 `scripts/release-notes-gen.mjs`（~126 行，风格对齐 `release-triplet-check.mjs`）：`fetch` → 校验 → 拼 7 节 Markdown → `writeFileSync` → `Wrote: <path>` / exit 1。
+
+**关键实现**
+- 环境：`EXTERN_API_URL`（去尾 `/`）、`RELEASE_OUTPUT_DIR`（`mkdirSync recursive`）、`RELEASE_PROBE` 仅 `=== 'true'` 才 `probe=true`，默认 `false`
+- CLI：`--output=<path>` 覆盖；默认 `发布清单-YYYYMMDD.md`（本地日）
+- 失败路径：网络 / HTTP≠200 / JSON 解析 / `data==null` / 写入 → 中文错误 → exit 1
+- 字段：`?.` + `?? '—'`；路径型验证链接，**不写完整 URL / baseUrl / 密钥类字样**；stdout 仅 `Wrote:` 与错误
+
+**M2**：在 `版本三元组发布流程.md` §2.2 增加 `node scripts/release-notes-gen.mjs` 一行。
+
+**自检**：`node --check` 通过；脚本内无 `API_KEY`/`TOKEN`/`SECRET`/`password`/`Bearer`/`MCP_*_BASE_URL`/`baseUrl`；未起服务、未打 manifest（留给 H4）。
+
+---SPLIT---
+```yaml
+from: dev
+to: main (orchestrator)
+project: release-notes-gen
+stage: H3
+deliverable:
+  kind: implementation-report
+  path: scripts/release-notes-gen.mjs, doc/方案C/方案C_协议与治理/版本三元组发布流程.md
+  summary: >-
+    新增 release-notes-gen.mjs：从 manifest 生成 7 节发布清单 Markdown（默认 probe=false、无密钥/无完整 URL）；
+    §2.2 补充一键生成说明。语法检查通过；未实测 fetch（H4）。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1: scripts/release-notes-gen.mjs 已新增；env/CLI/7节/exit码/缺失字段—/无密钥 已按约束实现"
+    - "M1: node --check exit 0；未改 release-triplet-check / extern-api / 发布清单-模板"
+    - "M2: 版本三元组发布流程.md §2.2 已补 release-notes-gen 一行"
+    - "红色自检: ①输出模板无密钥字段 ②HTTP/解析/写入失败 exit 1 ③缺失写— ④probe=false 默认"
+evidence:
+  - "diff: +scripts/release-notes-gen.mjs (~126 LOC); M 版本三元组发布流程.md §2.2 +1 行注释+命令"
+  - "node --check scripts/release-notes-gen.mjs → exit 0；未试跑 manifest（按 H3 约束）"
+lesson_hint: ""
+```
+
+**改动清单**（`git status --short`；本 Goal 仅后两行相关，其余为分支既有改动）：
+```
+ M debug.txt
+ M doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+ M doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+ M doc/方案C/方案C_协议与治理/版本三元组发布流程.md
+ M doc/方案C/方案C_文档对齐/MCP接入文档.md
+ M extern-api/README.md
+ M extern-api/doc/重构api架构/README.md
+ M extern-api/server/prompts/chat-system-v1.md
+ M extern-api/server/services/mcpToolUserMessages.js
+ M extern-api/server/services/mcpToolUserMessages.test.js
+ M scripts/openclaw/README.md
+ M scripts/openclaw/common/coding/configure-cursor-code.ps1
+ M scripts/openclaw/common/coding/invoke-cursor-agent.ps1
+ M scripts/openclaw/common/docs/README.md
+ M scripts/openclaw/common/install/doctor.ps1
+ M scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md
+?? doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+?? scripts/release-notes-gen.mjs
+```
+[h3-run-wrapper] exit=0 elapsedSec=85.9

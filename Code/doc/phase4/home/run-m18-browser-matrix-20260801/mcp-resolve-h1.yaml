@@ -1,0 +1,37 @@
+# MCP resolve log — H1 pm → m18-browser-matrix
+# DO NOT write tokens or secrets in this file
+
+endpoint: agents-skill-remote (Single-Facade MCP)
+mode: local
+dataSource: /var/www/agents-skill-site/Code/code/docs/public/manifest.json
+health:
+  ok: true
+  contentHash: "6029dcd3053d9df9"
+  validatedAt: "2026-07-30T08:03:24.321Z"
+  generatedAt: "2026-07-30T08:03:23.768Z"
+  standardsRoot: docs/zh
+  counts:
+    agents: 8
+    skills: 13
+    rules: 10
+    relatedDocs: 6
+
+agent:
+  id: ProductManager
+  index: 1
+  title: 产品经理（ProductManager）
+  source: docs/zh/agents/standard/ProductManager/index.md
+  contentHash: "393c53994d1bac10"
+  skills:
+    - stage-gate-flow
+    - ai-code-boundary
+  skillsRecommended:
+    - doc-coauthoring
+
+boundSkills:
+  - id: stage-gate-flow
+    source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+    contentHash: "03778f2e80391568"
+  - id: ai-code-boundary
+    source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+    contentHash: "f8e641bd8ab22698"

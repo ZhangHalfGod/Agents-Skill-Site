@@ -1,0 +1,105 @@
+time=2026-08-01T05:49:50.114Z
+
+=== chrome TTS net ===
+chrome TTS ERR locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: /^朗读$/ }).last()
+    - locator resolved to <button type="button" class="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 100ms
+      - waiting for element to be visible, enabled and stable
+      - element is not stable
+  57 × retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+
+=== edge TTS net ===
+edge TTS ERR locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: /^朗读$/ }).last()
+    - locator resolved to <button type="button" class="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+  2 × retrying click action
+      - waiting 100ms
+      - waiting for element to be visible, enabled and stable
+      - element is not stable
+  57 × retrying click action
+       - waiting 500ms
+       - waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <button type="button" aria-label="复制消息" class="p-1.5 rounded-full hover:bg-gray-100">…</button> from <div class="absolute top-2 right-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+
+=== chrome ASR fake-file ===
+chrome t=2s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+chrome t=4s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+chrome t=6s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+chrome t=8s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+chrome t=10s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+chrome t=12s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+chrome t=14s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+chrome t=16s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+chrome t=18s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+chrome t=20s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+
+=== edge ASR fake-file ===
+edge t=2s val="" asr=[] noSpeechHint=0 micDenyHint=0
+edge t=4s val="" asr=[] noSpeechHint=0 micDenyHint=0
+edge t=6s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+edge t=8s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+edge t=10s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+edge t=12s val="" asr=["audiostart"] noSpeechHint=0 micDenyHint=0
+edge t=14s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+edge t=16s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+edge t=18s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+edge t=20s val="" asr=["audiostart","error:no-speech","end"] noSpeechHint=1 micDenyHint=0
+
+=== chrome ASR + SAPI ===
+chrome t=1.5s val="" asr=["audiostart"]
+chrome t=3s val="" asr=["audiostart"]
+chrome t=4.5s val="" asr=["audiostart"]
+chrome t=6s val="" asr=["audiostart","error:no-speech","end"]
+chrome t=7.5s val="" asr=["audiostart","error:no-speech","end"]
+chrome t=9s val="" asr=["audiostart","error:no-speech","end"]
+chrome bodyHits=["路线、路况、天气与目的地信息（由 AI 调用后端工具） · 助手回复可朗读（豆包语音）","未检测到语音，请重试"]
+
+=== chrome ASR deny mic ===
+chrome setPermission microphone=ok
+chrome setPermission audioCapture=fail cdpSession.send: Protocol error (Browser.setPermission): Invalid PermissionDescriptor name: audioCapture
+chrome denyEvents=[] hits=["路线、路况、天气与目的地信息（由 AI 调用后端工具） · 助手回复可朗读（豆包语音）"]

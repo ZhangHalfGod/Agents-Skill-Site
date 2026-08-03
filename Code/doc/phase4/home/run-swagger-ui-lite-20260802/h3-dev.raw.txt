@@ -1,0 +1,66 @@
+[h3-run-wrapper] WorkDir=E:\zhangchangWork\Work_Space\Trae_Study\MechAssist-Fusion node=C:\Users\Administrator\AppData\Local\cursor-agent\versions\2026.07.23-e383d2b\node.exe
+## H3 交付：swagger-ui-lite
+
+### 改了什么
+
+1. **`extern-api/server/routes/openapiRoutes.js`**（改）
+   - 顶部增加 `fileURLToPath` / `dirname` / `join` 与 `__dirname`
+   - 在 `/openapi.yaml` 之后、`export default` 之前新增 `GET /docs/ui`：固定 `sendFile` 到 `../views/swagger-ui.html`，设 `Cache-Control: no-cache`、`X-Content-Type-Options: nosniff`
+   - `/openapi.json`、`/openapi.yaml` 逻辑未动
+
+2. **`extern-api/server/views/swagger-ui.html`**（新建，~153 行）
+   - 纯静态：无 CDN、无密钥/Token/URL 值输出
+   - `fetch('/api/openapi.json')` → 按路径第二段分组 → 中文组名映射 → 方法排序表（徽章 + path + summary）
+   - 失败显示 `#error`；渲染经 `escapeHtml`
+
+### HTML 结构
+
+`h1` + 说明行 → `#error` → `#content`；inline `<style>`（徽章色）+ inline `<script>`（分组/排序/防注入）。
+
+### 自检（红色记录五项）
+
+| # | 项 | 结果 |
+|---|---|---|
+| ① | 路由仅 `sendFile` 固定路径，无目录遍历 | ✅ `join(__dirname,'..','views','swagger-ui.html')` |
+| ② | HTML 无用户输入注入点 | ✅ 仅消费 openapi.json，值经 `escapeHtml` |
+| ③ | 页面无密钥/URL 输出 | ✅ 只渲染 method/path/summary |
+| ④ | `/openapi.json\|yaml` 行为未动 | ✅ 仅追加路由 |
+| ⑤ | views 目录与文件已创建 | ✅ `extern-api/server/views/swagger-ui.html` |
+
+---SPLIT---
+```yaml
+from: dev
+to: main (orchestrator)
+project: swagger-ui-lite
+stage: H3
+deliverable:
+  kind: implementation-report
+  path: extern-api/server/routes/openapiRoutes.js, extern-api/server/views/swagger-ui.html
+  summary: >-
+    M1 新增 GET /docs/ui（sendFile 固定 views/swagger-ui.html）；
+    M2 新建纯静态轻量 UI，fetch /api/openapi.json 分组展示主要 tag；
+    未改业务 API / openapiGenerator / index.js CSP；自检五项通过。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1: /docs/ui 已挂于 openapiRoutes，__dirname 一份，路径指向 views/swagger-ui.html → PASS"
+    - "M2: swagger-ui.html 已创建；charset/标题/说明/样式/分组映射/方法排序/escapeHtml/无 CDN/无密钥 → PASS"
+    - "红① sendFile 固定路径无遍历 → PASS"
+    - "红② 无用户输入注入点 → PASS"
+    - "红③ 无密钥/URL 输出 → PASS"
+    - "红④ openapi.json|yaml 未改 → PASS"
+    - "红⑤ views 文件存在 → PASS"
+evidence:
+  - "diff: openapiRoutes.js +14 行（import+__dirname+/docs/ui）；新增 views/swagger-ui.html ~153 行 / 5666 bytes"
+  - "node --check extern-api/server/routes/openapiRoutes.js → exit 0"
+lesson_hint: ""
+```
+
+### 改动清单（`git status --short`）
+
+```
+ M extern-api/server/routes/openapiRoutes.js
+?? extern-api/server/views/swagger-ui.html
+```
+[h3-run-wrapper] exit=0 elapsedSec=75.5

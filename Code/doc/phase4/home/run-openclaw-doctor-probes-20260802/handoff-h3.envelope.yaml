@@ -1,0 +1,36 @@
+from: dev
+to: main (orchestrator)
+project: openclaw-doctor-probes
+stage: H3
+deliverable:
+  kind: implementation-report
+  path: scripts/openclaw/common/install/doctor.ps1, scripts/openclaw/common/docs/README.md, scripts/openclaw/README.md
+  summary: >
+    doctor.ps1 新增 -Profile bm|home 与 probe 汇总（weather/tts/routing 着色分项表，FAIL→exit 1）；
+    common/docs 与 openclaw README 同步用法。自检四项均 PASS。实测 bm：1 PASS / 1 WARN / 1 FAIL → EXIT=1。
+    weather 空 detail 因既有 probe-weather ParserError（未改 probe）。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1 param -Profile ValidateSet bm|home: PASS"
+    - "M2 probe summary 段（相对路径/$LASTEXITCODE/着色/FAIL exit1/无Profile跳过）: PASS"
+    - "M3 common/docs README doctor 描述: PASS"
+    - "M4 openclaw README 用法示例 -Profile bm: PASS"
+evidence:
+  - "diff: doctor.ps1 +param +probe summary(~70行); docs README L8; README +1 usage line"
+  - "run: doctor -Profile bm → weather PASS / tts FAIL / routing WARN; EXIT=1; BOM=EF BB BF"
+lesson_hint: >
+  PS 调用子脚本若 ParserError，$LASTEXITCODE 可能仍为 0；汇总层按 exit code 会误 PASS。
+  后续若加固可在不改 probe 契约前提下对 & 包 try/catch，或先修 probe 文件编码。
+
+
+### 改动清单（`git status --short`）
+
+本次 H3 白名单改动仅 3 文件（其余为会话前既有改动）：
+
+ M scripts/openclaw/README.md
+ M scripts/openclaw/common/docs/README.md
+ M scripts/openclaw/common/install/doctor.ps1
+
+[h3-run-wrapper] exit=0 elapsedSec=190

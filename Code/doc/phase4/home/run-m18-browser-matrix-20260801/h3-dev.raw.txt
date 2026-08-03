@@ -1,0 +1,100 @@
+[h3-run-wrapper] WorkDir=E:\zhangchangWork\Work_Space\Trae_Study\MechAssist-Fusion node=C:\Users\Administrator\AppData\Local\cursor-agent\versions\2026.07.23-e383d2b\node.exe
+## H3 实测摘要
+
+在 Win 上完成 Chrome/Edge 实测并回填文档。入口优先 `extern-api` `/chat`（`:3000`+`:3002`）；ASR UI 仅在 `mcp-gaode` `/chat`（`:5173`）。
+
+### 环境（Phase 1）
+- Chrome / Edge / 麦克风 iKF-V11 Pro(OK) 均可用
+- 3002 曾中断：用 Node **v22.22.0** 拉起 `server/server.js`（Node 24 与 `better-sqlite3` 不兼容）；用完已关闭
+- **豆包密钥未配置**（`APP_ID`/`ACCESS_KEY` 空）；当前 `VOICE_TTS_PROVIDER=local`（曾试切 doubao，已恢复）
+- 未切 2.0（无法对豆包做额度探测）；mcp-gaode 依赖已齐，未再 `npm install`
+
+### 矩阵结果
+
+| OS | 浏览器 | ASR | TTS（豆包） |
+| --- | --- | --- | --- |
+| Win | Chrome | ❌ `no-speech`，输入框未填入 | ⏭ 密钥未配；C2 不以 local 顶替 |
+| Win | Edge | ❌ 同上 | ⏭ 同上 |
+| macOS | Chrome/Safari | ⏭ 无 Mac 设备 | ⏭ 无 Mac 设备 |
+
+### 冒烟
+1. ✅ 文本聊天正常  
+2. ❌ 口述填入未过（`no-speech`）  
+3. ⏭ 豆包未配；对照 local 朗读 HTTP 200 +「停止」可用（不计豆包 ✅）  
+4. ✅ 拒麦：`not-allowed` +「麦克风权限被拒绝…」  
+5–7. 已 ✅ 不重测  
+
+### 文档（C6 白名单）
+- 新建 `测试与发布/AI代码测试报告.md`
+- 更新 `测试与发布/README.md` §1/§2
+- 更新 `执行进度.md` §4/§6/§7  
+未 commit / push；未改 `debug.txt`。
+
+---SPLIT---
+```yaml
+from: dev
+to: main (orchestrator)
+project: m18-browser-matrix
+stage: H3
+deliverable:
+  kind: test-execution-report
+  path:
+    - doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+    - doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+    - doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+  summary: >
+    Win Chrome/Edge 实测完成并回填：ASR ❌（no-speech，输入框未填入）；
+    豆包 TTS ⏭（密钥未配置，C2 不以 local 顶替）；拒麦 ✅；macOS 全 ⏭；
+    冒烟 #1✅ #2❌ #3⏭ #4✅；报告与 README §1 逐格一致；自起 3002 已关闭。
+decisions:
+  - 入口 C1：extern-api /chat（前端 3000 + 后端 3002）；ASR UI 落在 mcp-gaode /chat（extern 无麦键）
+  - 未切豆包 2.0（密钥缺失，无法做额度 E5）
+  - 未降级以 mcp-gaode TTS 验收（mcp-gaode 亦未配豆包）
+  - 短暂将 VOICE_TTS_PROVIDER 试为 doubao 后已恢复 local；不以 local 成功记豆包 ✅
+  - 3002 用 nvm Node 22.22.0 重启；用完已停
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "C1: PASS — extern-api /chat 实测；ASR 补充 mcp-gaode /chat"
+    - "C2: PASS — 未以 local 顶替豆包矩阵 ✅；豆包列 ⏭+原因"
+    - "C2.1: N/A — 未触发额度切换"
+    - "C3: PASS — Layer1/2 有结果；macOS ⏭ 本环境跳过（无 Mac 设备）"
+    - "C3.1: N/A — Edge ASR 为 no-speech 非 not-allowed"
+    - "C4: PASS — 无业务代码变更"
+    - "C5: PASS — 报告含 §1~§6"
+    - "C5.1: PASS — README §1 与报告矩阵逐格一致"
+    - "C5.2: PASS — 无密钥值/无原始 audioBase64"
+    - "C6: PASS — 仅改白名单 3 文件"
+evidence:
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\m18-h3-final-log.txt
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\m18-h3-force-log.txt
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\h3-chrome-asr.png
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\h3-chrome-deny-fresh.png
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\h3-chrome-tts-force.png
+  - E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\run-m18-browser-matrix-20260801\evidence\h3-edge-tts-force.png
+lesson_hint: >
+  H1「豆包已配」与现场不符（APP_ID/ACCESS_KEY 空且 provider=local）；
+  Web Speech 假音频/扬声器回灌均 no-speech，P0 ASR 需真人口述或可靠环回。
+```
+
+### 改动清单（`git status` 只读）
+```
+ M debug.txt                                          # 既有本地改动，未触碰
+ M doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+ M doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+?? doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+```
+白名单 3 文件 ∈ C6；`debug.txt` 保持原状。H3 收尾时我主动停掉了当时用 Node 22 拉起的 `extern-api` 后端（端口 3002），所以该后台任务以非 0 退出是预期结果，不是测试失败。
+
+文档回填已完成（报告 / README §1·§2 / 执行进度）；当前 3002 未在监听。若还要继续浏览器实测，需再用 Node 22 启动 `extern-api` 的 `dev:server`。
+[h3-run-wrapper] exit=0 elapsedSec=1280.5
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 1)...
+Retry attempt 1...
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 2)...
+Retry attempt 2...
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 3)...
+Retry attempt 3...
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 4)...
+Retry attempt 4...
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 5)...
+Retry attempt 5...

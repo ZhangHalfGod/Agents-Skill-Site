@@ -1,0 +1,145 @@
+三个文件全部落盘。输出完整交付。
+
+---
+
+# AI代码生成范围清单（H1 — ProductManager）
+
+**项目**：release-notes-gen  
+**短名**：release-notes-gen  
+**阶段**：H1  
+**日期**：2026-08-02  
+**产出者**：ProductManager（agent=pm）  
+**业务仓**：MechAssist-Fusion（分支 feature/Home_window）  
+**run_dir**：`Code/doc/phase4/home/run-release-notes-gen-20260802`
+
+---
+
+## 1. 目标
+
+从 `GET /api/release/manifest`（:3002）生成发布清单 Markdown，对齐 `发布清单-模板.md` 结构。脚本 exit 0，输出无密钥。
+
+### 成功画像
+
+| 维度 | 标准 |
+|------|------|
+| exit 0 | 成功生成文件 → exit 0；连接/HTTP 错误 → exit 1 |
+| 字段一致 | Markdown 中 releaseTriplet/deployEnv/gitSha/mcp* 与 manifest 一致 |
+| 无密钥 | 输出不含 Token/Key/密码（默认 probe=false） |
+
+---
+
+## 2. 范围条目
+
+### 2.1 原位探查
+
+#### 已有参考
+
+| 文件 | 可复用 |
+|------|--------|
+| `scripts/release-triplet-check.mjs` | fetch 封装模式、`EXTERN_API_URL`、`RELEASE_PROBE` 环境变量、exit 码约定 |
+| `发布清单-模板.md` | 7 节结构：元信息/三元组/前检查/部署顺序/回滚/验证链接/备注 |
+
+#### Manifest 响应（probe=false 时 mcp 段仅 configured/reachable，无密钥泄露 ✅）
+
+#### 生成能力 vs 模板
+
+| 节 | 自动 | 手动占位 |
+|----|------|---------|
+| 一、元信息 | deployEnv + buildTime + gitSha | 操作人、关联需求 |
+| 二、发布三元组 | 6 行全自动 | — |
+| 三、发布前检查 | — | 测试/make manifest 检查（人工） |
+| 四、部署顺序 | 固定 5 步文本 | — |
+| 五、回滚 | 固定 4 步文本 | — |
+| 六、验证链接 | /health、manifest、capabilities | 前端地址 |
+| 七、备注 | — | 自由文本 |
+
+### 2.2 修改条目（P0）
+
+| # | 文件 | 动作 |
+|---|------|------|
+| M1 | **新增** `scripts/release-notes-gen.mjs` | .mjs 脚本：环境变量 `EXTERN_API_URL`（默认 :3002）、`RELEASE_OUTPUT_DIR`、`RELEASE_PROBE`（默认 false）；fetch manifest → 生成 7 节 Markdown → 写入 `发布清单-YYYYMMDD.md` → exit 0/1 |
+
+### 2.3 不修改
+
+release-triplet-check.mjs、releaseContract.js、发布清单-模板.md、业务代码、git push
+
+---
+
+## 3. 验收口径
+
+| 用户验收条件 | Given-When-Then | 条目 |
+|------------|-----------------|------|
+| "脚本 exit 0" | extern-api :3002 运行 → `node scripts/release-notes-gen.mjs` → exit 0 + 文件产生 | M1 |
+| "字段与 manifest 一致" | 生成 Markdown vs `GET /api/release/manifest?probe=false` → 字段逐项一致 | M1 |
+| 无密钥 | grep `KEY\|TOKEN\|SECRET` → 零命中 | M1 |
+
+---
+
+## 4. 风险与回滚
+
+网络不可达 → exit 1；目录缺失 → mkdir 或提示；字段缺失 → 写 `—` 不崩溃。回滚：删除 .mjs。
+
+---
+
+## 5. 开放问题（提交 H2）
+
+1. **输出结构**：完全对齐模板 7 节 vs 轻量摘要版（仅三元组+链接）？
+2. **probe 默认值**：建议 `false`（安全无外部请求，需 probe 时手动 `RELEASE_PROBE=true`）
+3. **字段缺失行为**：FAIL exit 1 还是照写 `—`？建议照写
+4. **输出命名**：`发布清单-YYYYMMDD.md` vs `发布清单-<sha>.md`？建议日期
+5. **是否更新版本三元组发布流程.md**？P2 补充引用
+
+---
+
+*本清单由 ProductManager 产出，提交架构师（H2）复核。*
+
+---SPLIT---
+
+```yaml
+from: pm
+to: arch
+project: release-notes-gen
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-release-notes-gen-20260802/h1-pm.scope-checklist.md
+  summary: |
+    新增 scripts/release-notes-gen.mjs，从 GET /api/release/manifest（:3002）
+    生成发布清单 Markdown（对齐 发布清单-模板.md 7 节结构）。
+    环境变量参考 release-triplet-check.mjs（EXTERN_API_URL、RELEASE_PROBE 默认 false）。
+    输出文件不含密钥/Token；exit 0 = 成功，字段与 manifest 一致。
+
+decisions:
+  - "新增 scripts/release-notes-gen.mjs（.mjs 对齐现有脚本风格）"
+  - "默认 probe=false（安全无外部请求，MCP 段仅 configured/reachable）"
+  - "7 节 Markdown 输出：自动节标注 (auto)，手动节标注 (placeholder)"
+  - "环境变量 EXTERN_API_URL/RELEASE_OUTPUT_DIR/RELEASE_PROBE，对齐 release-triplet-check.mjs"
+  - "字段缺失时写 '—' 不崩溃"
+  - "不改 release-triplet-check.mjs、不改模板文件、不改业务代码"
+
+open_questions:
+  - "输出结构：完全对齐模板 7 节 vs 轻量摘要版？"
+  - "probe 默认 false 还是 true？建议 false"
+  - "字段缺失：FAIL vs 照写 '—'？建议照写"
+  - "文件命名：按日期 YYYYMMDD 还是 commit SHA？"
+  - "版本三元组发布流程.md 是否引用新脚本？P2 更新"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 release-triplet-check.mjs: fetch manifest + 打印 triplet/MCP + exit 码参考"
+    - "源码确认 releaseContract.js: getExternReleaseManifest() 完整 manifest 结构"
+    - "源码确认 releaseContract.test.js: 断言 releaseTriplet/mcp/mcpMech/gatewayPlanes/releaseValidation 字段"
+    - "源码确认 releaseRoutes.js: GET /api/release/manifest 路由，接受 ?probe 参数"
+    - "源码确认 发布清单-模板.md: 7 节结构（元信息/三元组/前检查/部署/回滚/验证/备注）"
+    - "源码确认 发布清单-20260602-演练.md: 演练样例，填充了三元组/前检查/回滚节"
+    - "源码确认 scripts/ 目录: 已有 .mjs 先例（release-triplet-check.mjs, governance-smoke.mjs）"
+    - "无密钥分析: probe=false 时 mcp 段仅 configured/reachable，不泄露 MCP_*_BASE_URL"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 2.0KB"
+
+lesson_hint: ""
+```

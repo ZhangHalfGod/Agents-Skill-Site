@@ -1,0 +1,451 @@
+openapi: 3.0.3
+info:
+  title: MechAssist AI Extern API
+  version: 1.0.0
+  description: 从 registry LAYERS 自动生成的 OpenAPI 规范
+  x-generator: mechassist-openapi
+servers:
+  - url: http://localhost:3002
+paths:
+  /api/auth/register:
+    post:
+      summary: 注册新用户并返回 JWT
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+  /api/auth/login:
+    post:
+      summary: 邮箱密码登录，返回 user 与 token
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+  /api/auth/me:
+    get:
+      summary: 获取当前登录用户
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/auth/profile:
+    put:
+      summary: 更新姓名、头像
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/auth/password:
+    put:
+      summary: 修改密码
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/auth/refresh:
+    post:
+      summary: 刷新 JWT
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/chat/message:
+    post:
+      summary: 非流式对话
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - messages
+              properties:
+                messages:
+                  type: array
+                  items:
+                    type: object
+                conversation_id:
+                  type: string
+  /api/chat/message/stream:
+    post:
+      summary: 流式对话（SSE）
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - messages
+              properties:
+                messages:
+                  type: array
+                  items:
+                    type: object
+                conversation_id:
+                  type: string
+  /api/chat/conversations:
+    get:
+      summary: 对话列表
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/chat/conversations/{id}:
+    get:
+      summary: 对话详情（含消息）
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    delete:
+      summary: 删除对话
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/voice/capabilities:
+    get:
+      summary: 获取语音合成能力列表（支持的声音与语言）
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+      x-note: voice routes 尚未实现 Express handler（仅 service 层存在）
+  /api/voice/tts:
+    post:
+      summary: 文本转语音合成
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+      x-note: voice routes 尚未实现 Express handler（仅 service 层存在）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                voice:
+                  type: string
+                speed:
+                  type: number
+  /api/voice/tts/files/{fileName}:
+    get:
+      summary: 下载已合成的语音文件
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+      x-note: voice routes 尚未实现 Express handler（仅 service 层存在）
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/system/status:
+    get:
+      summary: 检查 AI 服务连通性
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/faq/categories:
+    get:
+      summary: FAQ 分类列表
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+  /api/faq:
+    get:
+      summary: FAQ 列表（支持 category_id、keyword）
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+  /api/faq/{id}:
+    get:
+      summary: FAQ 详情
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/repair-records:
+    get:
+      summary: 工单列表（分页、状态筛选）
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/repair-records/{id}:
+    get:
+      summary: 工单详情
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    patch:
+      summary: 更新工单状态
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/admin/users:
+    get:
+      summary: 用户列表（分页）
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+  /api/admin/users/{id}:
+    patch:
+      summary: 更新用户角色
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未授权（需要有效 JWT）
+        '500':
+          description: 服务器内部错误
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/docs:
+    get:
+      summary: 结构化 API 文档（与 /v2 目录同源）
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+  /api/release/manifest:
+    get:
+      summary: Prompt/注册表/commit 三元组与 MCP capabilities 探测
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      parameters:
+        - name: probe
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+          description: 传 false 跳过 MCP 探测
+  /api/gateway/planes:
+    get:
+      summary: 获取所有网关平面列表
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+  /api/gateway/control-plane:
+    get:
+      summary: 获取控制面快照
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+  /api/gateway/data-plane:
+    get:
+      summary: 获取数据面快照
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+  /health:
+    get:
+      summary: 服务健康状态
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+  /v2/:
+    get:
+      summary: v2 服务发现目录根入口
+      responses:
+        '200':
+          description: 成功
+        '500':
+          description: 服务器内部错误
+      x-registry-status: inferred
+      x-discovery: true
+      description: v2 服务发现目录——供客户端动态发现 API 能力
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

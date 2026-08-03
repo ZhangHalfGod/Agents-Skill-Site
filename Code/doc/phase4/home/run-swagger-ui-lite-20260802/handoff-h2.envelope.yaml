@@ -1,0 +1,47 @@
+from: arch
+to: devlead
+project: swagger-ui-lite
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-swagger-ui-lite-20260802/h2-arch-constraints.md
+  summary: |
+    CSP inline 兼容确认。自研 HTML 方案定稿：独立文件 server/views/swagger-ui.html +
+    路由 res.sendFile + 7 组路径映射 + 方法徽章配色。CDN 不纳入本期。
+    红色记录已登记（网关层端点新增）。H1 三问题全部裁定。
+
+decisions:
+  - "P0 自研 HTML（独立文件 server/views/swagger-ui.html）；CDN swagger-ui → P2 不做"
+  - "HTML 独立文件：res.sendFile() + ES module __dirname 推导"
+  - "分组：按路径第二段映射到 7 个中文标签（auth→认证/chat→对话/faq→FAQ/repair-records→维修/admin→管理/release→发布/其他→系统）"
+  - "方法徽章：GET 绿/POST 蓝/PUT 橙/DELETE 红/PATCH 紫"
+  - "加载失败降级：错误块显示提示文字"
+  - "不修改 openapiGenerator.js（不加 tags）"
+  - "红色记录已登记（网关层端点新增，见 §4）"
+
+open_questions:
+  - "未来若 LAYERS 新增领域（如新增 third-party slug），HTML 分组映射需同步更新"
+  - "若 CSP 缩紧去掉 unsafe-inline，本页面将不可用——需提前评估 CDN 方案"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: Architect (contentHash=0c7488c611693662)"
+    - "技能 source: stage-gate-flow (03778f2e), ai-code-boundary (f8e641bd)"
+    - "mcp-resolve-h2.yaml: 860 bytes"
+    - "playbook-pack-h2.md: 1347 bytes"
+    # 业务仓
+    - "CSP 确认: scriptSrc/src unsafe-inline → 自研方案兼容"
+    - "openapiRoutes.js: 现有 /openapi.json + /openapi.yaml 路由"
+    - "registry LAYERS: auth/chat/business/admin/system 5 slug"
+    - "openapiGenerator.js: 无 tags 输出"
+    - "挂载: server/index.js L177 app.use('/api', apiLimiter, openapiRoutes)"
+    # 交付物
+    - "h2-arch-constraints.md / mcp-resolve-h2.yaml / playbook-pack-h2.md 均已落盘"
+    # 红色记录
+    - "网关层端点新增——已登记（openapiRoutes.js + views/swagger-ui.html）"
+
+lesson_hint: ""

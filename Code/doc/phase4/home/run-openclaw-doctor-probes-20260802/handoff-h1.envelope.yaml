@@ -1,0 +1,46 @@
+from: pm
+to: arch
+project: openclaw-doctor-probes
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-openclaw-doctor-probes-20260802/h1-pm.scope-checklist.md
+  summary: |
+    扩展 doctor.ps1，新增 -Profile bm|home 参数，在现有基础诊断后
+    按 profile 汇总 weather/tts/routing 探测结果，输出 PASS/WARN/FAIL 分项表。
+    任一 probe FAIL → exit 1；不传 Profile → 保持旧行为。
+    不改三个 probe 脚本本身，只改 doctor.ps1 一个文件。
+
+decisions:
+  - "仅改 doctor.ps1 一个文件，不新增文件"
+  - "新增 -Profile 参数（ValidateSet bm|home），可选，不传则跳过 probe"
+  - "读取 profiles/<profile>/profile.json 的 capabilities 决定跑哪些 probe"
+  - "PASS = probe exit 0；FAIL = exit ≠ 0；routing 恒 0 → 解析输出判 WARN"
+  - "任一 FAIL → exit 1"
+  - "不改三个 probe 脚本；不破坏 install-windows.ps1 等调用方"
+
+open_questions:
+  - "按 profile 汇总：-Profile bm|home 单选还是 -AllProfiles 遍历？"
+  - "WARN 是否触发非零退出？建议仅 FAIL 触发"
+  - "是否调真实 probe（发外部 API）？或加 -DryRun 纯结构探测？"
+  - "routing probe 恒 exit 0：doctor 内应直接调 invoke-route.ps1 还是解析 probe 输出？"
+  - "是否需要 coding（V5）probe？当前无独立 coding probe 脚本"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 doctor.ps1: 仅打印 openclaw 诊断 + 提示文字，不跑 probe、无 PASS/WARN/FAIL、无退出码"
+    - "源码确认 probe-weather.ps1: exit 0=OK, 1=FAIL, 参数 -City/-TimeoutSec, 依赖 wttr.in"
+    - "源码确认 probe-tts.ps1: exit 0=OK, 1=FAIL, 参数 -BaseUrl (默认 :9880), 依赖本地 TTS"
+    - "源码确认 probe-routing.ps1: 恒 exit 0 (Mac 离线也 0), 调 Test-OpenClawRoute + invoke-route"
+    - "源码确认 bm/profile.json: weatherBackend=wttr.in, ttsEngine=system-speech, capabilities=[weather,tts,routing,coding,model-switch]"
+    - "源码确认 home/profile.json: weatherBackend=mcp-gaode, ttsEngine=cosyvoice, 同 capabilities"
+    - "源码确认 apply-profile.ps1: 按 capabilities 数组调 configure-*.ps1"
+    - "grep doctor 调用方: install-windows.ps1 L28 (提示), docs/README.md L3 (描述), 无程序化调用"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 2.0KB"
+
+lesson_hint: ""

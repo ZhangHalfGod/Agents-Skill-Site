@@ -1,0 +1,41 @@
+from: pm
+to: arch
+project: swagger-ui-lite
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-swagger-ui-lite-20260802/h1-pm.scope-checklist.md
+  summary: |
+    新增 GET /api/docs/ui 路由，返回自研轻量 HTML 页面（~130 行），
+    从 /api/openapi.json 按路径前缀分组渲染 API 列表。
+    零依赖（不 npm install）、CSP 兼容（inline script/style）、不改业务 API。
+
+decisions:
+  - "方案 A：自研极简 HTML（零依赖、CSP 无需改）"
+  - "路由放 openapiRoutes.js，路径 /docs/ui，挂载于 /api → /api/docs/ui"
+  - "分组按路径第二段（/api/auth/* → 认证），映射 LAYERS slug"
+  - "不改 openapiGenerator.js（不加 tags）；不改 server/index.js CSP"
+  - "网关层新增端点 → 触发红色记录"
+
+open_questions:
+  - "方案选型：自研极简（P0）vs CDN swagger-ui（P2）？"
+  - "HTML 内联 vs 独立文件 server/views/swagger-ui.html？"
+  - "是否同期给 openapiGenerator 加 tags？P2 考虑"
+  - "红色记录已触发"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 openapiRoutes.js: 现有 /openapi.json + /openapi.yaml 路由，无 /docs/ui"
+    - "源码确认 openapiGenerator.js: 无 tags 输出（indexOf('tags')===-1）"
+    - "源码确认 node_modules: 无 swagger-ui-dist（CDN 是唯一引入途径）"
+    - "源码确认 server/index.js L80-L89: CSP scriptSrc='self'+unsafe-inline，无 CDN 域"
+    - "源码确认 server/index.js L177: app.use('/api', apiLimiter, openapiRoutes) 挂载"
+    - "路径不冲突: /api/docs 在 chatRoutes，/api/docs/ui 在 openapiRoutes"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 1.8KB"
+
+lesson_hint: ""

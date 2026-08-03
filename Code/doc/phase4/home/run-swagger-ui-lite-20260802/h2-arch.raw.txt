@@ -1,0 +1,40 @@
+三文件全部落盘确认 ✅
+
+---
+
+## H2 架构合规复核 — swagger-ui-lite
+
+### 复核结论：通过 ✅
+
+CSP 已含 `'unsafe-inline'`（scriptSrc + styleSrc），自研 HTML 零依赖方案直接兼容。openapiGenerator 无 tags 输出→分组在 UI 侧按路径段映射。
+
+### UI 方案定稿
+
+| 维度 | 裁定 |
+|------|------|
+| 方案 | **自研 HTML**（独立文件 `server/views/swagger-ui.html`）+ `res.sendFile()` |
+| CDN | P2 不纳入（需放宽 CSP） |
+| 分组 | 7 组：auth→认证 / chat→对话 / faq→FAQ / repair-records→维修 / admin→管理 / release→发布 / 其他→系统 |
+| 徽章 | GET 绿 / POST 蓝 / PUT 橙 / DELETE 红 / PATCH 紫 |
+| 降级 | fetch 失败 → 错误块：`"请确认 extern-api 已启动"` |
+| 缓存 | `Cache-Control: no-cache` |
+
+### H1 三问题裁定
+
+| Q | 裁定 |
+|---|------|
+| Q1: 自研 vs CDN？ | P0 自研（独立文件），CDN 不纳入本期 |
+| Q2: 内联 vs 独立文件？ | **独立文件** `server/views/swagger-ui.html`，路由用 `res.sendFile()` + ES module `__dirname` |
+| Q3: 给 openapiGenerator 加 tags？ | 不加（本期不改生成器） |
+
+### 红色记录 ✅ 已登记
+
+网关层端点新增 → `openapiRoutes.js` + `views/swagger-ui.html`，含完整审查矩阵（风险点 3 项，审查人 H2/H3/H4）。
+
+### 修改面
+
+P0=M1+M2（openapiRoutes.js +15 行路由 + 新建 `server/views/swagger-ui.html` ~130 行）。显式不做：openapiGenerator.js、server/index.js CSP、所有业务路由。
+
+### 下一跳
+
+交接信封指向 DevLead（H3），7 组路径映射表 + 方法徽章配色 + ES module __dirname 推导已精确定稿。

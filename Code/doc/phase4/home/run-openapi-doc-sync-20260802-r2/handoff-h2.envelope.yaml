@@ -1,0 +1,63 @@
+from: arch
+to: devlead
+project: openapi-doc-sync
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-openapi-doc-sync-20260802-r2/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。H1 范围清单所有核心事实经原位复核确认无误。
+    修改面白名单仅 2 个 .md 文件（extern-api/README.md L96、extern-api/doc/重构api架构/README.md L53），
+    合计 4 处文本替换。H1 三个 open_questions 已裁定：
+    Q1 /api/docs 建议后续独立规划；Q2 L49 不修正；Q3 不新增独立条目。
+    额外发现 registry.js system/docs implemented:true 但路由缺失，已写入 lesson_hint，本期不改。
+
+decisions:
+  - "修改面仅 2 个 .md 文件，精确到行号与目标措辞，H3 直接执行无需再探"
+  - "M1（README.md L96）：将「规划中，未实现」替换为「已实现，3.0.3，从 registry 自动生成；Swagger UI（/api/docs）另行规划」"
+  - "M2（重构api架构/README.md L53）：将「后续规划（未实现）」替换为「已实现：/api/openapi.json 与 /api/openapi.yaml 已从 registry.js 动态生成 3.0.3」"
+  - "M2b（同文件 L49）：不修改——/api/docs 路由未实现，保留原表述避免误导"
+  - "registry.js system/docs implemented:true 与路由缺失不一致——本期不改，仅记录 lesson_hint"
+  - "措辞原则不变：生成=已实现，UI 托管=另行评估；不删除其他有效信息"
+  - "H2 产出即放行信号：编排者在接收到本文后自动放行 H3 执行文本修改"
+
+open_questions:
+  - "/api/docs 端点是否未来需要实现？建议后续独立规划"
+  - "registry.js 中 system/docs 的 implemented 字段是否应修正为 false？建议后续单独任务处理"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS 自查
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+    - "角色 source 已读取: Architect @ docs/zh/agents/standard/Architect/index.md (contentHash=0c7488c611693662, 3389 chars, not truncated)"
+    - "技能 source 已读取: stage-gate-flow @ docs/zh/skills/custom/common/stage-gate-flow/index.md (contentHash=03778f2e80391568, 1835 chars, not truncated)"
+    - "mcp-resolve-h2.yaml 已落盘: 769 bytes"
+    - "playbook-pack-h2.md 已落盘: 1852 bytes, 含角色义务/出门清单/硬禁区/sources"
+    # 业务仓复核
+    - "源码确认 openapiRoutes.js L16-L57: GET /api/openapi.json + /api/openapi.yaml 路由完整"
+    - "源码确认 openapiGenerator.js: generateOpenApiSpec() 纯函数，生成 3.0.3"
+    - "源码确认 server/index.js L177: app.use('/api', apiLimiter, openapiRoutes) 已挂载"
+    - "源码确认 extern-api/README.md L96: 写「规划中，未实现」"
+    - "源码确认 extern-api/doc/重构api架构/README.md L53: 写「后续规划（未实现）」"
+    - "grep 全量 extern-api/*.md（排除 node_modules）: 仅以上 2 处矛盾——H1 复核一致"
+    - "grep 全量 业务仓 doc/、README.md: extern-api 外无矛盾表述——H1 复核一致"
+    # 额外发现
+    - "registry.js L255-L264: system/docs implemented:true, API_PATHS.API_DOCS=/api/docs, 但 server/routes/ 下无对应路由——已写入 lesson_hint"
+    # 交付物落盘
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘 run-dir"
+    - "playbook-pack-h2.md 已落盘 run-dir"
+    # 文件自查
+    - "run-dir 下三文件均确认存在（dir 列出）"
+    # 出门清单
+    - "stage-gate-flow 全部勾选通过；核心模块红色记录标记不适用"
+
+lesson_hint: |
+  registry.js 中 system/docs 声明 implemented:true（路径 /api/docs），
+  但 server/routes/ 与 server/index.js 中均无 /api/docs 路由实现。
+  这导致 openapiGenerator 生成的 OpenAPI 规范中包含 /api/docs 端点描述，
+  而实际请求会 404。建议后续单独任务处理：
+  A) 实现 /api/docs 路由（如 Redoc/Swagger UI 托管页），
+  B) 或修正 registry.js 中 system/docs 的 implemented 为 false。

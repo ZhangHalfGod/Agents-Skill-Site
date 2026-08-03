@@ -1,0 +1,32 @@
+from: dev
+to: main (orchestrator)
+project: openapi-doc-sync
+stage: H3
+deliverable:
+  kind: doc-alignment-report
+  path: extern-api/README.md, extern-api/doc/重构api架构/README.md
+  summary: >
+    已完成 M1/M2 两处整行替换；M2b 未动。extern-api 下 .md 已无
+    「OpenAPI+未实现/规划中」矛盾表述；目标措辞含 openapi.json/yaml、3.0.3、registry。
+    diff 仅 2 文件各 1 行。未改 server/、未 commit/push、未起服务。
+decisions:
+  - 严格按 H2 白名单执行 M1→M2，以原文匹配为准（行号仅参考）
+  - M2b（结构化文档 GET /api/docs）不修改，保留 /api/docs 未实现语义
+  - 无关工作区改动（debug.txt、方案C 文档等）保持现状，未恢复/未改动
+  - registry.js system/docs implemented:true 与路由缺失不一致——本期不改，仅继承 lesson_hint
+gate:
+  checklist: stage-gate-flow
+  items:
+    - M1: PASS — README.md 已替换为目标措辞
+    - M2: PASS — 重构api架构/README.md 已替换为目标措辞
+    - M2b: PASS — 「- 结构化文档：`GET /api/docs`」未改动
+    - 不做清单: PASS — 未改 server/shared/package.json/.env；未接 Swagger UI；未实现 /api/docs；未 commit/push；未 npm install；未调 Site MCP/飞书
+evidence:
+  - "grep OpenAPI.*(未实现|规划中) under extern-api/**/*.md → No matches"
+  - "grep /api/openapi.json|/api/openapi.yaml|3.0.3 → 两文件目标行均命中"
+  - "git diff --stat → 2 files changed, 2 insertions(+), 2 deletions(-)"
+  - "git diff 仅 M1/M2 各一行 +/-；L50 结构化文档行未出现在 diff"
+lesson_hint: |
+  registry.js 中 system/docs 声明 implemented:true（路径 /api/docs），
+  但路由实际缺失；openapi 规范会含 /api/docs 而请求 404。
+  建议后续单独任务：实现 /api/docs 或将 implemented 改为 false。

@@ -1,0 +1,24 @@
+# MCP resolve record — H1 (ProductManager)
+# Generated: 2026-08-02T12:45+08:00
+mcp:
+  health:
+    ok: true
+    contentHash: "6029dcd3053d9df9"
+    dataSource: "/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+    mode: "local"
+  agent:
+    id: "ProductManager"
+    title: "产品经理（ProductManager）"
+    source: "docs/zh/agents/standard/ProductManager/index.md"
+    contentHash: "393c53994d1bac10"
+    scope: "standard"
+    index: 1
+  bound_skills:
+    - id: "stage-gate-flow"
+      source: "docs/zh/skills/custom/common/stage-gate-flow/index.md"
+      contentHash: "03778f2e80391568"
+      origin: "custom"
+    - id: "ai-code-boundary"
+      source: "docs/zh/skills/custom/common/ai-code-boundary/index.md"
+      contentHash: "f8e641bd8ab22698"
+      origin: "custom"

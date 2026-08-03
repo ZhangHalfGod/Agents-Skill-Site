@@ -1,0 +1,38 @@
+# M2 门禁签名 — openclaw-doctor-probes
+
+- **签名者**：main（编排者）
+- **时间**：2026-08-02T17:05+08:00
+- **项目**：openclaw-doctor-probes
+- **run-dir**：`E:\zhangchangWork\Work_Space\Trae_Study\Agents-Skill-Site\Code\doc\phase4\home\run-openclaw-doctor-probes-20260802`
+- **授权**：用户预授权 M2 后自动放行 H3，全自动至 H4 闭环并尝试写 Lesson
+
+## 校验结果
+
+| 检查项 | 状态 |
+|--------|------|
+| H1 信封四要素 | ✅ |
+| H1 mcp-resolve-h1.yaml / playbook-pack-h1.md | ✅（895B / 2.0KB） |
+| H2 信封四要素 | ✅（信封内嵌交付物文件，main 提取归档） |
+| H2 mcp-resolve-h2.yaml / playbook-pack-h2.md | ✅（839B / 2.75KB） |
+| H2 裁定 H1 开放问题（Q1~Q5） | ✅ |
+| 红色记录 | N/A（运维诊断脚本） |
+| 密钥泄露检查 | ✅ |
+| 飞书双写（H1/H2） | ✅（新建文档，见下） |
+
+## 签名
+
+```
+H1 pm scope-list      ✅ 通过
+H2 arch-constraints   ✅ 通过
+────────────────────────────
+M2 门禁：放行（用户已预授权，自动进入 H3）
+```
+
+## 说明
+
+- 飞书双写（新建，Home 未配置「OpenClaw 产出」folder_token，落默认空间——如实记录）：
+  - H1 范围清单：https://feishu.cn/docx/JulidZNe3oETxkxcqPvcx4otn8B
+  - H2 架构约束：https://feishu.cn/docx/ALJ5dktf2oLicWxis3XcV9ftn0e
+- 本地镜像：`h1-pm.scope-checklist.md` / `h2-arch-constraints.md`（信封校验仍读本地）
+- H3 单仓派遣（MechAssist-Fusion）：M1+M2 doctor.ps1（-Profile 参数 + probe 汇总段）+ M3/M4 文档同步；关键实现点：routing 双维度判定（exit + 输出文本）、仅 FAIL → exit 1、profile.json 缺失 WARN 降级
+- H4：实跑 `doctor.ps1 -Profile bm` 验证分项表与退出码；无参数行为向后兼容；代码核对退出码逻辑

@@ -1,0 +1,50 @@
+# H1 交接信封
+# Generated: 2026-08-01T11:23+08:00
+
+from: pm
+to: arch
+project: m18-browser-matrix
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/run-m18-browser-matrix-20260801/h1-pm.scope-checklist.md
+  summary: >
+    划定 m18-browser-matrix（M18 语音浏览器测试矩阵回填）AI 生成范围：新增 1 个文件
+    AI代码测试报告.md，修改 2 个文件（README.md §1/§2 + 执行进度.md §4/§7）。P0 六条
+    覆盖 Win Chrome ASR/TTS 实测与矩阵回填，P1 三条覆盖 Win Edge 实测与 mcp-gaode SPA；
+    macOS 标注「本环境跳过」。本机 Chrome ✅ Edge ✅ 麦克风 ✅，extern-api TTS=doubao
+    （已配 DOUBAO_TTS_*），mcp-gaode 未配 TTS。纯文档回填，无代码变更，不触发红色记录。
+
+decisions:
+  - "实测入口优先 extern-api /chat（端口 3002），与全局说明 §2 产品边界一致"
+  - "TTS provider 使用 extern-api 已有的 doubao（VOICE_TTS_PROVIDER=doubao + DOUBAO_TTS_* 已配）"
+  - "macOS 矩阵行全部填「本环境跳过」"
+  - "不触发核心模块红色记录（纯文档回填，无代码变更）"
+  - "mcp-gaode .env 无 TTS 配置：若需验证 mcp-gaode /chat 端到端，H3 可自行决定是否临时配置 DOUBAO_TTS_* 或仅测 extern-api"
+
+open_questions:
+  - "执行进度.md §5 M18-7 已标注「✅ Win Edge/Chrome 朗读 + Chat（extern /chat）」，但矩阵 §1 所有框为空：请 H2 裁定——将已有验证记录直接回填矩阵，还是重新实测后填入？"
+  - "mcp-gaode 前端依赖是否完整（npm install 可通过）待 H3 首次启动验证"
+  - "doubao 1.0 免费额度（~5000 字符）是否已用尽？若用尽，是否已按执行进度 §3.1 切 2.0？"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "已读：测试与发布/README.md（矩阵 §1 全空、冒烟 §2 部分勾选、环境 §4、进度 §7、安全检查 §5）"
+    - "已读：执行进度.md（§1 阶段总览 🔄、§2 锚点、§3 豆包/local 配置、§4 2026-06-03 验证记录、§5 M18-7 已有 ✅、§6 待办 #1 明确待补浏览器实测、§7 变更记录）"
+    - "已读：全局说明.md（§2 产品边界 extern-api /chat 为主入口、§3 技术栈、§4 模块关系）"
+    - "已读：M18-A/M18-B README.md（ASR/TTS 验收标准）"
+    - "环境确认：Chrome C:\Program Files\Google\Chrome\Application\chrome.exe 存在 ✅"
+    - "环境确认：Edge C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe 存在 ✅"
+    - "环境确认：麦克风 (iKF-V11 Pro(7.1)) Status=OK ✅"
+    - "环境确认：音频输出 (iKF-V11 Pro(7.1)) Status=OK ✅"
+    - "环境确认：extern-api .env VOICE_TTS_PROVIDER=doubao + DOUBAO_TTS_APP_ID 已设 ✅"
+    - "环境确认：mcp-gaode .env 仅 PORT=3001，无 TTS 配置 ⚠️"
+    - "环境确认：无 macOS 设备 ❌"
+    - "环境确认：AI代码测试报告.md 不存在（需新建）"
+    - "MCP 自查：health ok（contentHash=6029dcd3053d9df9, local manifest）"
+    - "MCP 自查：get_agent ProductManager → source=docs/zh/agents/standard/ProductManager/index.md"
+    - "MCP 自查：get_source_text 成功（3238 chars, contentHash=393c53994d1bac10）"
+
+lesson_hint: ""

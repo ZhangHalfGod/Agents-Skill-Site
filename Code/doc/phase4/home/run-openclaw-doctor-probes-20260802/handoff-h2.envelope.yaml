@@ -1,0 +1,53 @@
+from: arch
+to: devlead
+project: openclaw-doctor-probes
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-openclaw-doctor-probes-20260802/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。doctor.ps1 现状确认（55 行，无 probe，尾部手动提示）。
+    三 probe 脚本契约验证完成（weather/tts exit 0/1；routing 恒 exit 0 需文本判定）。
+    双 profile 结构确认（capabilities 一致，weatherBackend/ttsEngine 可读来丰富输出）。
+    扩展方案：-Profile 单选 + 分项表 + exit 1（仅 FAIL）。H1 五问题全部裁定。
+
+decisions:
+  - "-Profile 单选 bm|home（不传则跳过，无 -AllProfiles）"
+  - "分项表格式：weather/tts/routing 三行 PASS/WARN/FAIL + detail + 汇总"
+  - "PASS=exit 0；FAIL=exit ≠ 0；routing WARN=exit 0 且输出含'节点离线'/'exit=2'"
+  - "退出码：仅 FAIL → exit 1；WARN 不计入"
+  - "routing 保持调 probe-routing.ps1（双维度判定），不直接调 invoke-route.ps1"
+  - "不做 -DryRun / coding probe / 遍历双 profile"
+  - "profile.json 缺失 → WARN + exit 0（不阻断）"
+  - "P2 M3/M4（docs/README.md + scripts/openclaw/README.md）推荐同步"
+  - "红色记录 N/A（运维诊断脚本）"
+
+open_questions:
+  - "Test-OpenClawRoute.ps1 内部行为未知——若其输出格式变化，routing WARN 判定正则需同步"
+  - "未来若新增领域 probe（如 weather 高德版 probe），需扩展 doctor 的能力→probe 映射表"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source 已读取: Architect (contentHash=0c7488c611693662)"
+    - "技能 source 已读取: stage-gate-flow (contentHash=03778f2e80391568)"
+    - "mcp-resolve-h2.yaml 已落盘: 769 bytes"
+    - "playbook-pack-h2.md 已落盘: 1724 bytes"
+    # 业务仓
+    - "源码确认 doctor.ps1: 55 行，无 -Profile，尾部手动提示 probe"
+    - "源码确认 probe-weather.ps1: exit 0=OK, exit 1=FAIL"
+    - "源码确认 probe-tts.ps1: exit 0=OK, exit 1=FAIL"
+    - "源码确认 probe-routing.ps1: L15 exit 0 恒值，输出含 'exit=2'"
+    - "源码确认 bm/profile.json: capabilities=[weather,tts,routing,coding,model-switch]"
+    - "源码确认 home/profile.json: capabilities 一致"
+    # 交付物
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘"
+    - "playbook-pack-h2.md 已落盘"
+    # 出门清单
+    - "stage-gate-flow 通过；红色记录 N/A"
+
+lesson_hint: ""

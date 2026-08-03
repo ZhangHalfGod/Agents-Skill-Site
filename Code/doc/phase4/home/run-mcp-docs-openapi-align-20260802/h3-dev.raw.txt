@@ -1,0 +1,87 @@
+[h3-run-wrapper] WorkDir=E:\zhangchangWork\Work_Space\Trae_Study\MechAssist-Fusion node=C:\Users\Administrator\AppData\Local\cursor-agent\versions\2026.07.23-e383d2b\node.exe
+已完成。仅改 `doc/方案C/方案C_文档对齐/MCP接入文档.md`（175→199 行），四处增补如下。
+
+## 改动说明
+
+| 项 | 位置 | 内容 |
+|----|------|------|
+| M2 | §2.1 入口表 | 「发布探测」后追加：发现目录 / OpenAPI 规范 / 结构化文档 |
+| M4 | §7 | 新增步骤 7（`/v2/` + `/api/openapi.json`，端口 3002） |
+| M3 | §8 索引表末 | 追加 extern-api README、重构 api 架构两条链接（`../../../extern-api/...`） |
+| M1 | 版权行前 | 新增 §9「API 发现与文档」 |
+
+## 新 §9 全文
+
+```markdown
+## 9. API 发现与文档
+
+### 9.1 端点索引
+
+| 端点 | 端口 | 方法 | 鉴权 | 说明 | 同源 |
+|------|------|------|------|------|------|
+| `GET /v2/` | 3002 | GET | 无需 | 四层发现目录（auth/chat/business/admin/system） | registry.js → v2Catalog.js |
+| `GET /api/openapi.json` | 3002 | GET | 无需 | OpenAPI 3.0.3 规范（JSON） | registry.js → openapiGenerator.js |
+| `GET /api/openapi.yaml` | 3002 | GET | 无需 | OpenAPI 3.0.3 规范（YAML） | 同上 |
+| `GET /api/docs` | 3002 | GET | 无需 | 结构化文档（与 /v2/ 同源） | registry.js |
+
+### 9.2 同源说明
+
+以上四个端点共享单一数据真源——`server/catalog/registry.js`（`LAYERS` + `shared/apiPaths.js`）。OpenAPI JSON/YAML 规范由 `openapiGenerator.js` 动态生成；v2 发现目录由 `v2Catalog.js` 路由提供。新增 API 只需更新 registry，发现目录与 OpenAPI 文档自动同步。
+```
+
+## 自检
+
+- M1：§9 四行索引 + 同源段齐全；无「404/未实现/规划中」
+- M2：§2.1 三行已追加，口径与 extern-api README L95-96 一致
+- M3：§8 两条相对路径 `../../../extern-api/...` 正确
+- M4：§7 步骤 7 路径为 `localhost:3002`
+- 未 commit / push；未改其他文件
+
+---SPLIT---
+```yaml
+from: dev
+to: main (orchestrator)
+project: mcp-docs-openapi-align
+stage: H3
+deliverable:
+  kind: doc-alignment-report
+  path: doc/方案C/方案C_文档对齐/MCP接入文档.md
+  summary: >
+    纯文档对齐：§2.1 补发现/OpenAPI/docs 三行；§7 补步骤 7；§8 补两条
+    extern-api 索引；新增 §9 四端点索引表与 registry 同源说明。
+    自检 M1–M4 全通过；措辞无 404/未实现；本次 diff 仅该文件。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1 PASS: §9 四行×六列 + §9.2 同源段，/api/docs 写作「结构化文档（与 /v2/ 同源）」"
+    - "M2 PASS: §2.1 发布探测后追加发现目录/OpenAPI/结构化文档三行"
+    - "M3 PASS: §8 表末追加 extern-api README 与重构api架构两条 ../../../ 链接"
+    - "M4 PASS: §7 步骤 7 含 GET :3002/v2/ 与 /api/openapi.json"
+evidence:
+  - "git diff: +发现目录/OpenAPI/结构化文档(§2.1); +步骤7(§7); +2索引行(§8); +§9全文"
+  - "grep: /v2/ /api/openapi.json|yaml /api/docs registry.js openapiGenerator v2Catalog 均命中目标文件"
+  - "本次会话写入面仅 MCP接入文档.md；工作区其他 M/?? 为既有脏文件，非本 Goal"
+lesson_hint: ""
+```
+
+## 改动清单（`git status --short`）
+
+```
+ M debug.txt
+ M doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+ M doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+ M doc/方案C/方案C_文档对齐/MCP接入文档.md
+ M extern-api/README.md
+ M extern-api/doc/重构api架构/README.md
+ M extern-api/server/prompts/chat-system-v1.md
+ M extern-api/server/services/mcpToolUserMessages.js
+ M extern-api/server/services/mcpToolUserMessages.test.js
+ M scripts/openclaw/common/coding/configure-cursor-code.ps1
+ M scripts/openclaw/common/coding/invoke-cursor-agent.ps1
+ M scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md
+?? doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+```
+
+**本 Goal 实际写入**：仅 `doc/方案C/方案C_文档对齐/MCP接入文档.md`；其余条目为会话开始前既有工作区变更。
+[h3-run-wrapper] exit=0 elapsedSec=101.3

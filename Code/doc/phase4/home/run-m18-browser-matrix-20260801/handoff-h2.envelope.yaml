@@ -1,0 +1,52 @@
+
+
+```yaml
+from: arch
+to: devlead / dev
+project: m18-browser-matrix
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/run-m18-browser-matrix-20260801/h2-arch-constraints.md
+  summary: >
+    复核 H1 pm scope-list（全部接受）；输出架构约束 C1~C6（实测入口 extern-api
+    /chat 优先、TTS=doubao 不切 local、矩阵分层 P0/P1/跳过、文档模板与一致性、
+    文件写准入白名单）；执行计划 Phase 1~5；裁定 3 个 H1 开放问题 + 2 个补充裁定。
+
+decisions:
+  - "实测入口优先 extern-api /chat（端口 3002），与全局说明 §2 产品边界一致（H1 决策重申）"
+  - "TTS provider = doubao（extern-api 已配），不切换 local（M18-E 不在本任务范围）"
+  - "M18-7 已有验证记录仅作对照基线，不直接回填矩阵；H3 必须重新实测（时隔近 2 月，环境和验收粒度均需更新）"
+  - "矩阵分层：Layer1 Win Chrome P0 必须实测；Layer2 Win Edge P1 有结果或 ⏭+原因；Layer3 macOS 全 ⏭"
+  - "macOS 跳过统一格式：⏭ 本环境跳过（无 Mac 设备）"
+  - "不触发《核心模块AI生成红色记录》（纯文档回填，无代码变更）"
+  - "不调用 feishu_doc / feishu_drive 等飞书工具（飞书双写由编排者 main）"
+  - "H3 可自行决定是否在 mcp-gaode/.env 配 TTS 以独立验证 mcp-gaode /chat（H1 已放权）"
+
+open_questions:
+  - question: "豆包 1.0 免费额度是否已用尽？"
+    resolution: "H3 Phase 1 E5 实测前确认；若用尽→按执行进度 §3.1 切 2.0"
+  - question: "mcp-gaode 前端依赖是否完整？"
+    resolution: "H3 Phase 1 E4.1 确认；允许 npm install（环境准备），失败则降级仅测 extern-api"
+
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "H2 输入已确认（H1 scope-list ✅）"
+    - "架构约束 C1~C6 已明确"
+    - "执行计划 Phase 1~5 已编排"
+    - "H1 开放问题全部裁定"
+    - "核心模块红色记录：N/A（纯文档）"
+    - "本阶段 Lesson 已写入（L-H2-001, L-H2-002）"
+
+evidence:
+  - mcp-resolve-h2.yaml
+  - playbook-pack-h2.md
+  - h2-arch-constraints.md（本文）
+  - h1-pm.scope-checklist.md（上游）
+
+lesson_hint: >
+  矩阵状交付物应按格子标记状态，避免扁平化成一句 ✅ 导致粒度缺失（L-H2-001）。
+  执行进度.md 路径交叉引用需要在 H4 复核（L-H2-002）。
+``

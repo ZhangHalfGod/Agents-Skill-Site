@@ -1,0 +1,24 @@
+# 模板：复制为 <run-dir>/mcp-resolve-h1.yaml
+# 来源：角色自查 agents-skill-remote；禁止写入任何 token
+mcp_resolve:
+  scheme: single-facade-mcp+hop-snapshot
+  from_hop: H1
+  queried_at: "2026-08-02T17:40:00+08:00"
+  endpoint: "http://<PUBLIC_HOST>/agents-skill-mcp/mcp"
+  health:
+    ok: true
+    dataSource: "/var/www/agents-skill-site/Code/code/docs/public/manifest.json"
+    contentHash: "6029dcd3053d9df9"
+  agents:
+    - id: ProductManager
+      source: docs/zh/agents/standard/ProductManager/index.md
+      contentHash: "393c53994d1bac10"
+  skills:
+    - id: stage-gate-flow
+      source: docs/zh/skills/custom/common/stage-gate-flow/index.md
+      contentHash: ""
+    - id: ai-code-boundary
+      source: docs/zh/skills/custom/common/ai-code-boundary/index.md
+      contentHash: ""
+  bind_note: |
+    正文已由 get_source_text 拉取并摘入 playbook-pack-h1.md。

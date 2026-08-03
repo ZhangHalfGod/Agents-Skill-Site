@@ -1,0 +1,52 @@
+from: arch
+to: devlead
+project: release-notes-gen
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-release-notes-gen-20260802/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。姐妹脚本 release-triplet-check.mjs 模式可复用。
+    manifest 响应结构经 releaseContract.js 确认（12 顶层字段），probe 参数语义经 releaseRoutes.js 确认。
+    模板 7 节结构确认，字段→Markdown 映射定稿（§二 6 行表）。
+    probe 默认 false（安全优先），无密钥保障清单 6 项。H1 五问题全部裁定。
+
+decisions:
+  - "新增 scripts/release-notes-gen.mjs（.mjs ESM，对齐 release-triplet-check.mjs）"
+  - "输出完全对齐模板 7 节，标注 auto/fixed/placeholder"
+  - "§二 6 行表字段映射：prompt/registry/service/mcp/mcpMech/deployEnv"
+  - "probe 默认 false（安全优先）；true 时 mcp 段仅打印 compatible/version，不打印 URL"
+  - "字段缺失照写 '—' 不崩溃；HTTP 失败/解析失败 → exit 1"
+  - "文件命名：发布清单-YYYYMMDD.md"
+  - "P2 推荐：更新版本三元组发布流程.md 引用新脚本"
+  - "红色记录 N/A（运维工具脚本）"
+
+open_questions:
+  - "模板 §三/§六 中固定操作步骤是否需随项目演进同步更新？建议定期 review 生成器内的固定文本"
+  - "若 extern-api 未来更换 manifest 响应字段名（如 deprecated releaseTriplet），生成器需同步——无自动检测机制"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source 已读取: Architect (contentHash=0c7488c611693662)"
+    - "技能 source 已读取: stage-gate-flow (contentHash=03778f2e80391568)"
+    - "mcp-resolve-h2.yaml 已落盘: 769 bytes"
+    - "playbook-pack-h2.md 已落盘: 1615 bytes"
+    # 业务仓
+    - "源码确认 release-triplet-check.mjs: fetch 封装 + EXTERN_API_URL/RELEASE_PROBE + exit 码约定"
+    - "源码确认 releaseContract.js L114-L144: manifest 12 顶层字段结构"
+    - "源码确认 releaseRoutes.js L13-L15: probe query 参数语义"
+    - "源码确认 发布清单-模板.md: 7 节结构，含 6 行三元组表格式"
+    - "源码确认 发布清单-20260602-演练.md: 样例输出格式"
+    - "无密钥验证: manifest 字段不含 KEY/TOKEN/SECRET/password/Bearer"
+    # 交付物
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘"
+    - "playbook-pack-h2.md 已落盘"
+    # 出门清单
+    - "stage-gate-flow 通过；红色记录 N/A"
+
+lesson_hint: ""

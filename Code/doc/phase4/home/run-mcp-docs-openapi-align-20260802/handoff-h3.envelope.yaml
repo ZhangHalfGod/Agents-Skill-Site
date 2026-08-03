@@ -1,0 +1,46 @@
+from: dev
+to: main (orchestrator)
+project: mcp-docs-openapi-align
+stage: H3
+deliverable:
+  kind: doc-alignment-report
+  path: doc/方案C/方案C_文档对齐/MCP接入文档.md
+  summary: >
+    纯文档对齐：§2.1 补发现/OpenAPI/docs 三行；§7 补步骤 7；§8 补两条
+    extern-api 索引；新增 §9 四端点索引表与 registry 同源说明。
+    自检 M1–M4 全通过；措辞无 404/未实现；本次 diff 仅该文件。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1 PASS: §9 四行×六列 + §9.2 同源段，/api/docs 写作「结构化文档（与 /v2/ 同源）」"
+    - "M2 PASS: §2.1 发布探测后追加发现目录/OpenAPI/结构化文档三行"
+    - "M3 PASS: §8 表末追加 extern-api README 与重构api架构两条 ../../../ 链接"
+    - "M4 PASS: §7 步骤 7 含 GET :3002/v2/ 与 /api/openapi.json"
+evidence:
+  - "git diff: +发现目录/OpenAPI/结构化文档(§2.1); +步骤7(§7); +2索引行(§8); +§9全文"
+  - "grep: /v2/ /api/openapi.json|yaml /api/docs registry.js openapiGenerator v2Catalog 均命中目标文件"
+  - "本次会话写入面仅 MCP接入文档.md；工作区其他 M/?? 为既有脏文件，非本 Goal"
+lesson_hint: ""
+
+
+## 改动清单（`git status --short`）
+
+
+ M debug.txt
+ M doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+ M doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+ M doc/方案C/方案C_文档对齐/MCP接入文档.md
+ M extern-api/README.md
+ M extern-api/doc/重构api架构/README.md
+ M extern-api/server/prompts/chat-system-v1.md
+ M extern-api/server/services/mcpToolUserMessages.js
+ M extern-api/server/services/mcpToolUserMessages.test.js
+ M scripts/openclaw/common/coding/configure-cursor-code.ps1
+ M scripts/openclaw/common/coding/invoke-cursor-agent.ps1
+ M scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md
+?? doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+
+
+**本 Goal 实际写入**：仅 `doc/方案C/方案C_文档对齐/MCP接入文档.md`；其余条目为会话开始前既有工作区变更。
+[h3-run-wrapper] exit=0 elapsedSec=101.3

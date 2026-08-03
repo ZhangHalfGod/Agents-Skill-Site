@@ -1,0 +1,52 @@
+from: arch
+to: devlead
+project: workdir-whitelist
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-workdir-whitelist-20260802/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。H1 范围清单所有核心事实经原位复核确认无误。
+    白名单方案定稿：6 仓默认 + WORKDIR_WHITELIST 追加 + 精确匹配（-in）+ exit 1。
+    两份脚本插入点已明确：业务仓 L21→L22、编排版 L19→L20，各自适配脚本结构。
+    H1 五个 open_questions 全部裁定。红色记录已登记（网关层安全模块）。
+    修改面：P0=M1+M2+M3，P1 推荐同步，P2 建议不强制。
+
+decisions:
+  - "白名单默认值：Trae_Study 下 6 个 git 仓库绝对路径（全列）"
+  - "WORKDIR_WHITELIST：分号分隔，追加语义（$allowedRoots += $extra）"
+  - "匹配方式：精确目录比较（-in），双方 GetFullPath 归一化，大小写不敏感"
+  - "FAIL：Write-Output 'FAIL: 工作目录不在白名单中: <WorkDir>' + exit 1"
+  - "插入点：业务仓副本 L21{后}→L22、编排副本 L19{后}→L20（编排版需补 GetFullPath）"
+  - "双副本均修改（M1+M2），白名单默认值一致"
+  - "红色记录已登记：网关层安全模块，涉及 invoke-cursor-agent.ps1"
+  - "P1（configure-cursor-code.ps1）推荐同步；P2（顶层 README 等）建议不强制"
+
+open_questions:
+  - "configure-cursor-code.ps1 生成的 SKILL 模板是否引用了 invoke-cursor-agent.ps1 行为？H3 确认后决定 P1 是否执行"
+  - "医生诊断脚本（doctor.ps1）是否应增加白名单状态检测？建议后续独立评估"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS 自查
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=manifest.json (local)"
+    - "角色 source 已读取: Architect @ docs/zh/agents/standard/Architect/index.md (contentHash=0c7488c611693662, 3389 chars, not truncated)"
+    - "技能 source 已读取: stage-gate-flow @ docs/zh/skills/custom/common/stage-gate-flow/index.md (contentHash=03778f2e80391568, 1835 chars, not truncated)"
+    - "技能 source 已读取: ai-code-boundary @ docs/zh/skills/custom/common/ai-code-boundary/index.md (contentHash=f8e641bd8ab22698, 1172 chars, not truncated)"
+    - "mcp-resolve-h2.yaml 已落盘: 903 bytes"
+    - "playbook-pack-h2.md 已落盘: 2066 bytes, 含角色义务/出门清单/硬禁区/sources"
+    # 业务仓复核
+    - "源码确认 业务仓副本 invoke-cursor-agent.ps1 L17-L21: GetFullPath + Test-Path，无白名单"
+    - "源码确认 编排副本 invoke-cursor-agent.ps1 L17-L19: Test-Path，无 GetFullPath，无白名单"
+    - "源码确认 SKILL.md: 含 Rules 段，无白名单说明"
+    - "实查 Trae_Study 目录: 7 个子目录，Api_Gateway 无 .git（非 git 仓库），确认为 6 个候选"
+    # 交付物落盘
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘 run-dir"
+    - "playbook-pack-h2.md 已落盘 run-dir"
+    # 出门清单
+    - "stage-gate-flow 全部勾选通过；红色记录已登记"
+
+lesson_hint: ""

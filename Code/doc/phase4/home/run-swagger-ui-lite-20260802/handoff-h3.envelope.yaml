@@ -1,0 +1,35 @@
+from: dev
+to: main (orchestrator)
+project: swagger-ui-lite
+stage: H3
+deliverable:
+  kind: implementation-report
+  path: extern-api/server/routes/openapiRoutes.js, extern-api/server/views/swagger-ui.html
+  summary: >-
+    M1 新增 GET /docs/ui（sendFile 固定 views/swagger-ui.html）；
+    M2 新建纯静态轻量 UI，fetch /api/openapi.json 分组展示主要 tag；
+    未改业务 API / openapiGenerator / index.js CSP；自检五项通过。
+decisions: []
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1: /docs/ui 已挂于 openapiRoutes，__dirname 一份，路径指向 views/swagger-ui.html → PASS"
+    - "M2: swagger-ui.html 已创建；charset/标题/说明/样式/分组映射/方法排序/escapeHtml/无 CDN/无密钥 → PASS"
+    - "红① sendFile 固定路径无遍历 → PASS"
+    - "红② 无用户输入注入点 → PASS"
+    - "红③ 无密钥/URL 输出 → PASS"
+    - "红④ openapi.json|yaml 未改 → PASS"
+    - "红⑤ views 文件存在 → PASS"
+evidence:
+  - "diff: openapiRoutes.js +14 行（import+__dirname+/docs/ui）；新增 views/swagger-ui.html ~153 行 / 5666 bytes"
+  - "node --check extern-api/server/routes/openapiRoutes.js → exit 0"
+lesson_hint: ""
+
+
+### 改动清单（`git status --short`）
+
+
+ M extern-api/server/routes/openapiRoutes.js
+?? extern-api/server/views/swagger-ui.html
+
+[h3-run-wrapper] exit=0 elapsedSec=75.5

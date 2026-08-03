@@ -1,0 +1,35 @@
+三文件全部落盘确认 ✅
+
+---
+
+## H2 架构合规复核 — mcp-docs-openapi-align
+
+### 复核结论：通过 ✅
+
+MCP接入文档.md（175 行 8 节）缺失四端点索引——经源码路由 + extern-api README 交叉验证，确认 `/v2/`（L172）、`/api/openapi.*`（L177）均已挂载。
+
+### 修改面：仅一个文件，4 处修改
+
+| 修改 | 位置 | 内容 |
+|------|------|------|
+| M1 | 新增 §9 | 4 行端点索引表 + 同源说明段落 |
+| M2 | §2.1 入口表 | 补 3 行（发现目录 / OpenAPI / 结构化文档） |
+| M3 | §8 文档索引 | 补 2 条 extern-api README 链接 |
+| M4 | §7 联调清单 | 补步骤 7（curl /v2/ + /api/openapi.json） |
+
+### H1 开放问题裁定
+
+| Q | 裁定 |
+|---|------|
+| Q1: 同源精度 | registry.js 单一真源 + OpenAPI 经 openapiGenerator 动态生成（两级表述） |
+| Q2: mcp-gaode | 不纳入（独立项目 3001 端口） |
+| Q3: §9 位置 | 文档末尾（§8 之后，独立主题） |
+| Q4: /api/docs 措辞 | "结构化文档（与 /v2/ 同源）"——不加实现状态判定 |
+
+### Lesson Hint
+
+`/api/docs` 路由未实现（openapi-doc-sync 项目已发现 registry.js implemented:true 但无路由），文档保留描述但措辞不加"已实现"，H4 验收时预期 404 为已知差异。
+
+### 下一跳
+
+交接信封指向 DevLead（H3），MCP接入文档.md 四修改点精确到行级措辞，直接执行。

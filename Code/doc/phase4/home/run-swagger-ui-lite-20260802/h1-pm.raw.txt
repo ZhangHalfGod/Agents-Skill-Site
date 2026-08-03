@@ -1,0 +1,148 @@
+三个文件全部落盘。输出完整交付。
+
+---
+
+# AI代码生成范围清单（H1 — ProductManager）
+
+**项目**：swagger-ui-lite  
+**短名**：swagger-ui-lite  
+**阶段**：H1  
+**日期**：2026-08-02  
+**产出者**：ProductManager（agent=pm）  
+**业务仓**：MechAssist-Fusion（分支 feature/Home_window）  
+**run_dir**：`Code/doc/phase4/home/run-swagger-ui-lite-20260802`
+
+---
+
+## 1. 目标
+
+新增 `GET /api/docs/ui` 路由，返回轻量 HTML 页面，加载 `/api/openapi.json` 并按路径分组渲染 API 列表。不改业务 API、不装新依赖、不触 CSP 拦截。
+
+### 成功画像
+
+| 维度 | 标准 |
+|------|------|
+| 浏览器可浏览主要 tag | 访问 `:3002/api/docs/ui` → 页面按 auth/chat/faq/admin/system 分组，含方法徽章 + 摘要 |
+| 不改业务 | 现有 `/api/*` 与 openapiGenerator 不变 |
+| 零依赖 + CSP 兼容 | 无 npm install；inline script/style 已在 `'unsafe-inline'` 白名单 |
+
+---
+
+## 2. 范围条目
+
+### 2.1 原位探查
+
+| 检查项 | 结论 |
+|--------|------|
+| `openapiGenerator.js` | **无 tags**（openapi.json 仅有 paths，无 tags 分组） |
+| `node_modules/swagger-ui-dist` | **不存在**（CDN 是唯一引入 swagger-ui 的途径） |
+| CSP（server/index.js L80） | `scriptSrc/styleSrc: 'self' + 'unsafe-inline'`，**无 CDN 域**——CDN swagger-ui 需放宽 CSP |
+| `/api/docs` vs `/api/docs/ui` | 路径不冲突（`/api/docs` 在 chatRoutes，`/api/docs/ui` 在 openapiRoutes） |
+| 路由挂载 | `app.use('/api', apiLimiter, openapiRoutes)` → 新路由自动继承限流 |
+
+### 2.2 方案对比（提交 H2）
+
+| 方案 | 优势 | 劣势 | 建议 |
+|------|------|------|------|
+| **A：自研极简 HTML** | 零依赖、CSP 无需改、离线可用 | 非标准 swagger-ui 外观 | **P0** |
+| B：CDN swagger-ui-dist | 完整 Swagger UI | 需改 CSP（加 CDN 域）、外部依赖 | P2 |
+
+### 2.3 修改条目（P0 — 方案 A）
+
+| # | 文件 | 动作 |
+|---|------|------|
+| M1 | `server/routes/openapiRoutes.js` | 新增 `router.get('/docs/ui', (req,res) => res.type('html').send(HTML_TEMPLATE))` |
+| M2 | 同上 HTML 内容 | 自研 ~130 行：fetch `/api/openapi.json` → 按路径第二段分组 → `<table>` 含方法徽章（GET=绿 POST=蓝 DELETE=红）+ 路径 + 摘要 |
+
+### 2.4 分组映射
+
+| 路径前缀 | 显示名 |
+|---------|--------|
+| `/api/auth/*` | 认证 |
+| `/api/chat/*` | 对话 |
+| `/api/faq/*` | FAQ |
+| `/api/repair-records/*` | 维修 |
+| `/api/admin/*` | 管理 |
+| `/api/system/*`, `/health` | 系统 |
+
+### 2.5 不修改
+
+openapiGenerator.js（不改加 tags）、server/index.js CSP、现有业务路由、npm install、git push
+
+### 2.6 红色记录
+
+网关层新增端点 → 触发红色记录。H2 确认方案后放行 H3。
+
+---
+
+## 3. 验收口径
+
+| 用户验收条件 | Given-When-Then | 条目 |
+|------------|-----------------|------|
+| "浏览器可浏览主要 tag" | :3002 运行 → 访问 `/api/docs/ui` → 分组列表含方法徽章+摘要 | M1, M2 |
+| CSP 无拦截 | Console 无 CSP violation | M1 |
+
+---
+
+## 4. 风险与回滚
+
+未来 tags vs 路径分组不一致 → 标注"自动分组"；路由受攻击 → 复用 apiLimiter。回滚：删除路由。
+
+---
+
+## 5. 开放问题（提交 H2）
+
+1. **方案选型**：自研极简（P0）vs CDN swagger-ui（P2 可选）？
+2. **HTML 内联 vs 独立文件**（`server/views/swagger-ui.html`）？
+3. **是否同期给 openapiGenerator 加 tags？** P2 考虑。
+4. **红色记录触发**：是（网关层新增端点）。
+
+---
+
+*本清单由 ProductManager 产出，提交架构师（H2）复核。*
+
+---SPLIT---
+
+```yaml
+from: pm
+to: arch
+project: swagger-ui-lite
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-swagger-ui-lite-20260802/h1-pm.scope-checklist.md
+  summary: |
+    新增 GET /api/docs/ui 路由，返回自研轻量 HTML 页面（~130 行），
+    从 /api/openapi.json 按路径前缀分组渲染 API 列表。
+    零依赖（不 npm install）、CSP 兼容（inline script/style）、不改业务 API。
+
+decisions:
+  - "方案 A：自研极简 HTML（零依赖、CSP 无需改）"
+  - "路由放 openapiRoutes.js，路径 /docs/ui，挂载于 /api → /api/docs/ui"
+  - "分组按路径第二段（/api/auth/* → 认证），映射 LAYERS slug"
+  - "不改 openapiGenerator.js（不加 tags）；不改 server/index.js CSP"
+  - "网关层新增端点 → 触发红色记录"
+
+open_questions:
+  - "方案选型：自研极简（P0）vs CDN swagger-ui（P2）？"
+  - "HTML 内联 vs 独立文件 server/views/swagger-ui.html？"
+  - "是否同期给 openapiGenerator 加 tags？P2 考虑"
+  - "红色记录已触发"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 openapiRoutes.js: 现有 /openapi.json + /openapi.yaml 路由，无 /docs/ui"
+    - "源码确认 openapiGenerator.js: 无 tags 输出（indexOf('tags')===-1）"
+    - "源码确认 node_modules: 无 swagger-ui-dist（CDN 是唯一引入途径）"
+    - "源码确认 server/index.js L80-L89: CSP scriptSrc='self'+unsafe-inline，无 CDN 域"
+    - "源码确认 server/index.js L177: app.use('/api', apiLimiter, openapiRoutes) 挂载"
+    - "路径不冲突: /api/docs 在 chatRoutes，/api/docs/ui 在 openapiRoutes"
+    - "mcp-resolve-h1.yaml 已落盘: 895 bytes"
+    - "playbook-pack-h1.md 已落盘: 1.8KB"
+
+lesson_hint: ""
+```

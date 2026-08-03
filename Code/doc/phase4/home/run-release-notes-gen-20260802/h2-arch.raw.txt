@@ -1,0 +1,43 @@
+三文件全部落盘确认 ✅
+
+---
+
+## H2 架构合规复核 — release-notes-gen
+
+### 复核结论：通过 ✅
+
+姐妹脚本 `release-triplet-check.mjs` 模式可复用（fetch 封装、env 约定、exit 码）。Manifest 响应结构经 `releaseContract.js` 确认（12 顶层字段），probe 参数语义经 `releaseRoutes.js` 验证。模板 7 节结构确认。
+
+### 生成器定稿
+
+| 维度 | 裁定 |
+|------|------|
+| 文件 | `scripts/release-notes-gen.mjs`（新增，~120 行 .mjs） |
+| 输出 | 完全对齐模板 7 节，标注 `(auto)`/`(fixed)`/`(placeholder)` |
+| §二 映射 | 6 行表：prompt → registry → service → mcp-gaode → mcp-faq → deployEnv |
+| probe | 默认 `false`（安全优先无外部请求） |
+| 字段缺失 | 照写 `—` 不崩溃 |
+| 命名 | `发布清单-YYYYMMDD.md` |
+| 退出 | 成功 0 / HTTP 失败 1 / 字段缺失 0（标注 MISS） |
+
+### H1 五问题裁定
+
+| Q | 裁定 |
+|---|------|
+| Q1: 完全对齐 vs 摘要？ | 完全对齐 7 节，标注 auto/fixed/placeholder |
+| Q2: probe 默认？ | `false`（安全优先） |
+| Q3: 字段缺失处理？ | 照写 `—`，不崩溃 |
+| Q4: 文件命名？ | `发布清单-YYYYMMDD.md`（日期） |
+| Q5: 流程文档同步？ | P2 推荐，不阻塞 H4 |
+
+### 无密钥保障
+
+输出禁止：`MCP_*_BASE_URL` / `API_KEY` / `TOKEN` / `SECRET` / password / Bearer / 完整 HTTP URL。probe=false 时 mcp 段仅含布尔值+版本号。
+
+### 修改面
+
+P0=M1（新增 1 个 .mjs 文件），P2=M2（流程文档引用推荐）。红色记录 N/A。
+
+### 下一跳
+
+交接信封指向 DevLead（H3），7 节映射表 + probe 策略 + 无密钥清单已精确定稿，直接编码。

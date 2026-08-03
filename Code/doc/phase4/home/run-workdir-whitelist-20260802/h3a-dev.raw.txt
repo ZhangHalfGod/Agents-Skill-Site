@@ -1,0 +1,79 @@
+[h3-run-wrapper] WorkDir=E:\zhangchangWork\Work_Space\Trae_Study\MechAssist-Fusion node=C:\Users\Administrator\AppData\Local\cursor-agent\versions\2026.07.23-e383d2b\node.exe
+## H3a 交付：workdir-whitelist（业务仓）
+
+在 `Test-Path` 存在性检查之后、`$agentCmd` 赋值之前插入 WorkDir 白名单；同步 SKILL；P1 因 `configure-cursor-code.ps1` 会嵌入/覆盖 SKILL 模板，已一并加白名单说明。
+
+### 改了什么
+
+| 文件 | 变更 |
+|------|------|
+| `scripts/openclaw/common/coding/invoke-cursor-agent.ps1` | L22–L42：白名单校验（6 仓 + `WORKDIR_WHITELIST`）；路径用单引号字符串（原片段无引号在 PS 中不安全） |
+| `scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md` | `## Rules` 下新增 `### WorkDir 白名单` |
+| `scripts/openclaw/common/coding/configure-cursor-code.ps1` | 嵌入 `$skillMd` 的 Rules 同步白名单小节 |
+
+### 自检（红色记录五项）
+
+1. **6 仓路径**：与需求一致（MechAssist-Fusion / Agents-Skill-Site / MCP_Gaode_Map / Life-Coach-AI / AI_People_System / openclaw_trae_cursor）
+2. **精确比较**：`$wd -notin $normalized`，两侧均 `GetFullPath`
+3. **FAIL 文案 + exit 1**：`FAIL: 工作目录不在白名单中: $WorkDir`
+4. **FAIL 后不启动 agent**：插入点在 `$agentCmd` / `Resolve-ChatId` / `Start-Process` 之前；拒测仅输出 FAIL，无 `RUN agent=`
+5. **环境变量追加**：`;` 分割 → Trim → 非空且 `Test-Path` 后 `+=`
+
+**运行证据**：白名单外 TEMP 目录 → `DENY_EXIT=1`；白名单内本仓 → 未命中白名单拒绝并进入 agent（自检 TimeoutSec=5 超时属预期，证明已过白名单）。
+
+### P1 结论
+
+**已同步**。`configure-cursor-code.ps1` 会生成并写回 workspace/仓内 `SKILL.md`，含 WorkDir 用法；不同步会导致下次 configure 覆盖掉 M3 说明。
+
+---SPLIT---
+```yaml
+from: dev
+to: main (orchestrator)
+project: workdir-whitelist
+stage: H3a
+deliverable:
+  kind: implementation-report
+  path: scripts/openclaw/common/coding/invoke-cursor-agent.ps1, scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md, scripts/openclaw/common/coding/configure-cursor-code.ps1
+  summary: >-
+    M1 在 Test-Path 后/$agentCmd 前插入 WorkDir 白名单（6 仓 + WORKDIR_WHITELIST）；
+    M3 SKILL Rules 增 WorkDir 白名单节；P1 因 configure 嵌入 SKILL 模板已同步。
+    自检：域外 DENY exit1 且无 RUN agent；域内过白名单可启动 agent。
+decisions:
+  - P1 同步：configure-cursor-code.ps1 生成/覆盖 SKILL 含 WorkDir 说明，必须加白名单句
+  - 白名单路径用单引号字符串（相对需求片段的无引号写法，保证 PS 字面量正确）
+gate:
+  checklist: stage-gate-flow
+  items:
+    - "M1: PASS — 白名单块位于 L24-42，在 $agentCmd 之前"
+    - "M3: PASS — SKILL.md ### WorkDir 白名单 已写"
+    - "P1: PASS — configure-cursor-code.ps1 模板已同步"
+    - "红① 6仓路径一致: PASS"
+    - "红② -notin + GetFullPath: PASS"
+    - "红③ FAIL 中文 + exit 1: PASS（DENY_EXIT=1）"
+    - "红④ FAIL 后不进 Resolve-ChatId/Start-Process: PASS（拒测无 RUN agent=）"
+    - "红⑤ WORKDIR_WHITELIST 分号追加+Test-Path: PASS（代码审查）"
+evidence:
+  - "DENY: TEMP\\workdir-whitelist-deny-test → exit 1, FAIL 工作目录不在白名单中"
+  - "ALLOW: MechAssist-Fusion → 无白名单拒绝，出现 RUN agent=...（TimeoutSec=5 超时）"
+  - "diff: 仅上述三文件含白名单相关增行"
+lesson_hint: "configure-cursor-code.ps1 会覆盖仓内 SKILL.md，白名单文档必须双写模板与静态副本"
+```
+
+### 改动清单（`git status --short`）
+
+```
+ M debug.txt
+ M doc/方案C/方案C_M18_语音_mcp-gaode/执行进度.md
+ M doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/README.md
+ M extern-api/README.md
+ M extern-api/doc/重构api架构/README.md
+ M scripts/openclaw/common/coding/configure-cursor-code.ps1
+ M scripts/openclaw/common/coding/invoke-cursor-agent.ps1
+ M scripts/openclaw/common/skills/code-via-cursor-cli/SKILL.md
+?? doc/方案C/方案C_M18_语音_mcp-gaode/测试与发布/AI代码测试报告.md
+```
+
+本次 H3a 仅改上述 3 个白名单文件；其余 `M`/`??` 为会话前已有脏工作区，未触碰。未 commit / push。H3a 已完成：`invoke-cursor-agent.ps1` 已加 WorkDir 白名单，`SKILL.md` 与 `configure-cursor-code.ps1` 模板已同步。
+
+自检通过：白名单外路径 `exit 1` 且不启动 agent；白名单内可进入 agent。未做 commit/push。
+[h3-run-wrapper] exit=0 elapsedSec=93

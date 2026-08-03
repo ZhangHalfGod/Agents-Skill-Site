@@ -1,0 +1,59 @@
+from: arch
+to: devlead
+project: mcp-docs-openapi-align
+stage: H2
+
+deliverable:
+  kind: arch-constraints
+  path: Code/doc/phase4/home/run-mcp-docs-openapi-align-20260802/h2-arch-constraints.md
+  summary: |
+    架构合规复核通过。MCP接入文档缺失四端点索引确认。修改面仅一个文件（MCP接入文档.md），
+    四处修改点：§2.1 补 3 行 + §7 补步骤 7 + §8 补 2 条索引 + 新增 §9。
+    H1 四个 open_questions 全部裁定。同源说明措辞以 extern-api/README.md 为权威参考源。
+    /api/docs 路由未实现但文档保留描述（结构调整后无"未实现/已实现"判定），记 lesson_hint。
+
+decisions:
+  - "仅改 MCP接入文档.md 一个文件，4 处修改（§2.1 + §7 + §8 + §9）"
+  - "§9 放在 §8 之后（文档末尾），为独立主题"
+  - "§9 含端点索引表（4 行 × 6 列）+ 同源说明段落"
+  - "同源措辞：registry.js 为单一数据真源 + OpenAPI 经 openapiGenerator 动态生成"
+  - "§2.1 补 3 行（发现目录/OpenAPI/结构化文档），采用现有键值对格式"
+  - "§8 新增 2 条索引（extern-api/README.md + 重构api架构/README.md）"
+  - "§7 补步骤 7（curl /v2/ + /api/openapi.json），不补 /api/docs"
+  - "/api/docs 描述：'结构化文档（与 /v2/ 同源）'，不加实现状态判定"
+  - "不纳入 mcp-gaode 侧（3001 端口，独立项目）"
+
+open_questions:
+  - "/api/docs 路由何时实现？registry.js 已声明 implemented:true 但无实际路由（见 openapi-doc-sync 项目 lesson）"
+  - "方案C 下其余文档（如第三域接入清单）是否需同步更新 API 发现端点引用？建议后续评估"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    # SF-HS 自查
+    - "MCP health ok: contentHash=6029dcd3053d9df9, dataSource=manifest.json (local)"
+    - "角色 source 已读取: Architect (contentHash=0c7488c611693662, 3389 chars)"
+    - "技能 source 已读取: stage-gate-flow (contentHash=03778f2e80391568, 1835 chars)"
+    - "mcp-resolve-h2.yaml 已落盘: 769 bytes"
+    - "playbook-pack-h2.md 已落盘: 1647 bytes, 含角色义务/出门清单/硬禁区/sources"
+    # 业务仓复核
+    - "源码确认 MCP接入文档.md: 175 行 8 节，缺失四端点索引"
+    - "源码确认 server/index.js L172: /v2/ 挂载验证通过"
+    - "源码确认 server/index.js L177: /api (openapiRoutes) 挂载验证通过"
+    - "源码确认 registry.js L255-L264: system/docs declared implemented:true"
+    - "源码确认 extern-api/README.md L95-96: 四端点措辞已对齐，作为权威参考源"
+    - "源码确认 extern-api/doc/重构api架构/README.md L49-L53: 同源措辞已对齐"
+    - "源码确认 mcp-gaode/README.md L174-L184: 独立 OpenAPI 计划，排除本期"
+    # 交付物落盘
+    - "h2-arch-constraints.md 已落盘 run-dir"
+    - "mcp-resolve-h2.yaml 已落盘 run-dir"
+    - "playbook-pack-h2.md 已落盘 run-dir"
+    # 出门清单
+    - "stage-gate-flow 全部勾选通过；红色记录 N/A"
+
+lesson_hint: |
+  /api/docs 端点：registry.js system/docs 声明 implemented:true，
+  路由实际存在（chatRoutes.js:828 toMountPath(API_PATHS.API_DOCS)），
+  openapi-doc-sync H4 实测 GET /api/docs 返回 200。
+  本 H2 初稿曾误引「无路由/404」旧结论（见 openapi-doc-sync lesson 修正版），
+  已由编排者按实测事实纠正；文档描述采用「结构化文档（与 /v2/ 同源）」不表态实现状态。

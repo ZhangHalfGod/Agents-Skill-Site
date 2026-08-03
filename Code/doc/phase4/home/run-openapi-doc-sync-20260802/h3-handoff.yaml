@@ -1,0 +1,66 @@
+from: dev
+to: main (orchestrator)
+project: openapi-doc-sync
+stage: H3
+
+deliverable:
+  kind: doc-alignment-report
+  path:
+    - extern-api/README.md
+    - extern-api/doc/重构api架构/README.md
+    - Code/doc/phase4/home/run-openapi-doc-sync-20260802/h3-doc-alignment-report.md
+  summary: >
+    已按 C3/C4 修正 2 处 .md：OpenAPI 规范端点 GET /api/openapi.json 与
+    GET /api/openapi.yaml 标为已实现（生成器 openapiGenerator.js）；
+    GET /api/docs 标为 Swagger UI 前端规划中尚未实现。
+    全文扫描无其他「OpenAPI 未实现」矛盾；本机服务未运行，引用 H1 实测
+    （HTTP 200, 3.0.3, 28 paths / 452 lines YAML）。
+
+decisions:
+  - E1: 严格只改 C1 指定 2 个 .md，其余只读
+  - E2: 本机 3002/3099/3098 探测超时，端点验收引用 H1 gate 实测（C5 允许）
+  - E3: 重构api架构 README 表格中 /api/docs 同源表述保留（非「OpenAPI 未实现」矛盾）
+  - E4: snapshot voice routes x-note 按 D4 不改
+  - E5: registry.js implemented 误标确认存在，按 D1 不修，写入 lesson_hint
+
+gate:
+  checklist: stage-gate-flow
+  items:
+    - id: C1
+      result: PASS
+      note: 仅修改 extern-api/README.md 与 extern-api/doc/重构api架构/README.md
+    - id: C1.1
+      result: PASS
+      note: 业务仓未新增文件；未改 server/shared/快照/registry
+    - id: C2
+      result: PASS
+      note: 规范端点已实现 vs /api/docs 前端尚未实现 已区分
+    - id: C3
+      result: PASS
+      note: README 已列出 json/yaml + 生成器路径；/api/docs 标注尚未实现前端渲染
+    - id: C4
+      result: PASS
+      note: 重构api架构 README 已实现表述含 28 paths 与生成器路径
+    - id: C5
+      result: PASS
+      note: 引用 H1 实测（本机 curl 超时，服务未运行）
+    - id: C6
+      result: PASS
+      note: 无残留「OpenAPI 未实现/规划中」矛盾；/api/docs 规划中均加注前端
+
+evidence:
+  - path: Code/doc/phase4/home/run-openapi-doc-sync-20260802/h1-handoff.yaml
+    finding: 引用 H1 — GET /api/openapi.json HTTP 200, 3.0.3, 28 paths；GET /api/openapi.yaml HTTP 200, 452 lines
+  - path: extern-api/server/routes/openapiRoutes.js
+    finding: 只读确认 GET /openapi.json 与 /openapi.yaml 路由存在
+  - path: extern-api/server/index.js
+    finding: 只读确认 app.use('/api', apiLimiter, openapiRoutes) 已挂载
+  - probe: localhost:3002|3099|3098 /api/openapi.json|/api/openapi.yaml
+    result: 本机连接超时（服务未运行）；验收以 H1 实测为准
+
+lesson_hint: |
+  registry.js 中 system/docs 标记 implemented: true（API_PATHS.API_DOCS = '/api/docs'），
+  但 server/routes/ 下无任何 /api/docs 路由实现。
+  registry 的 implemented 字段与真实路由存在不一致——建议在后续迭代写 Lesson Card：
+  「registry.js implemented 字段不可作为路由实现判据，须以 server/routes/ 实际文件为准；
+  后续应建立 registry-to-route 自动校验（CI 脚本）」。

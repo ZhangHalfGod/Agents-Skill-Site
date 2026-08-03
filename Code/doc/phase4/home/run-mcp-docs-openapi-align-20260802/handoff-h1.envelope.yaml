@@ -1,0 +1,46 @@
+from: pm
+to: arch
+project: mcp-docs-openapi-align
+stage: H1
+
+deliverable:
+  kind: scope-list
+  path: Code/doc/phase4/home/run-mcp-docs-openapi-align-20260802/h1-pm.scope-checklist.md
+  summary: |
+    在 MCP接入文档.md 新增 §9 "API 发现与文档"，列出 extern-api :3002 下
+    四个发现/文档端点（/v2/、/api/openapi.json、/api/openapi.yaml、/api/docs），
+    并说明四者同源于 registry.js。同步更新 §2.1 入口表与 §8 文档索引。
+    纯文档追加，不改代码。不改 mcp-gaode 侧。
+
+decisions:
+  - "仅改 MCP接入文档.md 一个文件，不新增文件"
+  - "新 §9 含端点索引表（4 行）+ 同源说明段落（registry.js 为单一真源）"
+  - "§2.1 入口表补充发现/文档行（均标注'无需鉴权'）"
+  - "§8 索引新增 extern-api/README.md 与 重构api架构/README.md"
+  - "不纳入 mcp-gaode 侧（3001 端口，独立项目，其 OpenAPI 计划表述独立处理）"
+  - "同源说明措辞参考 extern-api/doc/重构api架构/README.md（已对齐）"
+
+open_questions:
+  - "同源说明精度：'registry.js 为单一真源' 还是区分 OpenAPI 经 openapiGenerator 间接生成？"
+  - "是否需要覆盖 mcp-gaode 侧文档（端口 3001，独立 OpenAPI 计划）？建议不纳入本期"
+  - "新 §9 放在 §2 之后还是文档末尾？"
+  - "§7 联调清单是否补入 API 发现验证步骤？"
+
+gate:
+  checklist: stage-gate-flow
+  evidence:
+    - "MCP health ok: contentHash=6029dcd3053d9df9"
+    - "角色 source: ProductManager @ docs/zh/agents/standard/ProductManager/index.md (contentHash=393c53994d1bac10)"
+    - "源码确认 MCP接入文档.md: 175 行 8 节，缺 API 发现/文档章节"
+    - "源码确认 extern-api/README.md L95-96: 已对齐 OpenAPI 端点（openapi-doc-sync 成果）"
+    - "源码确认 extern-api/doc/重构api架构/README.md: v2 四层映射表 + 同源说明已更新"
+    - "源码确认 server/catalog/registry.js: LAYERS + API_PATHS 为数据真源"
+    - "源码确认 server/catalog/openapiGenerator.js L293: 从 registry 生成 OpenAPI 3.0.3"
+    - "源码确认 server/routes/v2Catalog.js: 从 registry 生成 v2 目录"
+    - "源码确认 server/index.js L172, L177: /v2/ 与 openapiRoutes 挂载"
+    - "grep 方案C 下 .md: 仅 M-3 发布说明有 /v2/ 引用（已正确），无其他矛盾"
+    - "交叉检查 mcp-gaode/README.md L174-L184: 独立 OpenAPI 计划表述（端口 3001），不纳入本期"
+    - "mcp-resolve-h1.yaml 已落盘: 964 bytes"
+    - "playbook-pack-h1.md 已落盘: 2.8KB"
+
+lesson_hint: ""
