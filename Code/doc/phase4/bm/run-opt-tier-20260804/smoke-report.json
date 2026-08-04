@@ -1,0 +1,40 @@
+{
+  "run": "D:/trae_git/Agents-Skill-Site/Code/doc/phase4/bm/run-opt-tier-20260804",
+  "checks": [
+    {
+      "name": "h2_uses_pointer",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "deliverables_nonzero",
+      "ok": true,
+      "detail": "d1=158 d2=70"
+    },
+    {
+      "name": "goal_has_l1_paths",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "goal_not_huge",
+      "ok": true,
+      "detail": "bytes=563"
+    },
+    {
+      "name": "raw_empty_allowed",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "live_soul_tier",
+      "ok": true,
+      "detail": "ok"
+    }
+  ],
+  "pass": true,
+  "phase_done": [
+    "B-structural"
+  ],
+  "notes": "P1-1 P1-3 structural smoke; no live Feishu hop"
+}

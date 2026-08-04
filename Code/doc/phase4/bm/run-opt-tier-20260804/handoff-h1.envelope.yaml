@@ -1,0 +1,16 @@
+﻿handoff:
+  from: ProductManager
+  to: Architect
+  project: opt-tier-smoke
+  stage: requirements
+  deliverable:
+    kind: scope-list
+    path: D:\trae_git\Agents-Skill-Site\Code\doc\phase4\bm\run-opt-tier-20260804\h1-scope-list.deliverable.md
+    summary: |
+      分层烟测；无业务改码
+  decisions: []
+  open_questions: []
+  gate:
+    checklist: stage-gate-flow
+    evidence: structural-smoke
+  lesson_hint: ""

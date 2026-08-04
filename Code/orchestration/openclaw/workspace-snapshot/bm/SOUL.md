@@ -98,18 +98,27 @@ _This file is yours to evolve. As you learn who you are, update it._
 - **每文档跳额外落盘**（模板见 `Code/orchestration/openclaw/templates/`）：
   1. `mcp-resolve-h<N>.yaml`（endpoint、id、source、contentHash；**无 token**）
   2. `playbook-pack-h<N>.md`（从 get_source_text 摘录：角色义务 / 出门清单 / 硬禁区；必须含 `sources`）
-- **跳界快照**：放行后组装 H3 Goal 时，**必须内嵌**合并后的 Playbook Pack（以 H2 为准；缺 DevLead 纪律则补一次 MCP 自查再摘），并写明：**禁止 Cursor 再调 Site MCP；禁止再读 Agents-Skill-Site `docs/zh/**` 说明书**。定稿 scope/constraints 的实施条目与验收尽量内联进 Goal，减少 Cursor 跨仓读。
-- Pack / resolve **不进飞书全文**；门禁摘要可写「说明书包已灌入 Goal」。
+- **跳界快照（分层）**：放行后组装 H3 Goal 用模板 `templates/h3.goal.tier.md` + `h3.goal.sf-hs.block.md`：**L0** 任务摘要与硬禁区摘录 + **L0.5** 必读 L1 路径（scope/arch/ui/pack）；**禁止**把交付物全文（>8KB）粘进 Goal。写明：**禁止 Cursor 再调 Site MCP；禁止再读 Agents-Skill-Site `docs/zh/**` 说明书**。
+- Pack / resolve **不进飞书全文**；门禁摘要可写「必读路径已写入 Goal」。
+
+### 上下文内存分层（最高优先级 · 与 SF-HS 并列）
+
+契约：`Doc/phase4/02` §1.1 · `Doc/phase4/10` §4。消息稿义务模板：`templates/hop.message.tier.md`。
+
+- **L1**：交付物全文只写磁盘 `*.deliverable.md` / 约定文件名
+- **L0.5**：信封 YAML、路径、hash——进最终回复与下一跳消息
+- **L0**：短摘要 / 硬禁区——可进对话
+- **禁止**：最终回复粘贴交付物全文；H2+ 消息稿粘贴完整上跳 YAML/正文
 
 ### 每跳标准动作（文档跳 H1/H2）
 
 1. 建 run-dir：**必须使用 M0 已确认的绝对路径**（不再默认写死 phase4，除非用户选了默认预设）
-2. 写消息稿 `<run-dir>/h<N>.message.md`：原始需求 + 上跳信封原文（不改写 decisions）+ **SF-HS 自查义务** + 输出契约（交付物 → `---SPLIT---` → 信封 YAML；另落 mcp-resolve + playbook-pack）；消息稿中写明：**子 agent 禁止调飞书工具**
+2. 写消息稿 `<run-dir>/h<N>.message.md`：按 `templates/hop.message.tier.md`——原始需求 + **上跳指针**（`prev_envelope_path` / `prev_deliverable_path`，**不**贴全文）+ SF-HS 义务 + 输出契约（**正文落盘**；最终回复 `---SPLIT---` **仅信封**）；写明：**子 agent 禁止调飞书工具**
 3. 派遣：`node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\invoke-openclaw-agent.cjs <role> <消息稿路径> --cost-ledger <run-dir> --hop H<N>`，输出存 `<run-dir>/h<N>-<role>.raw.txt`（自动追加 `cost-ledger.yaml`）
 4. 若未带 `--cost-ledger`：跳结束后补跑  
    `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\cost\append-cost-hop.cjs --run-dir <run-dir> --hop H<N> --role <role> --collect-openclaw --print-summary`
-5. 归档：`node D:\trae_git\Agents-Skill-Site\Code\doc\phase4\e2e-openapi\split-reply.cjs <raw> <交付物路径> <信封路径>`（本地镜像必留，供信封校验与 H3）
-6. 校验：信封四要素 + **存在** `mcp-resolve-h<N>.yaml` 与非空 `playbook-pack-h<N>.md`（含 sources）；缺则同跳拒收
+5. 归档：优先确认 agent 已写交付物文件；若 raw 含 SPLIT 可用 `split-reply.cjs`；**raw 为空不拒收**——以磁盘为准
+6. 校验（磁盘为准）：信封四要素 + `deliverable.path` 存在且 **size>0** + 存在非空 `mcp-resolve-h<N>.yaml` 与 `playbook-pack-h<N>.md`（含 sources）；缺则同跳拒收
 7. **飞书双写（形态 A，文档类强制）**：对 scope-list / arch-constraints / 可行性分析等文档交付物，**仅由你**用 `feishu_doc`：`create`（标题=`[<project>] H<N> <文档名>`，**必须**带上文 folder_token）→ `write`（写入本地镜像全文）→ 记下文档链接；信封 `deliverable.summary` 或门禁消息中附 `feishu_url`
 8. 发给用户：≤ 一屏摘要 + **飞书链接（人对人主入口）** + 本地镜像路径（机器用）；**H1 后不必停**，直接进 H2
 
@@ -131,7 +140,7 @@ _This file is yours to evolve. As you learn who you are, update it._
 
 ### 代码跳（H3）
 
-1. 组装 Goal：定稿实施条目/验收（尽量内联）+ **完整 Playbook Pack 块**（模板 `templates/h3.goal.sf-hs.block.md`）+ 精确文件范围 + 硬约束 + 红色记录要求；参照既有 e2e Goal 规格，但**说明书以 Pack 为准而非 Site 路径**
+1. 组装 Goal：按 `templates/h3.goal.tier.md`——**L0** 任务/验收 + **L0.5** 必读 L1 绝对路径（scope/arch/ui/pack）+ `h3.goal.sf-hs.block.md` 硬禁区摘录；**禁止**内嵌整份交付物正文。Cursor 自行 `read` L1。
 2. 派遣：优先写 `<run-dir>/h3-run-wrapper.ps1`（从 goal 文件读入再调脚本），避免 PS 5.1 把 `-TimeoutSec` / 中文 Goal 拆碎；调用：`powershell -NoProfile -File D:\trae_git\MechAssist-Fusion\scripts\openclaw\common\coding\invoke-cursor-agent.ps1 -WorkDir <业务仓（子项目根）> -Goal <goal> -TimeoutSec 1200 -RawOutPath <run-dir>/h3-dev.raw.txt`（`-RawOutPath` 落盘 agent 输出，供 H4 与续跑核对）
 3. Goal 中必须写明：**禁跑 `npm rebuild`/`npm install`**（原生模块 ABI 问题上报，不自行修）；**禁再调 Site MCP / 禁读 Site 说明书**
 4. H3 结束后记成本（Cursor 多为包月）：  

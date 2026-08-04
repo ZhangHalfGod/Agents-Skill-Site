@@ -409,18 +409,19 @@ L0.5 指针 ──► L1 DMA（read 大块）──► 抽出 L0 热摘要 ─�
 
 **Phase A 不做**：改交付物契约、改 MCP、改 Home。
 
-### Phase B — 指针 + DMA 落地（P1-1 / P1-3，约 1～2 天）**【分层核心】**
+### Phase B — 指针 + DMA 落地（P1-1 / P1-3）**【分层核心 · 2026-08-04 bm 已落地契约/SOUL/模板】**
 
-| 步 | 动作 | 产出 | 完成标准 |
-|:--:|------|------|----------|
-| B1 | 在 `02-orchestration-contracts.md` 增加「上下文内存分层」引用本文件 §4；约定最终回复 = 路径 + envelope | `02` 补丁 | 契约可评审 |
-| B2 | 更新消息稿义务：正文只写 `*.deliverable.md`；stdout/最终回复禁全文 | SOUL + `role-session.md` + 模板句 | 模板可复制 |
-| B3 | main 校验改为：文件存在且 size&gt;0 + 信封四要素（不依赖 raw 全文） | SOUL 校验段 | 即使 raw=0 仍可收跳 |
-| B4 | H2/H2b 消息改为 `prev_envelope_path` + hash，不粘贴上跳 YAML | 消息模板 / 示例 run | `h2.message.md` 不再随 H1 膨胀 |
-| B5 | **H3 Goal 模板固化**（防开发受损）：必含 WorkDir、L1 必读路径列表、Pack 硬禁区 L0 摘录、禁止再打 Site MCP | `templates/` 或 SOUL H3 段 | Goal 无整份 40KB 规范，但路径齐全 |
-| B6 | 含 UI 的复测 1 条（可复用眼镜仓小改） | `run-opt-p1-<日期>/` + §9 填写 | Cursor 能按路径读到完整规范；墙钟/token 对照基线 |
+| 步 | 动作 | 产出 | 状态 |
+|:--:|------|------|:----:|
+| B1 | `02` §1.1 上下文内存分层 | `Doc/phase4/02` | ✅ |
+| B2 | 消息稿义务 + `role-session.md` | `templates/hop.message.tier.md` · `role-session.md` · SOUL v1.6 | ✅ |
+| B3 | main 校验：磁盘 size&gt;0；raw 空可收 | 线上 SOUL（备份 `.bak-tier-20260804`） | ✅ |
+| B4 | 上跳指针模板 | `hop.message.tier.md` | ✅ |
+| B5 | H3 Goal 壳 | `templates/h3.goal.tier.md` + sf-hs 块说明 | ✅ |
+| B6 | 结构烟测 | `Code/doc/phase4/bm/run-opt-tier-20260804/` + `smoke-report.json` **pass** | ✅ 结构 |
+| B7 | （待）飞书真跑一条含 UI 需求，对照 §3 基线 token/墙钟 | 下一次【新项目需求】 | ⏳ |
 
-**H3 验收口令（B6 必过）**：人工打开 `h3-goal.md`，确认「必读路径」指向的 L1 文件非空；在 Cursor 侧不粘贴全文也能还原需求。
+**H3 验收口令**：Goal「必读 L1」路径非空；Cursor 靠 `read` 还原，不靠对话粘贴全文。
 
 ### Phase C — 并行与双写（P1-2，约 0.5 天）
 

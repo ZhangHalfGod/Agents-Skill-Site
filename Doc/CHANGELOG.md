@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-08-04 — orchestration：上下文内存分层落地（P1-1 / P1-3）
+
+- **契约**：`Doc/phase4/02` §1.1；模板 `hop.message.tier.md` / `h3.goal.tier.md`
+- **SOUL**：草稿 v1.6 + 线上 `~/.openclaw/workspace/SOUL.md`（备份 `.bak-tier-20260804`）；校验以磁盘为准
+- **烟测**：`Code/doc/phase4/bm/run-opt-tier-20260804/smoke-report.json` pass（结构；飞书真跑待 B7）
+- **快照**：`workspace-snapshot/bm` 已同步（folder_token 仍占位）
+
 ## 2026-08-04 — orchestration：bm OpenClaw workspace 快照入库
 
 - **路径**：`Code/orchestration/openclaw/workspace-snapshot/bm/`（SOUL/AGENTS/TOOLS/skills…）
