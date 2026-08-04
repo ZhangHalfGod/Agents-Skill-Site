@@ -6,7 +6,7 @@
 > **Demo 真源**：[`../../Code/doc/phase4/run-ai-vg-web-ui-route1-20260803/`](../../Code/doc/phase4/run-ai-vg-web-ui-route1-20260803/)  
 > **相关契约**：[`02`](02-orchestration-contracts.md) · [`06` SF-HS](06-single-facade-hop-snapshot.md) · [`07` M0](07-run-dir-m0-card.md) · [`08` 成本](08-cost-ledger-schema.md) · SOUL 草稿 `Code/orchestration/prompts/orchestrator-main-soul.draft.md`
 
-**读法**：§1–§3 = 现状怎么跑；§4 = Demo 数据；§5 = 提升点（**特别标识**，含预估收益与改动面）。  
+**读法**：§1–§2 = 现状怎么跑；§3 = Demo 数据；§4 = **上下文内存分层**；§5–§7 = 提升点；§8 = **执行计划**；§9 = 复核模板。  
 数字带「预估」的不是承诺 KPI，落地后用下一轮 `cost-ledger.yaml` + 墙钟对照本表复核。
 
 ---
@@ -168,7 +168,68 @@ run-ai-vg-web-ui-route1-20260803/
 
 ---
 
-## 4. 与「只 /new」的关系
+## 4. 上下文内存分层（指针 / 热小 / 冷大）
+
+> 类比编程：**指针**指地址；**普通访存**拿小热数据；**DMA** 搬大块连续外存。  
+> AI 工作流同理：**对话不搬仓库，只传句柄；大块落盘，模型按需 read，回灌只要关键摘要。**
+
+### 4.1 分层定义
+
+| 层级 | 类比 | 驻留哪里 | 体积纪律 | 典型内容 |
+|:----:|------|----------|----------|----------|
+| **L0 热** | 寄存器 / 直接地址访问 | 当前 prompt、tool 短结果、最终回复 | **宜 &lt; 2～4 KB/段**；禁整文档 | 任务一句、硬禁区 5～15 条、open_questions、验收要点、`ok/fail` |
+| **L0.5 指针** | 指针 / 句柄 | 信封 YAML、消息稿、Goal 头 | 路径 + hash + kind；**无正文** | `run_dir`、`deliverable.path`、`contentHash`、`playbook-pack-hN.md`、`image_path` |
+| **L1 冷（DMA）** | 大块外存 / DMA | 磁盘 run-dir、业务仓、MCP 源正文 | **不进对话常驻**；按需 `read` / `get_source_text` | `*.deliverable.md`、技能全文、源码树、PNG、飞书云文档镜像 |
+
+```text
+L0.5 指针 ──► L1 DMA（read 大块）──► 抽出 L0 热摘要 ──► 写入下一跳指针
+                 ▲                         │
+                 └──── 用完不必整段回灌 ─────┘
+```
+
+### 4.2 与现网组件的映射
+
+| 组件 | 当前偏向 | 目标分层 |
+|------|----------|----------|
+| handoff envelope | 已有 path（指针） | **L0.5** 为主；summary 保持短 |
+| `playbook-pack-hN.md` | 偏 L1 摘录 | 保留为 **L1**；Goal 只嵌 **L0 硬禁区** + Pack **路径** |
+| agent 最终回复 | 常把 L1 全文当 stdout（反模式） | 回复 = **L0.5 + 短 L0**；正文只写 L1 文件 |
+| H2 消息稿粘贴 H1 YAML | L1 误进热路径 | 改为 **L0.5**（`prev_envelope_path` + hash） |
+| SF-HS `get_source_text` | 每跳 DMA 全量 | 允许 hash 命中则 **跳过 DMA**，复用已有 Pack |
+| H3 `h3-goal.md` | 已有路径灌包 | **L0 摘要 + L0.5 必读列表**；规格全文 Cursor 自己 DMA |
+| main SOUL | 全量常驻偏热 | 拆成 L0 短路由 + L1 附录（触发再 read） |
+| 飞书双写 | 给人看的 L1 镜像 | 不占用模型上下文；链接进 L0.5 |
+
+### 4.3 硬规则（落地后写进 SOUL / `02`）
+
+1. **对话默认只传 L0 + L0.5**；出现整节交付物正文 = 违规（除非用户显式要贴）。  
+2. **L1 唯一真源 = 磁盘路径**（机器 SoT）；飞书是人对人镜像。  
+3. **H3 不依赖 OpenClaw 会话历史**；只依赖 Goal（L0/L0.5）+ 自行 read L1。  
+4. **从 L1 回写上下文时只允许摘要**：标题、决策 3～7 条、风险、路径——禁止原文粘贴。  
+5. **大小阈值（建议）**：单段将进 prompt 的文本 &gt; **8 KB** → 必须改指针 + read，不得整段嵌入消息稿。
+
+### 4.4 反模式 ↔ 正模式
+
+| 反模式（大块当寄存器） | 正模式（指针 + DMA） |
+|------------------------|----------------------|
+| H2 message 内嵌完整 H1 YAML | `prev: path + hash`，arch `read` |
+| ui 最终回复 40KB 规范全文 | 写 `h2b-ui.deliverable.md`，回复只给 envelope |
+| Goal 粘贴整份 UI 规范 | Goal 列路径 + 硬禁区 10 行 |
+| 每跳强制 MCP 全文 | hash 未变 → 复用 Pack（P2-2） |
+| main 为等 H3 反复长思考 | poll 短状态（L0），超时即停 |
+
+### 4.5 和【提升】项的对应
+
+| 分层目标 | 主要靠哪些提升 |
+|----------|----------------|
+| 对话变瘦（L0/L0.5） | P1-1、P1-3、P2-1 |
+| DMA 少做 / 做完不回灌 | P0-2、P2-2 |
+| H3 开发不受损 | §4.3 规则 3 + Goal 必读列表（见 §8 Phase B） |
+| 墙钟 | P0-1、P1-2（与分层正交，可并行） |
+
+---
+
+## 5. 与「只 /new」的关系
 
 `/new` 只清**当前聊天**上下文，**不能**：
 
@@ -176,12 +237,13 @@ run-ai-vg-web-ui-route1-20260803/
 - 去掉 H3 僵死等待  
 - 减少 SOUL 常驻体积  
 - 合并飞书双写等待  
+- 把 L1 误塞进 L0 的契约改掉  
 
-优化必须改：**契约 / SOUL / 消息模板 / 脚本 / 模型分档 / 超时纪律**。
+优化必须改：**契约 / SOUL / 消息模板 / 脚本 / 模型分档 / 超时纪律**（即落实 §4 分层）。
 
 ---
 
-## 5. 提升点清单（特别标识）
+## 6. 提升点清单（特别标识）
 
 图例：
 
@@ -310,36 +372,110 @@ run-ai-vg-web-ui-route1-20260803/
 
 ---
 
-## 6. 汇总表（优先序）
+## 7. 汇总表（优先序）
 
-| ID | 提升点 | 预估墙钟 | 预估 token/上下文 | 改动面 | 优先级 |
-|----|--------|----------|-------------------|--------|:------:|
-| P0-1 | H3 超时+僵死停 | −20～40 min | 中 | SOUL / h3 wrapper | **P0** |
-| P0-2 | 每跳新 session | −5～15 min | cached −40～70% | invoke + SOUL | **P0** |
-| P1-1 | 落盘正文 / stdout 信封 | −3～8 min | 文档跳 −20～40% | 02 / 消息模板 / main 校验 | P1 |
-| P1-2 | H2∥H2b + 双写并到 M2 | −10～25 min | ≈0 | SOUL | P1 |
-| P1-3 | 消息增量引用 | −2～5 min | −10～25% | 消息模板 | P1 |
-| P2-1 | SOUL 拆附录 | 次要 | main 系统提示 −30～50% | SOUL 部署 | P2 |
-| P2-2 | SF-HS hash 跳过全文 | −5～12 min | −20～40% | 06 + 消息 + 可选 MCP | P2 |
-| P2-3 | 文档跳 flash | H1+H2 跳内 −20～40% | 费用↓ | openclaw.json | P2 |
-| P2-4 | 快轨 | 小改 −50～70% | 同降 | SOUL + 02 | P2 |
-| P2-5 | 出图异步 | 到 M2 −3～10 min | 小 | SOUL + 业务 pipeline | P2 |
+| ID | 提升点 | 预估墙钟 | 预估 token/上下文 | 改动面 | 优先级 | 分层 |
+|----|--------|----------|-------------------|--------|:------:|:----:|
+| P0-1 | H3 超时+僵死停 | −20～40 min | 中 | SOUL / h3 wrapper | **P0** | 正交 |
+| P0-2 | 每跳新 session | −5～15 min | cached −40～70% | invoke + SOUL | **P0** | 减误缓存 |
+| P1-1 | 落盘正文 / stdout 信封 | −3～8 min | 文档跳 −20～40% | 02 / 消息模板 / main 校验 | P1 | **L1←DMA** |
+| P1-2 | H2∥H2b + 双写并到 M2 | −10～25 min | ≈0 | SOUL | P1 | 正交 |
+| P1-3 | 消息增量引用 | −2～5 min | −10～25% | 消息模板 | P1 | **L0.5** |
+| P2-1 | SOUL 拆附录 | 次要 | main 系统提示 −30～50% | SOUL 部署 | P2 | L0/L1 |
+| P2-2 | SF-HS hash 跳过全文 | −5～12 min | −20～40% | 06 + 消息 + 可选 MCP | P2 | 少 DMA |
+| P2-3 | 文档跳 flash | H1+H2 跳内 −20～40% | 费用↓ | openclaw.json | P2 | 正交 |
+| P2-4 | 快轨 | 小改 −50～70% | 同降 | SOUL + 02 | P2 | 少跳 |
+| P2-5 | 出图异步 | 到 M2 −3～10 min | 小 | SOUL + 业务 pipeline | P2 | L1 异步 |
 
-**若只做 P0-1 + P0-2 + P1-2**：相对本 Demo，墙钟有机会从 ~100min 落到 **~40–60min** 量级（仍取决于 H3 真实编码时间）。
-
----
-
-## 7. 建议落地节奏（bm `feature/bm`）
-
-1. **本周 P0**：改 SOUL 草稿 → 同步 `~/.openclaw/workspace/SOUL.md` → 改 invoke 会话策略 → 用小需求烟测一跳 H3。  
-2. **下周 P1**：改消息模板与 `02` 契约；跑一条含 UI 的需求，对比新 `cost-ledger.yaml` 填回 §6「实测」列。  
-3. **再后 P2**：SOUL 拆分 / hash 缓存 / 快轨按钮。  
-
-合入：在 `feature/bm` 提交 → PR → `develop`（勿直接改 `feature/home`）。
+**若只做 P0-1 + P0-2 + P1-2**：相对本 Demo，墙钟有机会从 ~100min 落到 **~40–60min** 量级（仍取决于 H3 真实编码时间）。  
+**若再加 P1-1 + P1-3**：上下文接近 §4 目标形态，H3 仍靠指针读 L1，开发规格不砍。
 
 ---
 
-## 8. 复核模板（下一轮 Demo 粘贴）
+## 8. 执行计划（bm · `feature/bm`）
+
+> **原则**：先守 H3 输入（Goal 指针 + L1 落盘），再瘦中间对话；每 Phase 结束用 §9 模板对照基线 §3。  
+> **分支**：只在 `feature/bm` 改；合入 `develop` 后再让 Home `pull`；勿改 `feature/home`。  
+> **OpenClaw**：改草稿后必须同步 `~/.openclaw/workspace/SOUL.md` 才对飞书生效。
+
+### Phase A — 墙钟止血（P0，约 0.5～1 天）
+
+| 步 | 动作 | 产出 | 完成标准 |
+|:--:|------|------|----------|
+| A1 | SOUL 草稿：H3 `TimeoutSec`→300～480；poll 连续 2 次无增量即停并允许「跳过→H4」 | `orchestrator-main-soul.draft.md` | 文案含明确秒数与停法 |
+| A2 | 同步线上 `SOUL.md`（备份 `.bak-opt-YYYYMMDD`） | 本机 SOUL | 飞书 `/status` 或抽查段落存在 |
+| A3 | `invoke-openclaw-agent.cjs`：每 hop 新 isolated session（CLI 旗标以实测为准） | 脚本 + 简短注释 | 烟测 1 跳：`source.paths` 长度 = 1 |
+| A4 | 小需求烟测（可无 UI）：M0→H1→M2→短 H3 | `Code/doc/phase4/bm/run-opt-p0-<日期>/` | H3 空等 &lt; 新超时；台账入库 |
+
+**Phase A 不做**：改交付物契约、改 MCP、改 Home。
+
+### Phase B — 指针 + DMA 落地（P1-1 / P1-3，约 1～2 天）**【分层核心】**
+
+| 步 | 动作 | 产出 | 完成标准 |
+|:--:|------|------|----------|
+| B1 | 在 `02-orchestration-contracts.md` 增加「上下文内存分层」引用本文件 §4；约定最终回复 = 路径 + envelope | `02` 补丁 | 契约可评审 |
+| B2 | 更新消息稿义务：正文只写 `*.deliverable.md`；stdout/最终回复禁全文 | SOUL + `role-session.md` + 模板句 | 模板可复制 |
+| B3 | main 校验改为：文件存在且 size&gt;0 + 信封四要素（不依赖 raw 全文） | SOUL 校验段 | 即使 raw=0 仍可收跳 |
+| B4 | H2/H2b 消息改为 `prev_envelope_path` + hash，不粘贴上跳 YAML | 消息模板 / 示例 run | `h2.message.md` 不再随 H1 膨胀 |
+| B5 | **H3 Goal 模板固化**（防开发受损）：必含 WorkDir、L1 必读路径列表、Pack 硬禁区 L0 摘录、禁止再打 Site MCP | `templates/` 或 SOUL H3 段 | Goal 无整份 40KB 规范，但路径齐全 |
+| B6 | 含 UI 的复测 1 条（可复用眼镜仓小改） | `run-opt-p1-<日期>/` + §9 填写 | Cursor 能按路径读到完整规范；墙钟/token 对照基线 |
+
+**H3 验收口令（B6 必过）**：人工打开 `h3-goal.md`，确认「必读路径」指向的 L1 文件非空；在 Cursor 侧不粘贴全文也能还原需求。
+
+### Phase C — 并行与双写（P1-2，约 0.5 天）
+
+| 步 | 动作 | 产出 | 完成标准 |
+|:--:|------|------|----------|
+| C1 | SOUL：H2 与 H2b 同时 invoke，汇合后再 M2 | SOUL | 日志时间戳重叠 |
+| C2 | 飞书双写合并到 M2 前一次性（或放行后） | SOUL | 文档跳中途无 create 阻塞 |
+| C3 | （可选）出图 P2-5：M2 允许无图 | SOUL + 业务 pipeline 一文 | 无 ARK 不挡签字 |
+
+### Phase D — 深化（P2，按需，≥1 周内选做）
+
+| 步 | 动作 | 依赖 |
+|:--:|------|------|
+| D1 | SOUL 拆附录（升格/成本）P2-1 | Phase A 已稳 |
+| D2 | SF-HS hash 跳过全文 P2-2 | Phase B 指针稳定 |
+| D3 | pm/arch 默认 flash P2-3 | 质量抽检通过 |
+| D4 | 【快轨】路由 P2-4 | `02` 快轨表 |
+
+### 里程碑与门禁
+
+```text
+M1（A 完成）→ 飞书体感：H3 不再空等半小时
+M2（B 完成）→ 分层生效：对话瘦、磁盘全、H3 开发不回退
+M3（C 完成）→ 含 UI 需求墙钟接近 40–60min 量级（编码时间另计）
+M4（D 选做）→ cached / 系统提示进一步下降
+```
+
+| 门禁 | 失败则 |
+|------|--------|
+| B6 H3 读不到 L1 | **回滚**消息契约，禁止合 develop |
+| A3 仍多 trajectory | 先修 invoke，不进 Phase B |
+| 合入冲突 Home | `feature/bm` rebase `origin/develop` 后再 PR |
+
+### 责任与合入
+
+| 角色 | 职责 |
+|------|------|
+| bm | 执行 Phase A→C；证据进 `Code/doc/phase4/bm/` |
+| 人 | M2 签字；B6 人工抽查 Goal 路径 |
+| Home | 不改本计划文件除非 PR 已合 develop；之后 pull develop |
+| ECS | 仍跟 `main`；本优化未发版前不部署 |
+
+```bash
+# 每 Phase 结束（示例）
+git checkout feature/bm
+git add Doc/phase4/10-pipeline-impl-and-optimization.md Code/orchestration/...
+git commit -m "perf(orchestration): phase <A|B|C> context hierarchy / ..."
+git push -u origin feature/bm
+# PR → develop；合并后：
+git fetch origin && git checkout develop && git pull origin develop
+```
+
+---
+
+## 9. 复核模板（下一轮 Demo 粘贴）
 
 ```yaml
 run_id: run-xxxxx
@@ -348,8 +484,13 @@ tokens_total:
 tokens_cached_input:
 trajectories_per_hop: { H1: 1, H2: 1, H2b: 1 }  # 目标全 1
 h3_wait_min:      # 从 invoke 到停/续
-notes:            # 启用了哪些【提升】ID
-vs_baseline_100min: # 差值
+h3_goal_has_l1_paths: true   # Goal 是否列出完整必读路径
+deliverable_in_stdout: false # 应为 false（分层正模式）
+phase_done: [A, B]           # 已完成执行计划 Phase
+notes:                       # 启用了哪些【提升】ID
+vs_baseline_100min:          # 差值
 ```
 
 基线：本文件 §3（`run-ai-vg-web-ui-route1-20260803`）。
+分层目标：本文件 §4。
+执行计划：本文件 §8。
