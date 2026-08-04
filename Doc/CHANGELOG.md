@@ -1,5 +1,11 @@
 # CHANGELOG — All_URI
 
+## 2026-08-04 — orchestration：bm OpenClaw workspace 快照入库
+
+- **路径**：`Code/orchestration/openclaw/workspace-snapshot/bm/`（SOUL/AGENTS/TOOLS/skills…）
+- **同步**：`sync-from-live.cjs`（拉取本机 workspace 并脱敏 `folder_token`）
+- **排除**：`memory/`、`.bak`、tmp、密钥；部署说明见同目录 README + `Doc/guides/local-openclaw-runtime-deploy.md` §3.6
+
 ## 2026-08-04 — docs：编排流水现网实现 + 优化点清单
 
 - **文档**：`Doc/phase4/10-pipeline-impl-and-optimization.md`（流程、route1 Demo 数据、【提升】P0–P2 含预估收益与改动面）

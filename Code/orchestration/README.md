@@ -15,6 +15,7 @@ orchestration/
     setup-agents.ps1               ← 花名册一键重建/对齐脚本（幂等，无密钥；详见头注释）
     promote-commit.cjs             ← 飞书升格：develop-only commit，永不 push（见 Doc/phase4/09）
     cost/                          ← 成本台账：pricing.yaml + append/collect/summarize（见 Doc/phase4/08）
+    workspace-snapshot/            ← bm/Home 的 ~/.openclaw/workspace 可共享快照（脱敏；见其 README）
   envelopes/
     handoff.example.yaml           ← 交接信封实例（H1：PM → Architect）
   prompts/

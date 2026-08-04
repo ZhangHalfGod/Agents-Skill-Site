@@ -118,14 +118,17 @@ openclaw mcp list
 
 期望：工具约 **10** 个（含 `get_source_text`）。health 绿 ≠ 流水线已验收。
 
-### 3.6 编排者 SOUL（流水线人格）
+### 3.6 编排者 SOUL / workspace（流水线人格）
+
+**整份 workspace 快照（推荐新机器）**：[`Code/orchestration/openclaw/workspace-snapshot/`](../../Code/orchestration/openclaw/workspace-snapshot/README.md)  
+内含 bm 脱敏后的 `SOUL.md`、`AGENTS.md`、`TOOLS.md`、`skills/*` 等。拷到本机 `~/.openclaw/workspace/` 后：替换 `REPLACE_WITH_FEISHU_FOLDER_TOKEN`、改绝对路径。
+
+**仅补流水线段（已有人格时）**：
 
 1. 打开仓内草稿：[`Code/orchestration/prompts/orchestrator-main-soul.draft.md`](../../Code/orchestration/prompts/orchestrator-main-soul.draft.md)  
-2. **追加**到本机 `~/.openclaw/workspace/SOUL.md`（或部署侧约定的 main workspace），不要无脑覆盖日常人格段。仓内草稿升版（含 **升格流水线模式** /「同意升格」）时须把对应段同步进线上 SOUL，否则飞书触发句不生效——见 [`Doc/phase4/09-feishu-promote-pipeline.md`](../phase4/09-feishu-promote-pipeline.md)。  
-3. **全文替换**草稿中的 Windows 绝对路径为本机路径，例如：  
-   - `D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\...`  
-   - `D:\trae_git\MechAssist-Fusion\scripts\openclaw\...`  
-4. M0 / 双写 / SF-HS 等规则以草稿版本为准；改方向须留决策日志（S0）。
+2. **追加**到本机 `~/.openclaw/workspace/SOUL.md`，不要无脑覆盖日常人格段。草稿升版须同步线上 SOUL——见 [`Doc/phase4/09-feishu-promote-pipeline.md`](../phase4/09-feishu-promote-pipeline.md)。  
+3. **全文替换** Windows 绝对路径为本机路径。  
+4. 改完后可在 bm 跑 `workspace-snapshot/sync-from-live.cjs --machine bm` 回写仓内快照（会脱敏 folder_token）。
 
 ### 3.7 Gateway 常驻
 
