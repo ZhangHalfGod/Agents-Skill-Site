@@ -1,5 +1,10 @@
 # CHANGELOG — All_URI
 
+## 2026-08-04 — docs：编排流水现网实现 + 优化点清单
+
+- **文档**：`Doc/phase4/10-pipeline-impl-and-optimization.md`（流程、route1 Demo 数据、【提升】P0–P2 含预估收益与改动面）
+- **索引**：`Doc/phase4/README.md` 挂链
+
 ## 2026-08-03 — OpenClaw：UI 文生图脚本（火山方舟 ARK）
 
 - **脚本**：`Code/orchestration/openclaw/ui-image/generate-ui-image.cjs`（Key 仅 `~/.openclaw/.env`：`ARK_API_KEY` + `ARK_IMAGE_MODEL=ep-…`）

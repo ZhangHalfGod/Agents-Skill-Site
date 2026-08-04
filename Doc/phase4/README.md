@@ -19,6 +19,7 @@
 | 8 | **[07-run-dir-m0-card.md](07-run-dir-m0-card.md)** | **M0：飞书 presentation 卡指定 run-dir** |
 | 9 | **[08-cost-ledger-schema.md](08-cost-ledger-schema.md)** | **成本台账字段草案（DeepSeek / Cursor）** |
 | 10 | **[09-feishu-promote-pipeline.md](09-feishu-promote-pipeline.md)** | **飞书「同意升格」整包流水线** |
+| 11 | **[10-pipeline-impl-and-optimization.md](10-pipeline-impl-and-optimization.md)** | **现网流水实现流程 + Demo + 提升点** |
 
 ## 本目录文件
 
@@ -34,6 +35,7 @@
 | [07-run-dir-m0-card.md](07-run-dir-m0-card.md) | ✅ |
 | [08-cost-ledger-schema.md](08-cost-ledger-schema.md) | ✅ 契约+脚本 |
 | [09-feishu-promote-pipeline.md](09-feishu-promote-pipeline.md) | ✅ 契约 |
+| [10-pipeline-impl-and-optimization.md](10-pipeline-impl-and-optimization.md) | ✅ 现网+优化清单 |
 
 ## 配套落点
 
