@@ -1,0 +1,5 @@
+{
+  "channel": "feishu",
+  "target": "oc_3d3d446d39b8d2d0292c0d31f428bc23",
+  "note": "BM pipeline / Inf 群；看门狗确定性播报用，不经 main LLM"
+}

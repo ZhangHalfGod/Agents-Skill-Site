@@ -257,11 +257,12 @@ L0.5 指针 ──► L1 DMA（read 大块）──► 抽出 L0 热摘要 ─�
 
 | 项 | 内容 |
 |----|------|
-| **问题** | Cursor `-TimeoutSec 1200`；poll 无增量仍空等 ~30min（Lesson `2026-08-03-ai-vg-web-ui-h3-stale-process`） |
+| **问题** | TimeoutSec 1200 + 只等 completion wake；默认 `--resume` 挂旧巨型会话（Lesson 2026-08-03 / US08 2026-08-04） |
 | **预估墙钟** | **−20～40 min / 次**（砍掉空等；有代码则直接 H4） |
 | **预估上下文** | 主会话少烧 poll 轮次（中） |
-| **改动什么** | ① 线上 `SOUL.md` + 草稿：TimeoutSec→**300–480**；连续 2 次无增量即上报并停 ② `h3-run-wrapper` 模板默认超时 ③ 可选：wrapper 检测业务仓文件 mtime 变化则标记「可续 H4」 |
-| **验收** | 再跑一跳：卡住不超过新超时；用户说「跳过」立即 H4 |
+| **改动什么** | ① TimeoutSec→**480**（大改≤900）② 流水线 H3 **强制 `-Fresh`** ③ `check-h3-done.cjs`：raw 摘要 / `[AI生成]` commit → 立刻 H4，**不单等 wake** ④ 僵尸 cursor-agent 按 PID 杀 |
+| **验收** | 卡住不超过新超时；`check-h3-done` done 或用户「跳过」→ 立刻 H4；无跨需求 resume |
+| **状态** | **已落地文案+脚本**（2026-08-04）：SOUL 草稿/线上 + `check-h3-done.cjs`；MechAssist invoke 默认仍 resume，靠 SOUL `-Fresh` 约束 |
 
 ---
 

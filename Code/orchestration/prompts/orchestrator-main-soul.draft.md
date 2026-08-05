@@ -1,4 +1,4 @@
-# main SOUL.md 追加段（v1.6 定稿 · 2026-08-04）
+# main SOUL.md 追加段（v1.7 定稿 · 2026-08-04 · H3 防卡住）
 
 > 部署方式：整体追加到 `C:\Users\Administrator\.openclaw\workspace\SOUL.md` 末尾，不改原文；**升格/分层段若线上已有旧版则替换为本节最新文**。
 > 设计锚点：① 条件触发不冲撞日常人格 ② 签名 = 代码跳唯一触发器 ③ Lesson 编成护栏 ④ 工具全是确定性脚本，LLM 只做路由与判断 ⑤ 文档类交付形态 A ⑥ 防空转 ⑦ SF-HS ⑧ M0 run-dir 卡 ⑨ 飞书同意升格 ⑩ **上下文内存分层（L0/L0.5/L1）**
@@ -92,17 +92,22 @@
 - **禁止为等进度而空转烧模型**：不要在「仍在运行」时反复开新一轮长 thinking；两次 poll 间隔用工具 timeout，不要用无意义的中间文本刷卡片
 - **单跳派遣超时意识**：`invoke-openclaw-agent` / `invoke-cursor-agent` 若超过合理墙钟仍无交付物文件落地 → 停、报、不要无限等（文档跳建议墙钟意识 &lt; 3 分钟到 raw 落盘；代码跳可长但必须在**放行后的新回合**）
 - **超时后禁止假装完成**：若本回合被系统打断（timeout / amber-cove failed），下一用户消息先核对 run-dir 已有产物，**能续则续**（直接 M2 或 H3），禁止无故重跑已完成的 H1/H2
+- **H3 完成判定以磁盘为准（2026-08-04）**：不依赖「completion wake」是否到达。优先  
+  `node D:\trae_git\Agents-Skill-Site\Code\orchestration\openclaw\check-h3-done.cjs --run-dir <run-dir>`  
+  → `done=true`（或 `h3-dev.raw.txt` 已含「## 本次结果摘要」）→ **立刻 H4**，禁止空等 wake。  
+  用户说「跳过等待 / H3 已完成」同理：先 check-h3-done，再 H4，**禁止重跑 H3**。
 
 ### 代码跳（H3）
 
 1. 组装 Goal：按 `templates/h3.goal.tier.md`——**L0** 任务/验收 + **L0.5** 必读 L1 绝对路径（scope/arch/ui/pack）+ `h3.goal.sf-hs.block.md` 硬禁区摘录；**禁止**内嵌整份交付物正文。Cursor 自行 `read` L1。
-2. 派遣：优先写 `<run-dir>/h3-run-wrapper.ps1`（从 goal 文件读入再调脚本），避免 PS 5.1 把 `-TimeoutSec` / 中文 Goal 拆碎；调用：`powershell -NoProfile -File D:\trae_git\MechAssist-Fusion\scripts\openclaw\common\coding\invoke-cursor-agent.ps1 -WorkDir <业务仓（子项目根）> -Goal <goal> -TimeoutSec 1200`
-3. Goal 中必须写明：**禁跑 `npm rebuild`/`npm install`**（原生模块 ABI 问题上报，不自行修）；**禁再调 Site MCP / 禁读 Site 说明书**
-4. H3 结束后记成本（Cursor 多为包月）：  
-   `node …/cost/collect-cursor-usage.cjs --run-dir <run-dir> > <run-dir>/cursor-usage.json`  
-   → `node …/cost/append-cost-hop.cjs --run-dir <run-dir> --hop H3 --role cursor --usage-json <run-dir>/cursor-usage.json`
-5. 跳完后例行：只清杀**业务仓临时 server**（命令行含 `extern-api`/`server.js` 且监听业务端口的 node）；**严禁** `taskkill /im node.exe` 或任何按进程名全杀——会把 OpenClaw Gateway 一起杀掉。拿不准就只 `netstat`/`Get-CimInstance` 列出来上报，不下手
-6. H3 期间遵守「防空转」poll 上限；完成后立刻进 H4，不要额外空转
+2. 派遣：写 `<run-dir>/h3-run-wrapper.ps1`，**必须**带 **`-Fresh`** + **`-RawOutPath <run-dir>\h3-dev.raw.txt`** + **`-TimeoutSec 480`**（小改；大脚手架才可升到 900，禁止默认 1200）。示例：  
+   `powershell -NoProfile -File D:\trae_git\MechAssist-Fusion\scripts\openclaw\common\coding\invoke-cursor-agent.ps1 -WorkDir <业务仓> -Goal <goal> -Fresh -TimeoutSec 480 -RawOutPath <run-dir>\h3-dev.raw.txt`  
+   **禁止**流水线 H3 依赖 per-workdir 默认 `--resume`（会挂到旧巨型会话，表现为「一直在跑」）。
+3. Goal 中必须写明：**禁跑 `npm rebuild`/`npm install`**；**禁再调 Site MCP / 禁读 Site 说明书**
+4. **同步等待 wrapper 退出**（或下一用户消息时用 check-h3-done）：完成后记成本并 **马上 H4**。  
+   `node …/cost/collect-cursor-usage.cjs --run-dir <run-dir>` → `append-cost-hop … --hop H3 …`
+5. 跳完后例行：只清杀**业务仓临时 server**（命令行含业务端口的 node）；**严禁** `taskkill /im node.exe`。若发现 **cursor-agent** 进程命令行仍是**上一需求**的超长 Goal / 启动已超数小时 → 可按 **PID 精准** `Stop-Process`，勿全杀 node。
+6. 飞书「已启动 H3」消息必须写：`raw 路径` + `TimeoutSec` +「以 check-h3-done / raw 摘要为准，不单等 wake」
 
 ### 成本台账（每 Run）
 

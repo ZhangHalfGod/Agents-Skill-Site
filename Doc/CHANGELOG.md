@@ -1,5 +1,12 @@
 # CHANGELOG — All_URI
 
+## 2026-08-04 — orchestration：H3 防卡住（P0-1）
+
+- **根因**：completion wake 常丢；invoke 默认 `--resume` 易挂旧会话；TimeoutSec 1200 空等过久
+- **SOUL**：强制 `-Fresh` + TimeoutSec 480；完成以 `check-h3-done.cjs` / raw / `[AI生成]` commit 为准，立刻 H4
+- **脚本**：`Code/orchestration/openclaw/check-h3-done.cjs`
+- **文档**：`Doc/phase4/10` P0-1 状态更新
+
 ## 2026-08-04 — orchestration：上下文内存分层落地（P1-1 / P1-3）
 
 - **契约**：`Doc/phase4/02` §1.1；模板 `hop.message.tier.md` / `h3.goal.tier.md`
