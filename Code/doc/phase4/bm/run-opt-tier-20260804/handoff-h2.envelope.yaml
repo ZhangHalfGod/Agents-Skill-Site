@@ -1,0 +1,16 @@
+﻿handoff:
+  from: Architect
+  to: DevLead
+  project: opt-tier-smoke
+  stage: design
+  deliverable:
+    kind: arch-constraints
+    path: D:\trae_git\Agents-Skill-Site\Code\doc\phase4\bm\run-opt-tier-20260804\h2-arch.deliverable.md
+    summary: |
+      分层烟测架构空壳
+  decisions: []
+  open_questions: []
+  gate:
+    checklist: stage-gate-flow
+    evidence: structural-smoke
+  lesson_hint: ""

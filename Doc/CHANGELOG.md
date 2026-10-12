@@ -1,5 +1,30 @@
 # CHANGELOG — All_URI
 
+## 2026-08-04 — orchestration：H3 防卡住（P0-1）
+
+- **根因**：completion wake 常丢；invoke 默认 `--resume` 易挂旧会话；TimeoutSec 1200 空等过久
+- **SOUL**：强制 `-Fresh` + TimeoutSec 480；完成以 `check-h3-done.cjs` / raw / `[AI生成]` commit 为准，立刻 H4
+- **脚本**：`Code/orchestration/openclaw/check-h3-done.cjs`
+- **文档**：`Doc/phase4/10` P0-1 状态更新
+
+## 2026-08-04 — orchestration：上下文内存分层落地（P1-1 / P1-3）
+
+- **契约**：`Doc/phase4/02` §1.1；模板 `hop.message.tier.md` / `h3.goal.tier.md`
+- **SOUL**：草稿 v1.6 + 线上 `~/.openclaw/workspace/SOUL.md`（备份 `.bak-tier-20260804`）；校验以磁盘为准
+- **烟测**：`Code/doc/phase4/bm/run-opt-tier-20260804/smoke-report.json` pass（结构；飞书真跑待 B7）
+- **快照**：`workspace-snapshot/bm` 已同步（folder_token 仍占位）
+
+## 2026-08-04 — orchestration：bm OpenClaw workspace 快照入库
+
+- **路径**：`Code/orchestration/openclaw/workspace-snapshot/bm/`（SOUL/AGENTS/TOOLS/skills…）
+- **同步**：`sync-from-live.cjs`（拉取本机 workspace 并脱敏 `folder_token`）
+- **排除**：`memory/`、`.bak`、tmp、密钥；部署说明见同目录 README + `Doc/guides/local-openclaw-runtime-deploy.md` §3.6
+
+## 2026-08-04 — docs：编排流水现网实现 + 优化点清单
+
+- **文档**：`Doc/phase4/10-pipeline-impl-and-optimization.md`（流程、route1 Demo 数据、【提升】P0–P2 含预估收益与改动面）
+- **索引**：`Doc/phase4/README.md` 挂链
+
 ## 2026-08-03 — OpenClaw：UI 文生图脚本（火山方舟 ARK）
 
 - **脚本**：`Code/orchestration/openclaw/ui-image/generate-ui-image.cjs`（Key 仅 `~/.openclaw/.env`：`ARK_API_KEY` + `ARK_IMAGE_MODEL=ep-…`）

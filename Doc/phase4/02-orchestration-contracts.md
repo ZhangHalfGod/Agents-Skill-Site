@@ -3,7 +3,8 @@
 > **文档级别**：四期契约  
 > **日期**：2026-07-29  
 > **原则**：交接 = 「交付物文件 + 信封消息」；机器 SoT = 本地 Markdown（`deliverable.path`，供校验/H3）；人对人展示 SoT = 飞书云文档（形态 A 双写，见 main SOUL「文档类交付双写」）；信封是会话间唯一通信格式  
-> **角色定义**：本仓 `docs/zh/agents/standard/**`；门禁：[`stage-gate-flow`](../../Code/code/docs/zh/skills/custom/common/stage-gate-flow/index.md)
+> **角色定义**：本仓 `docs/zh/agents/standard/**`；门禁：[`stage-gate-flow`](../../Code/code/docs/zh/skills/custom/common/stage-gate-flow/index.md)  
+> **上下文分层**：[`10-pipeline-impl-and-optimization.md`](10-pipeline-impl-and-optimization.md) §4（L0 热 / L0.5 指针 / L1 DMA）
 
 ---
 
@@ -14,6 +15,25 @@
 1. 每跳**产出什么**（交付物 + 必备章节）
 2. 每跳**怎么算完**（出门门禁 + 证据分层）
 3. 跳与跳之间**传什么**（交接信封 schema）
+
+## 1.1 上下文内存分层（强制）
+
+完整定义见 [`10` §4](10-pipeline-impl-and-optimization.md)。落地纪律：
+
+| 层 | 含义 | 允许进对话/最终回复 |
+|----|------|---------------------|
+| **L0 热** | 短摘要、硬禁区、验收要点 | ✅ |
+| **L0.5 指针** | `path` / `contentHash` / kind | ✅（**首选**） |
+| **L1 DMA** | 交付物全文、MCP 说明书全文、大图 | ❌ 常驻；只落盘，模型按需 `read` |
+
+**输出契约（文档跳）**
+
+1. **正文**必须写入 run-dir 内 `*.deliverable.md`（或契约约定文件名），`size > 0`。  
+2. **最终回复 / stdout**只含：短 L0 + handoff YAML（或 `---`SPLIT`---` 后仅信封）；**禁止**把交付物全文塞进最终回复。  
+3. **下一跳消息稿**只引用上跳 `prev_envelope_path` + hash（或信封摘要），**禁止**粘贴完整上跳 YAML/交付物。  
+4. **H3 Goal**：L0 任务摘要 + L0.5 必读路径列表 + Pack **硬禁区**摘录；规格全文由 Cursor `read` L1，禁止整份 UI/架构正文内嵌（阈值建议：单段将进 Goal 的文本 &gt; 8KB → 改指针）。
+
+编排者校验以**磁盘文件**为准：即使 `*.raw.txt` 为空，只要 deliverable + envelope 合法即可收跳。
 
 ## 2. 交接信封（handoff envelope）
 
